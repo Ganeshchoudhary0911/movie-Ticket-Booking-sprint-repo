@@ -1,0 +1,38 @@
+<!-- src/main/resources/templates/payment.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Payment</title>
+    <meta charset="UTF-8" />
+    <style>
+        body { font-family: system-ui, Arial, sans-serif; margin: 2rem; }
+        .card { max-width: 640px; margin: auto; padding: 1.5rem; border: 1px solid #eee; border-radius: 12px; box-shadow: 0 1px 8px rgba(0,0,0,0.06); }
+        h1 { margin-top: 0; }
+        .row { display: flex; justify-content: space-between; margin: 0.25rem 0; }
+        .muted { color: #666; }
+        .cta { display: flex; gap: 1rem; margin-top: 1.5rem; }
+        .btn { padding: 0.6rem 1rem; border: none; border-radius: 8px; cursor: pointer; text-decoration: none; }
+        .btn-primary { background: #2563eb; color: #fff; }
+        .btn-danger { background: #dc2626; color: #fff; }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h1>Complete Your Payment</h1>
+    <div class="row"><div class="muted">Booking ID</div><div th:text="${booking.bookingId}">123</div></div>
+    <div class="row"><div class="muted">Show</div><div th:text="${booking.show != null ? booking.show.title : 'N/A'}">Show Title</div></div>
+    <div class="row"><div class="muted">Date</div><div th:text="${booking.bookingDate}">2026-02-02</div></div>
+    <div class="row"><div class="muted">Amount</div><div>₹<span th:text="${#numbers.formatDecimal(booking.totalAmount, 0, 'COMMA', 2, 'POINT')}">0.00</span></div></div>
+    <div class="row"><div class="muted">Status</div><div th:text="${booking.bookingStatus}">PENDING</div></div>
+    <div class="row"><div class="muted">Payment</div><div th:text="${booking.paymentStatus}">PENDING</div></div>
+
+    <div class="cta">
+        <!-- Simulate success -->
+        <a th:href="@{|/bookings/success/${booking.bookingId}|}" class="btn btn-primary">Pay Now</a>
+
+        <!-- Simulate failure -->
+        <a th:href="@{|/bookings/fail/${booking.bookingId}|}" class="btn btn-danger">Simulate Failure</a>
+    </div>
+</div>
+</body>
+</html>
