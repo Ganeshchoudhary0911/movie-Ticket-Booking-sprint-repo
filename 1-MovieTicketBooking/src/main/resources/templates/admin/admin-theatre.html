@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Theatre Management</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" 
+         strap@5.3.0/dist/css/bootstrap.min.css>
+</head>
+
+<body class="bg-light">
+
+<div class="container mt-5">
+
+    <h2 class="text-center mb-4">Manage Theatres</h2>
+
+    <div class="mb-3 text-end">
+        /admin/theatres/addAdd New Theatre</a>
+    </div>
+
+    <table class="table table-striped table-bordered shadow-sm">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>City</th>
+                <th>Location</th>
+                <th>Total Seats</th>
+                <th>Contact</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr th:each="t : ${theatres}">
+                <td th:text="${t.theatreId}"></td>
+                <td th:text="${t.theatreName}"></td>
+                <td th:text="${t.city}"></td>
+                <td th:text="${t.location}"></td>
+                <td th:text="${t.totalSeats}"></td>
+                <td th:text="${t.contactNumber}"></td>
+
+                <td>
+                    <a th:href="@{'/admin/theatres/edit/' + ${t.theatreId}}"
+                       class="btn btn-sm btn-warning">
+                        Edit
+                              </tr>
+        </tbody>
+    </table>
+
+</div>
+
+<!-- Bootstrap JS -->
+https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js
+
+</body>
+</html>
