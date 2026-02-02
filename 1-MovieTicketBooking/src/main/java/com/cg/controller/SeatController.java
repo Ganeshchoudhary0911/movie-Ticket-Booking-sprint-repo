@@ -1,47 +1,42 @@
 package com.cg.controller;
  
-import java.util.List;
-
+import com.cg.entity.Seat;
+import com.cg.entity.Show;
+import com.cg.service.SeatService;
+import com.cg.service.ShowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
  
-import com.cg.entity.Seat;
-import com.cg.service.SeatService;
- 
 @Controller
-@RequestMapping("/api/seats")
 public class SeatController {
  
-	@Autowired
-    private final SeatService seatService;
+    @Autowired
+    private SeatService seatService;
  
-    // ✅ Constructor injection
-    public SeatController(SeatService seatService) {
-        this.seatService = seatService;
+    @Autowired
+    private ShowService showService;
+ 
+    // User: open seat selection page
+    @GetMapping("/seats/{showId}")
+    public String showSeats(@PathVariable Long showId, Model model) {
+ 
+        Show show = showService.getShowById(showId);
+ 
+        model.addAttribute("show", show);
+        model.addAttribute("seats", seatService.getSeatsByShow(show));
+ 
+        return "seat-selection";
     }
  
-    // 1️⃣ Add a seat
-    @PostMapping("/add")
-    public Seat addSeat(@RequestBody Seat seat) {
-        return seatService.addSeat(seat);
-    }
+    // User: book a seat
+    @PostMapping("/seats/book/{seatId}")
+    public String bookSeat(@PathVariable Long seatId) {
  
-    // 2️⃣ Get all seats for a show
-    @GetMapping("/show/{showId}")
-    public List<Seat> getSeatsByShow(@PathVariable Long showId) {
-        return seatService.getSeatByShow(showId);
-    }
+        seatService.markSeatAsBooked(seatId);
  
-    // 3️⃣ Get available seats
-    @GetMapping("/available/{showId}")
-    public List<Seat> getAvailableSeats(@PathVariable Long showId) {
-        return seatService.getAvailableSeats(showId);
-    }
- 
-    // 4️⃣ Book a seat
-    @PutMapping("/book/{seatId}")
-    public Seat bookSeat(@PathVariable Long seatId) {
-        return seatService.bookSeat(seatId);
+        return "redirect:/booking/confirm/" + seatId;
     }
 }
+ 
