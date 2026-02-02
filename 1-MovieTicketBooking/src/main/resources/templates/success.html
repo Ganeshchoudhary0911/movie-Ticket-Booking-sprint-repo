@@ -1,0 +1,31 @@
+<!-- src/main/resources/templates/success.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Booking Successful</title>
+    <meta charset="UTF-8" />
+    <style>
+        body { font-family: system-ui, Arial, sans-serif; margin: 2rem; }
+        .card { max-width: 640px; margin: auto; padding: 1.5rem; border: 1px solid #e6ffed; border-radius: 12px; background: #f0fff4; }
+        .ok { color: #065f46; }
+        .muted { color: #444; }
+        .details { margin-top: 1rem; }
+        a { color: #2563eb; text-decoration: none; }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h1 class="ok">✅ Payment Successful</h1>
+    <p class="muted">Your booking is confirmed.</p>
+
+    <div class="details">
+        <p><strong>Booking ID:</strong> <span th:text="${booking.bookingId}">123</span></p>
+        <p><strong>Status:</strong> <span th:text="${booking.bookingStatus}">CONFIRMED</span></p>
+        <p><strong>Payment:</strong> <span th:text="${booking.paymentStatus}">PAID</span></p>
+        <p><strong>Amount:</strong> ₹<span th:text="${#numbers.formatDecimal(booking.totalAmount, 0, 'COMMA', 2, 'POINT')}">0.00</span></p>
+    </div>
+
+    <p><a th:href="@{/bookings/history}">View booking history →</a></p>
+</div>
+</body>
+</html>
