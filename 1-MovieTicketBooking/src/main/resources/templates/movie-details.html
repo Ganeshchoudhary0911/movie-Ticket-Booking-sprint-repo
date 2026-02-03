@@ -1,0 +1,45 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${movie.movieName} + ' - BookMyShow'"></title>
+    <link href="https://cdn.jsdelivr.net" rel="stylesheet">
+    <style>
+        .hero-section { background: #1a1a1a; color: white; padding: 40px 0; }
+        .poster-detail { border-radius: 12px; width: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .tag { background: #333; padding: 4px 12px; border-radius: 15px; font-size: 0.9rem; margin-right: 8px; }
+        .book-btn { background: #F84464; color: white; font-weight: bold; padding: 12px 40px; border-radius: 8px; }
+    </style>
+</head>
+<body>
+
+<div class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-3">
+                <img src="https://via.placeholder.com" class="poster-detail" alt="Poster">
+            </div>
+            <div class="col-md-9 px-md-5">
+                <h1 class="fw-bold mb-3" th:text="${movie.movieName}">Movie Name</h1>
+                <div class="mb-3">
+                    <span class="tag" th:text="${movie.language}">Language</span>
+                    <span class="tag" th:text="${movie.genre}">Genre</span>
+                    <span th:text="${movie.duration} + ' mins'">120 mins</span>
+                </div>
+                <div class="mb-4">
+                    <h4 class="text-warning fw-bold">⭐ <span th:text="${movie.rating}">9.0</span>/10</h4>
+                </div>
+                <p class="lead" th:text="${movie.description}">Movie description goes here...</p>
+                <a href="/shows" class="btn book-btn btn-lg mt-3">Book Tickets</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <h3>About the Movie</h3>
+    <p th:text="${movie.description}">Detailed synopsis...</p>
+</div>
+
+</body>
+</html>

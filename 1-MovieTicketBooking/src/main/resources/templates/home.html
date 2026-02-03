@@ -1,0 +1,50 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>BookMyShow | Movie Tickets</title>
+    <link href="https://cdn.jsdelivr.net" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .navbar { background-color: #333545; }
+        .btn-primary { background-color: #F84464; border: none; }
+        .movie-card { border: none; transition: transform 0.3s; cursor: pointer; }
+        .movie-card:hover { transform: scale(1.05); }
+        .movie-poster { border-radius: 8px; height: 350px; object-fit: cover; background: #eee; }
+        .rating-badge { background: #333; color: white; border-radius: 4px; padding: 2px 8px; font-size: 0.8rem; }
+    </style>
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-dark sticky-top p-3">
+    <div class="container d-flex justify-content-between">
+    <a class="navbar-brand fw-bold fs-3" href="/" style="color:#F84464;">BookMyShow</a>
+        <form class="d-flex w-50" th:action="@{/}" method="get">
+            <input class="form-control me-2" type="search" name="search" placeholder="Search for Movies, Events, Plays...">
+        </form>
+    </div>
+</nav>
+
+<div class="container mt-5">
+    <h3 class="fw-bold mb-4">Recommended Movies</h3>
+    <div class="row row-cols-1 row-cols-md-4 g-4">
+        <!-- Loop through Movies -->
+        <div class="col" th:each="movie : ${movies}">
+            <a th:href="@{'/movie/' + ${movie.movieId}}" class="text-decoration-none text-dark">
+                <div class="card h-100 movie-card">
+                    <img src="https://via.placeholder.com" class="card-img-top movie-poster" alt="Movie Poster">
+                    <div class="card-body px-0">
+                        <h5 class="card-title fw-bold mb-1" th:text="${movie.movieName}">Movie Name</h5>
+                        <div class="d-flex align-items-center mb-2">
+                            <span class="rating-badge">⭐ <span th:text="${movie.rating}">8.5</span>/10</span>
+                        </div>
+                        <p class="text-muted small" th:text="${movie.genre}">Genre</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
