@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Admin Dashboard</title>
+  <meta charset="UTF-8"/>
+</head>
+<body>
+<h2>Admin Dashboard</h2>
+<p>Welcome, Admin! Use the REST endpoints to manage content.</p>
+
+<ul>
+  <li>Movies: <code>GET/POST/PUT/DELETE</code> <code>/api/admin/movies</code></li>
+  <li>Theatres: <code>GET/POST/PUT/DELETE</code> <code>/api/admin/theatres</code></li>
+  <li>Shows: <code>GET/POST/PUT/DELETE</code> <code>/api/admin/shows</code></li>
+</ul>
+
+<p><a th:href="@{/logout}">Logout</a></p>
+</body>
+</html>
