@@ -3,6 +3,7 @@ package com.cg.service;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cg.entity.*;
@@ -10,8 +11,9 @@ import com.cg.repository.BookingRepository;
 
 @Service
 public class BookingService implements IBookingService {
-
-	private final BookingRepository bookingRepository;
+	
+	@Autowired
+	private BookingRepository bookingRepository;
 
 	public BookingService(BookingRepository bookingRepository) {
 		this.bookingRepository = bookingRepository;
@@ -69,7 +71,6 @@ public class BookingService implements IBookingService {
 	public Booking cancelBooking(Long bookingId, String username) {
 
 		Booking booking = getBookingById(bookingId);
-
 		if (booking != null && booking.getUser().getUsername().equals(username)) {
 			booking.setBookingStatus("CANCELLED");
 			return bookingRepository.save(booking);
@@ -81,7 +82,6 @@ public class BookingService implements IBookingService {
 	public Booking getBooking(Long bookingId, String username) {
 
 		Booking booking = getBookingById(bookingId);
-
 		if (booking != null && booking.getUser().getUsername().equals(username)) {
 			return booking;
 		}

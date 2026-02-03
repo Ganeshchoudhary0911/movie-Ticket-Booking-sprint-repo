@@ -7,17 +7,17 @@ import com.cg.entity.User;
 
 public interface IBookingService {
 
-    Booking createBooking(User user, Show show, double amount);
+	public Booking createBooking(User user, Show show, double amount);
 
-    Booking confirmPayment(Long bookingId);
+	public Booking confirmPayment(Long bookingId);
 
-    Booking failPayment(Long bookingId);
+	public Booking failPayment(Long bookingId);
 
-    Booking cancelBooking(Long bookingId, String username);
+	public Booking cancelBooking(Long bookingId, String username);
 
-    Booking getBooking(Long bookingId, String username);
+	public Booking getBooking(Long bookingId, String username);
 
-    List<Booking> getUserBookings(User user);
+	public List<Booking> getUserBookings(User user);
 
-    Booking getBookingById(Long bookingId);
+	public Booking getBookingById(Long bookingId);
 }
