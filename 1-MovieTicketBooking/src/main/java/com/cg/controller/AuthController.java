@@ -1,45 +1,50 @@
 package com.cg.controller;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+
 import com.cg.entity.Role;
 import com.cg.entity.User;
+import com.cg.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
+@Controller
+public class AuthController {
 
+    @Autowired
+    private UserService userService;
 
-  public class AuthController {
-	@Autowired
-	  private PasswordEncoder encoder;
-	 
-	    // User login page
-	    @GetMapping("/login")
-	    public String loginPage() {
-	        return "login";  // loads login.html
-	    }
-	 
-	    // User signup page
-	    @GetMapping("/signup")
-	    public String signupPage(Model model) {
-	        model.addAttribute("user", new User());
-	        return "signup";  // loads signup.html
-	    }
-	 
-	    {
-	 
-	        // Assign default role USER
-	        user.setRole(Role.USER);
-	 
-	        // Encrypt password before saving
-	        user.setPassword(encoder.encode(user.getPassword()));
-	 
-	        // Enable user
-	        user.setEnabled(true);
-	 
-	        // Save user in DB
-	        userService.saveUser(user);
-	 
-	        // Redirect to login page after successful registration
-	        return "redirect:/login";
-	    }
-	}
+    @Autowired
+    private PasswordEncoder encoder; // injected from SecurityConfig
 
+    // Render login page
+    @GetMapping("/login")
+    public String loginPage() {
+        return "login";
+    }
+
+    // Render signup page
+    @GetMapping("/signup")
+    public String signupPage(Model model) {
+        model.addAttribute("user", new User());
+        return "signup";
+    }
+
+    // Handle signup form submission
+    @PostMapping("/signup")
+    public String handleSignup(@ModelAttribute User user) {
+        // default role USER
+        user.setRole(Role.USER);
+
+        // encode password
+        user.setPassword(encoder.encode(user.getPassword()));
+        user.setEnabled(true);
+
+        // save to DB
+        userService.saveUser(user);
+
+        // redirect to login
+        return "redirect:/login";
+    }
+}

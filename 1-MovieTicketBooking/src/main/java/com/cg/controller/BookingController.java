@@ -33,7 +33,7 @@ public class BookingController {
                                  Principal principal,
                                  Model model) {
 
-        User user = userService.findByUserName(principal.getName());
+        User user = userService.findByUsername(principal.getName());
         Show show = showService.getShowById(showId);
 
         if (user == null || show == null) {
