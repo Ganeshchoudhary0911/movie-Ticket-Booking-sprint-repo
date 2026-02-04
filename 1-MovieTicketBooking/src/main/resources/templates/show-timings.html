@@ -84,91 +84,86 @@
           rel="stylesheet">
 </head>
 
-<body class="bg-light">
+<style>
+body {
+	background-color: #f2f2f2;
+}
 
-================= HEADER =================
-<div class="bg-white py-4 border-bottom">
-    <div class="container">
+.movie-header {
+	background: #ffffff;
+	padding: 20px;
+	border-bottom: 1px solid #ddd;
+}
 
-        <h3 class="fw-bold mb-1" th:text="${movie.movieName}">Movie Name</h3>
+.movie-title {
+	font-size: 28px;
+	font-weight: 700;
+}
 
-        <div class="text-secondary small">
-            <span th:text="${movie.language}">Language</span> •
-            <span th:text="${movie.duration}">120</span> mins
-        </div>
+.movie-info {
+	color: #666;
+	font-size: 14px;
+}
 
-    </div>
-</div>
+/* Date selector */
+.date-box {
+	width: 90px;
+	text-align: center;
+	padding: 10px;
+	border: 1px solid #ddd;
+	border-radius: 8px;
+	margin-right: 10px;
+	cursor: pointer;
+	background: white;
+}
 
+.date-box.active {
+	background: #dc3545;
+	color: white;
+	border-color: #dc3545;
+}
 
-================= DATE SELECTOR =================
-<div class="container py-3">
+/* Theatre card */
+.theatre-card {
+	background: white;
+	padding: 20px;
+	border-radius: 10px;
+	margin-bottom: 20px;
+}
 
-    <div class="d-flex gap-3">
+.theatre-name {
+	font-size: 18px;
+	font-weight: 600;
+}
 
-        ACTIVE DATE
-        <div class="px-3 py-2 bg-danger text-white rounded text-center fw-semibold">
-            Tue<br><small>03 Feb</small>
-        </div>
+.cancel-text {
+	font-size: 13px;
+	color: #777;
+}
 
-        OTHER DATES
-        <div class="px-3 py-2 bg-white text-dark rounded text-center border">
-            Wed<br><small>04 Feb</small>
-        </div>
+.show-time {
+	border: 1px solid #28a745;
+	color: #28a745;
+	padding: 6px 16px;
+	border-radius: 6px;
+	text-decoration: none;
+	margin-right: 10px;
+	margin-top: 10px;
+	display: inline-block;
+	font-weight: 500;
+}
 
-        <div class="px-3 py-2 bg-white text-dark rounded text-center border">
-            Thu<br><small>05 Feb</small>
-        </div>
+.show-time:hover {
+	background: #28a745;
+	color: white;
+}
 
-        <div class="px-3 py-2 bg-white text-dark rounded text-center border">
-            Fri<br><small>06 Feb</small>
-        </div>
+.no-shows {
+	text-align: center;
+	color: #777;
+	padding: 50px;
+	font-size: 18px;
+}
+</style>
+</head>
 
-    </div>
-
-</div>
-
-
-================= THEATRES & SHOWS =================
-<div class="container">
-
-    No Shows
-    <div th:if="${#maps.isEmpty(groupedShows)}"
-         class="text-center text-secondary fs-5 py-5">
-        No shows available for this movie.
-    </div>
-
-    Shows Available
-    <div th:each="entry : ${groupedShows}" class="mb-4">
-
-        <div class="bg-white p-4 rounded shadow-sm">
-
-            <div class="fw-semibold fs-5"
-                 th:text="${entry.value[0].theatre.theatreName}">
-                Theatre Name
-            </div>
-
-            <div class="text-secondary small mb-3">
-                Non-cancellable
-            </div>
-
-            Show Times
-            <div class="d-flex flex-wrap gap-2">
-
-                <a th:each="show : ${entry.value}"
-                   th:href="@{/seats/{id}(id=${show.showId})}"
-                   th:text="${show.showTime}"
-                   class="btn btn-outline-success">
-                    18:30
-                </a>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-</body>
-</html> -->
