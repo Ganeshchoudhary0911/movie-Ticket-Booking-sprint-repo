@@ -1,9 +1,13 @@
 package com.cg.service;
-
-import com.cg.entity.User;
+import com.cg.config.*;
+import com.cg.entity.*;
 import com.cg.repository.UserRepository;
 import com.cg.service.UserService;
+
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,6 +15,7 @@ public class UserService implements IUserService {
 
     @Autowired
     UserRepository userRepository;
+    PasswordEncoder passwordEncoder;
 
     @Override
     public User saveUser(User user) { return userRepository.save(user); }
@@ -47,11 +52,29 @@ public class UserService implements IUserService {
 
         // 4) Default role if absent
         if (user.getRole() == null) {
-            user.setRole(User.Role.USER);
+            user.setRole(Role.USER);
         }
 
         // 5) Persist and return
         return userRepository.save(user);
     }
+    public User login(String username, String rawPassword) {
+        if (username == null || username.isBlank() ||
+            rawPassword == null || rawPassword.isBlank()) {
+            return null; // or throw IllegalArgumentException
+        }
+
+        Optional<User> opt = Optional.empty();
+        if (opt.isEmpty()) {
+            return null; // user not found
+        }
+
+        User u = opt.get();
+        // Compare raw password with the encoded password stored in DB
+        boolean ok = passwordEncoder.matches(rawPassword, u.getPassword());
+        return ok ? u : null;
+    }
+
+  
 
 }

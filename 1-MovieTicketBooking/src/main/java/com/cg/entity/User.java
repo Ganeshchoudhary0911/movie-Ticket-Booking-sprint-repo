@@ -32,6 +32,8 @@ public class User {
     // Optional: if you have Booking entity
     // @OneToMany(mappedBy = "user")
     // private List<Booking> bookings;    
+    
+    public User() {	}
 
     public User(String username, String password, Role role) {
 		super();
@@ -39,8 +41,6 @@ public class User {
 		this.password = password;
 		this.role = role;
 	}
-
-
 
 	// getters and setters
     public Long getUserId() { return userId; }
