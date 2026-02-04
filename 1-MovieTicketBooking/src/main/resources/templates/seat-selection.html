@@ -1,75 +1,315 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>Select Seats</title>
-
-<!-- Bootstrap CSS -->
-https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css
-
-<style>
-.seat-box {
-	width: 50px;
-	height: 50px;
-	margin: 6px;
-	display: inline-block;
-	border-radius: 6px;
-	color: white;
-	font-weight: bold;
-	text-align: center;
-	padding-top: 12px;
-	cursor: pointer;
-}
-
-.premium {
-	background-color: #ff9800;
-}
-
-.regular {
-	background-color: #2196f3;
-}
-
-.booked {
-	background-color: #9e9e9e;
-	cursor: not-allowed;
-}
-</style>
+    <title>Select Seats</title>
+ 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+ 
+    <style>
+        body {
+            background-color: #f5f5f5;
+        }
+ 
+        .screen {
+            background: #d3d3d3;
+            height: 35px;
+            width: 70%;
+            margin: 20px auto 40px;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: bold;
+            padding-top: 6px;
+        }
+ 
+        .row-label {
+            font-weight: bold;
+            margin-right: 10px;
+            width: 20px;
+            display: inline-block;
+        }
+ 
+        .seat-row {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+ 
+        .seat-box {
+            width: 42px;
+            height: 42px;
+            border-radius: 6px;
+            margin: 5px;
+            color: white;
+            font-size: 13px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+ 
+        .premium {
+            background-color: #f5a623;
+        }
+ 
+        .regular {
+            background-color: #2f80ed;
+        }
+ 
+        .booked {
+            background-color: #9e9e9e;
+            cursor: not-allowed;
+        }
+ 
+        .selected {
+            border: 3px solid black;
+        }
+ 
+        .aisle {
+            height: 25px;
+        }
+    </style>
 </head>
-
-<body class="bg-light">
-
-	<div class="container mt-5">
-
-		<h2 class="text-center mb-4">
-			Select Seats — <span th:text="${show.showDate}"></span> <span
-				th:text="${show.showTime}"></span>
-		</h2>
-
-		<div class="text-center">
-
-			<!-- SEAT GRID -->
-			<div th:each="seat : ${seats}">
-
-				<!-- AVAILABLE SEAT AS BUTTON -->
-				@{
-				<div th:if="${not seat.booked}"
-     th:class="'seat-box ' + (seat.seatType == 'Premium' ? 'premium' : 'regular')"
-     th:text="${seat.seatRow + seat.seatNumber}">
+ 
+<body>
+ 
+<div class="container mt-4">
+ 
+    <h3 class="text-center mb-3">
+        Select Seats –
+        <span th:text="${show.showDate}"></span>
+        <span th:text="${show.showTime}"></span>
+    </h3>
+ 
+    <!-- SCREEN -->
+    <div class="screen">SCREEN THIS WAY</div>
+ 
+    <!-- ================= PREMIUM ROWS ================= -->
+    <div th:each="row : ${#sets.toSet(seats.![seatRow])}">
+ 
+        <div class="seat-row">
+ 
+            <span class="row-label" th:text="${row}"></span>
+ 
+            <div th:each="seat : ${seats}"
+                 th:if="${seat.seatRow == row}">
+ 
+                <!-- AVAILABLE -->
+                <div th:if="${!seat.booked}"
+                     th:class="'seat-box ' + (seat.seatType == 'Premium' ? 'premium' : 'regular')"
+                     th:text="${seat.seatRow + seat.seatNumber}"
+                     onclick="selectSeat(this)">
+                </div>
+ 
+                <!-- BOOKED -->
+                <div th:if="${seat.booked}"
+                     class="seat-box booked"
+                     th:text="${seat.seatRow + seat.seatNumber}">
+                </div>
+ 
+            </div>
+ 
+        </div>
+ 
+        <!-- AISLE GAP AFTER C ROW -->
+        <div th:if="${row == 'C'}" class="aisle"></div>
+ 
+    </div>
+ 
+    <!-- LEGEND -->
+    <div class="text-center mt-4">
+        <span class="badge bg-warning text-dark me-2">Premium</span>
+        <span class="badge bg-primary me-2">Regular</span>
+        <span class="badge bg-secondary">Booked</span>
+    </div>
+ 
 </div>
-				</form>
-
-				<!-- BOOKED SEAT (GRY) -->
-				<div th:if="${seat.booked}" class="seat-box booked"
-					th:text="${seat.seatRow + seat.seatNumber}"></div>
-
-			</div>
-		</div>
-
-		<div class="text-center mt-4">
-			<span class="badge bg-warning text-dark">Premium</span> <span
-				class="badge bg-primary">Regular</span> <span
-				class="badge bg-secondary">Booked</span>
-		</div>
-	</div>
-
+ 
+<script>
+    function selectSeat(seat) {
+        seat.classList.toggle("selected");
+    }
+</script>
+ 
 </body>
 </html>
+
+ 
+    <style>
+        body { background:#f5f5f5; }
+ 
+        .screen {
+            background:#d3d3d3;
+            height:35px;
+            width:70%;
+            margin:20px auto 40px;
+            border-radius:6px;
+            text-align:center;
+            font-weight:bold;
+            padding-top:6px;
+        }
+ 
+        .seat-row {
+            display:flex;
+            justify-content:center;
+            margin-bottom:12px;
+        }
+ 
+        .row-label {
+            font-weight:bold;
+            width:25px;
+            margin-right:10px;
+        }
+ 
+        .seat-box {
+            width:42px;
+            height:42px;
+            border-radius:6px;
+            border:3px solid;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            cursor:pointer;
+            font-size:13px;
+            font-weight:bold;
+            margin:4px;
+        }
+ 
+        .premium { background:#f5a623; border-color:#f5a623; color:white; }
+        .regular { background:#2f80ed; border-color:#2f80ed; color:white; }
+        .booked  { background:#9e9e9e; cursor:not-allowed; }
+        .selected { border:3px solid black; }
+ 
+        /* ===== Modal ===== */
+        .modal-overlay {
+            position:fixed;
+            inset:0;
+            background:rgba(0,0,0,0.6);
+            display:flex;
+            justify-content:center;
+            align-items:flex-end;
+            z-index:9999;
+        }
+ 
+        .seat-modal {
+            background:white;
+            width:100%;
+            padding:20px;
+            border-radius:16px 16px 0 0;
+            text-align:center;
+        }
+ 
+        .seat-numbers button {
+            width:45px;
+            height:45px;
+            margin:6px;
+            border-radius:50%;
+            border:none;
+        }
+ 
+        .seat-numbers button.active {
+            background:#f84464;
+            color:white;
+        }
+ 
+        .select-btn {
+            width:100%;
+            margin-top:15px;
+            padding:14px;
+            background:#f84464;
+            color:white;
+            border:none;
+            font-size:18px;
+        }
+    </style>
+</head>
+ 
+<body>
+ 
+<!-- ===== SEAT COUNT MODAL ===== -->
+<div id="seatCountModal" class="modal-overlay">
+    <div class="seat-modal">
+        <h4>How many seats?</h4>
+ 
+        <div class="seat-numbers mt-3">
+            <button onclick="setLimit(1,this)">1</button>
+            <button onclick="setLimit(2,this)">2</button>
+            <button onclick="setLimit(3,this)">3</button>
+            <button onclick="setLimit(4,this)">4</button>
+            <button onclick="setLimit(5,this)">5</button>
+            <button onclick="setLimit(6,this)">6</button>
+        </div>
+ 
+        <button class="select-btn" onclick="openLayout()">Select Seats</button>
+    </div>
+</div>
+ 
+<!-- ===== SEAT LAYOUT ===== -->
+<div id="seatLayout" class="container mt-4" style="display:none;">
+ 
+    <div class="screen">SCREEN THIS WAY</div>
+ 
+    <div th:each="row : ${#sets.toSet(seats.!seatRow)}">
+        <div class="seat-row">
+            <span class="row-label" th:text="${row}"></span>
+ 
+            <div th:each="seat : ${seats}"
+                 th:if="${seat.seatRow == row}"
+                 class="seat-box"
+                 th:classappend="${seat.seatType == 'premium'} ? ' premium' : ' regular'"
+                 th:classappend="${seat.booked} ? ' booked' : ''"
+                 th:text="${seat.seatRow + seat.seatNumber}"
+                 th:onclick="${!seat.booked} ? 'selectSeat(this)' : ''">
+            </div>
+        </div>
+    </div>
+ 
+    <div class="text-center mt-4">
+        <span class="badge bg-warning me-2">Premium</span>
+        <span class="badge bg-primary me-2">Regular</span>
+        <span class="badge bg-secondary">Booked</span>
+    </div>
+ 
+</div>
+ 
+<script>
+    let limit = 0;
+    let selected = 0;
+ 
+    function setLimit(n, btn) {
+        limit = n;
+        document.querySelectorAll(".seat-numbers button")
+            .forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+    }
+ 
+    function openLayout() {
+        if (limit === 0) {
+            alert("Select number of seats");
+            return;
+        }
+        document.getElementById("seatCountModal").style.display = "none";
+        document.getElementById("seatLayout").style.display = "block";
+    }
+ 
+    function selectSeat(seat) {
+        if (seat.classList.contains("selected")) {
+            seat.classList.remove("selected");
+            selected--;
+        } else {
+            if (selected >= limit) {
+                alert("Only " + limit + " seats allowed");
+                return;
+            }
+            seat.classList.add("selected");
+            selected++;
+        }
+    }
+</script>
+ 
+</body>
+</html>
+ 
+
+ 

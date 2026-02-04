@@ -8,6 +8,7 @@ public class AdminPageController {
 
     @GetMapping("/admin/dashboard")
     public String adminDashboard() {
+    	System.out.println("GOOD");
         return "admin-dashboard"; // loads admin-dashboard.html
     }
 }
