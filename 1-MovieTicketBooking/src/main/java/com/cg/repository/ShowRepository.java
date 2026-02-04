@@ -13,4 +13,7 @@ public interface ShowRepository extends JpaRepository<Show, Long> {
     List<Show> findByMovie(Movie movie);
  
     List<Show> findByTheatre(Theatre theatre);
+    
+    List<Show> findByMovieMovieId(Long movieId);
+    
 }
