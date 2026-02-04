@@ -29,89 +29,38 @@ public class User {
 
     private boolean enabled = true;
 
-    @OneToMany(mappedBy = "user")
-    private List<Booking> bookings;
+    // Optional: if you have Booking entity
+    // @OneToMany(mappedBy = "user")
+    // private List<Booking> bookings;    
 
-	public User() {
+    public User(String username, String password, Role role) {
 		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	public User(Long userId, String username, String email, String password, Role role, String phoneNumber,
-			boolean enabled, List<Booking> bookings) {
-		super();
-		this.userId = userId;
 		this.username = username;
-		this.email = email;
 		this.password = password;
 		this.role = role;
-		this.phoneNumber = phoneNumber;
-		this.enabled = enabled;
-		this.bookings = bookings;
 	}
 
-	public Long getUserId() {
-		return userId;
-	}
 
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
 
-	public String getUsername() {
-		return username;
-	}
+	// getters and setters
+    public Long getUserId() { return userId; }
+    public void setUserId(Long userId) { this.userId = userId; }
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
 
-	public String getEmail() {
-		return email;
-	}
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 
-	public String getPassword() {
-		return password;
-	}
+    public Role getRole() { return role; }
+    public void setRole(Role role) { this.role = role; }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public String getPhoneNumber() { return phoneNumber; }
+    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
 
-	public Role getRole() {
-		return role;
-	}
-
-	public void setRole(Role role) {
-		this.role = role;
-	}
-
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
-
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
-
-	public boolean isEnabled() {
-		return enabled;
-	}
-
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
-
-	public List<Booking> getBookings() {
-		return bookings;
-	}
-
-	public void setBookings(List<Booking> bookings) {
-		this.bookings = bookings;
-	}
-    
+    public boolean isEnabled() { return enabled; }
+    public void setEnabled(boolean enabled) { this.enabled = enabled; }
 }

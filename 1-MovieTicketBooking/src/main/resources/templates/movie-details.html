@@ -66,16 +66,8 @@
                 <div class="mt-3">
                     <span th:text="${movie.duration}">120</span> mins
                 </div>
- 
-                <h4 class="mt-3">
-                    ⭐ <span th:text="${movie.rating}">9.0</span>/10
-                </h4>
-                <a th:href="@{/shows/{id}(id=${movie.movieId})}"
-   class="book-btn mt-4 d-inline-block text-decoration-none">
-    Book Tickets
-</a>
- 
- 
+                <p class="lead" th:text="${movie.description}">Movie description goes here...</p>
+                <a href="/theatres" class="btn book-btn btn-lg mt-3">Book Tickets</a>
             </div>
         </div>
     </div>

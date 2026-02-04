@@ -6,4 +6,5 @@ public interface IUserService {
     User saveUser(User user);
     User findByEmail(String email);
     User findByUsername(String username);
+    public User registerUser(User user);
 }
