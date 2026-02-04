@@ -1,34 +1,32 @@
 package com.cg.entity;
 
 import jakarta.persistence.*;
+
 import java.util.List;
 
 @Entity
-@Table(name = "users", indexes = {
-        @Index(name = "idx_users_email", columnList = "email", unique = true)
-})
+@Table(name = "users")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    @Column(nullable = false, length = 80)
+    @Column(unique = true, nullable = false, length = 64)
     private String username;
 
-    @Column(nullable = false, unique = true, length = 120)
+    @Column(unique = true, nullable = false, length = 128)
     private String email;
 
     @Column(nullable = false)
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 10)
+    @Column(length = 16, nullable = false)
     private Role role;   // ADMIN or USER
 
     private String phoneNumber;
 
-    @Column(nullable = false)
     private boolean enabled = true;
 
     // Optional: if you have Booking entity

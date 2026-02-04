@@ -21,6 +21,7 @@ public class Movie {
 	    private int duration;
 	    private String description;
 	    private double rating;
+	    private String posterUrl;
 	 
 	    @OneToMany(mappedBy = "movie")
 	    private List<Show> shows;
@@ -29,20 +30,6 @@ public class Movie {
 	    	
 	    }
 	    
-	    
-	    
-		public Movie(Long movieId, String movieName, String genre, String language, int duration, String description,
-				double rating, List<Show> shows) {
-			super();
-			this.movieId = movieId;
-			this.movieName = movieName;
-			this.genre = genre;
-			this.language = language;
-			this.duration = duration;
-			this.description = description;
-			this.rating = rating;
-			this.shows = shows;
-		}
 
 		public Long getMovieId() {
 			return movieId;
@@ -107,6 +94,35 @@ public class Movie {
 		public void setShows(List<Show> shows) {
 			this.shows = shows;
 		}
+
+
+
+		public String getPosterUrl() {
+			return posterUrl;
+		}
+
+
+
+		public void setPosterUrl(String posterUrl) {
+			this.posterUrl = posterUrl;
+		}
+
+
+
+		public Movie(Long movieId, String movieName, String genre, String language, int duration, String description,
+				double rating, String posterUrl, List<Show> shows) {
+			super();
+			this.movieId = movieId;
+			this.movieName = movieName;
+			this.genre = genre;
+			this.language = language;
+			this.duration = duration;
+			this.description = description;
+			this.rating = rating;
+			this.posterUrl = posterUrl;
+			this.shows = shows;
+		}
+		
 	    
 	    
 
