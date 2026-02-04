@@ -50,5 +50,10 @@ public class ShowService {
     public List<Show> getShowsByMovie(Long movieId) {
         return showRepository.findByMovieMovieId(movieId);
     }
+
+	public Object getAllShows() {
+		// TODO Auto-generated method stub
+		return showRepository.findAll();
+	}
 }
  

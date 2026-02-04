@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Dashboard</title>
+
+  <!-- Bootstrap 5 -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    crossorigin="anonymous"
+  />
+  <!-- Bootstrap Icons (optional) -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    rel="stylesheet"
+  />
+
+  <style>
+    body { background-color: #f6f7fb; }
+    .card h5 { margin-bottom: .25rem; }
+    .endpoint { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+  </style>
+</head>
+<body>
+
+<!-- Top Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-semibold" th:href="@{/}">BookMyShow (Admin)</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNav" aria-controls="topNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="topNav">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" th:href="@{/admin/dashboard}"><i class="bi bi-speedometer2 me-1"></i>Dashboard</a>
+        </li>
+      </ul>
+      <div class="d-flex">
+        <a class="btn btn-outline-light" th:href="@{/logout}"><i class="bi bi-box-arrow-right me-1"></i>Logout</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Main -->
+<main class="container py-4">
+  <div class="d-flex align-items-center mb-4">
+    <div>
+      <h2 class="mb-0">Admin Dashboard</h2>
+      <small class="text-muted">Welcome, Admin! Manage Movies, Theatres, and Shows.</small>
+    </div>
+  </div>
+
+  <div class="row g-4">
+
+    <!-- Movies -->
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body d-flex flex-column">
+          <div class="d-flex align-items-center mb-2">
+            <i class="bi bi-film fs-3 text-primary me-2"></i>
+            <h5 class="card-title mb-0">Movies</h5>
+          </div>
+          <p class="text-muted">Create, update, or delete movies.</p>
+
+          <div class="mt-auto">
+            <!-- You have admin-movie.html -->
+            <a class="btn btn-primary w-100 mb-2" th:href="@{/admin/movies}">
+              <i class="bi bi-list-ul me-1"></i> Manage Movies (admin-movie.html)
+            </a>
+
+            <!-- If you later add a separate form like admin-movie-form.html, point it here -->
+            <a class="btn btn-outline-primary w-100" th:href="@{/admin/movies/new}">
+              <i class="bi bi-plus-circle me-1"></i> Add / Edit inside Movies page
+            </a>
+          </div>
+
+          <hr class="my-3">
+          <small class="text-muted">
+            REST endpoint: <span class="endpoint">GET/POST/PUT/DELETE /api/admin/movies</span>
+          </small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Theatres -->
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body d-flex flex-column">
+          <div class="d-flex align-items-center mb-2">
+            <i class="bi bi-building fs-3 text-warning me-2"></i>
+            <h5 class="card-title mb-0">Theatres</h5>
+          </div>
+          <p class="text-muted">Create theatres, edit details, and view the full list.</p>
+
+          <div class="mt-auto">
+            <!-- You have admin-theatre.html -->
+            <a class="btn btn-warning text-dark w-100 mb-2" th:href="@{/admin/theatres}">
+              <i class="bi bi-list-ul me-1"></i> Manage Theatres (admin-theatre.html)
+            </a>
+
+            <!-- You have admin-theatre-form.html -->
+            <a class="btn btn-outline-warning w-100 mb-2" th:href="@{/admin/theatres/add}">
+              <i class="bi bi-plus-circle me-1"></i> Add Theatre (admin-theatre-form.html)
+            </a>
+
+            <!-- You have theatre-list.html 
+            <a class="btn btn-outline-secondary w-100" th:href="@{/admin/theatres/list}">
+              <i class="bi bi-card-list me-1"></i> Theatre List (theatre-list.html)
+            </a>-->
+          </div>
+
+          <hr class="my-3">
+          <small class="text-muted">
+            REST endpoint: <span class="endpoint">GET/POST/PUT/DELETE /api/admin/theatres</span>
+          </small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Shows -->
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body d-flex flex-column">
+          <div class="d-flex align-items-center mb-2">
+            <i class="bi bi-ticket-perforated fs-3 text-success me-2"></i>
+            <h5 class="card-title mb-0">Shows</h5>
+          </div>
+          <p class="text-muted">Schedule shows and manage timings.</p>
+
+          <div class="mt-auto">
+            <!-- You have admin-show.html -->
+            <a class="btn btn-success w-100 mb-2" th:href="@{/admin/shows}">
+              <i class="bi bi-list-ul me-1"></i> Manage Shows (admin-show.html)
+            </a>
+
+            <!-- You have admin-show-form.html -->
+            <a class="btn btn-outline-success w-100" th:href="@{/admin/shows/add}">
+              <i class="bi bi-plus-circle me-1"></i> Add Show (admin-show-form.html)
+            </a>
+          </div>
+
+          <hr class="my-3">
+          <small class="text-muted">
+            REST endpoint: <span class="endpoint">GET/POST/PUT/DELETE /api/admin/shows</span>
+          </small>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Quick Links / Other Pages You Already Have -->
+  <section class="mt-5">
+    <h5 class="mb-3">Quick Links</h5>
+    <div class="list-group">
+      <a class="list-group-item list-group-item-action" th:href="@{/}">
+        <i class="bi bi-house-door me-2"></i> Home (home.html)
+      </a>
+      <a class="list-group-item list-group-item-action" th:href="@{/history}">
+        <i class="bi bi-clock-history me-2"></i> Booking History (history.html)
+      </a>
+      <a class="list-group-item list-group-item-action" th:href="@{/login}">
+        <i class="bi bi-box-arrow-in-right me-2"></i> Login (login.html)
+      </a>
+    </div>
+  </section>
+</main>
+
+<!-- Footer -->
+<footer class="text-center text-muted py-4">
+  <small>&copy; <span th:text="${#dates.format(#dates.createNow(), 'yyyy')}"></span> Admin Portal</small>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+</body>
+</html>

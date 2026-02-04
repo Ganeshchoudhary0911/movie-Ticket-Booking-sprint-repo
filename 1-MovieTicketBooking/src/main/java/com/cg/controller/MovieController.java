@@ -1,6 +1,9 @@
 package com.cg.controller;
 
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,4 +47,20 @@ public class MovieController {
         movieService.deleteMovie(id);
         return "redirect:/admin/movies";
     }
+    
+    @GetMapping("/admin/movies/new")
+    public String movieCreateForm(Model model) {
+        model.addAttribute("movie", new Movie());           // must NOT be null
+        model.addAttribute("ratings", List.of("U", "UA", "A")); // used by select
+        return "admin/admin-movie-form";
+    }
+
+    @GetMapping("/admin/movies/{id}/edit")
+    public String movieEditForm(@PathVariable Long id, Model model) {
+        Movie movie = movieService.getMovieById(id); // MUST be Movie, not Optional<Movie>
+        model.addAttribute("movie", movie);
+        model.addAttribute("ratings", List.of("U", "UA", "A"));
+        return "admin/admin-movie-form";
+    }    
+    
 }

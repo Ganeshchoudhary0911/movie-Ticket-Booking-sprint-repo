@@ -1,6 +1,7 @@
 package com.cg.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,9 @@ public class MovieService implements IMovieService {
 	    	moviereposistory.save(movie); }
 	    public void deleteMovie(Long id) { 
 	    	moviereposistory.deleteById(id); }
+		public Optional<Movie> findById(Long id) {
+			return moviereposistory.findById(id);
+		}
 	
 
 }
