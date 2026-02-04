@@ -1,6 +1,8 @@
 package com.cg.service;
 
 import com.cg.entity.Show;
+
+import java.time.LocalDate;
 import java.util.List;
 	 
 public interface IShowService {
@@ -14,5 +16,7 @@ public interface IShowService {
 	    Show getShowById(Long id);
 	 
 	    List<Show> getAllShows();
-	}
+	    
+	    List<Show> getShowsByMovieAndDate(long movieId, LocalDate date);
+}
 

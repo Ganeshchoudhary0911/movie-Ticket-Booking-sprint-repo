@@ -1,5 +1,6 @@
 package com.cg.service;
  
+import java.time.LocalDate;
 import java.util.List;
  
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,5 +51,13 @@ public class ShowService {
     public List<Show> getShowsByMovie(Long movieId) {
         return showRepository.findByMovieMovieId(movieId);
     }
+    public List<Show> getAllShows() {
+        return showRepository.findAll();
+    }
+    
+    public List<Show> getShowsByMovieAndDate(long movieId, LocalDate date) {
+        return showRepository.findByMovieMovieIdAndShowDate(movieId, date);
+    }
+     
 }
  
