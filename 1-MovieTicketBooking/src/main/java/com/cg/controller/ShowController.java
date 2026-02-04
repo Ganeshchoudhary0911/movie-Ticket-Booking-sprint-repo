@@ -8,11 +8,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import com.cg.entity.Movie;
-import com.cg.entity.Show;
-import com.cg.service.MovieService;
-import com.cg.service.ShowService;
-import com.cg.service.TheatreService;
+import com.cg.entity.*;
+import com.cg.entity.Theatre;
+import com.cg.service.*;
 
 @Controller
 public class ShowController {
@@ -28,12 +26,12 @@ public class ShowController {
 
 	// ================= USER =================
 
-	@GetMapping("/shows/{movieId}")
-	public String viewShowTimings(@PathVariable Long movieId, Model model) {
+	@GetMapping("/shows/{theatreId}")
+	public String viewShowTimings(@PathVariable Long theatreId, Model model) {
 
-		Movie movie = movieService.getMovieById(movieId);
+		Theatre theatre = theatreService.getTheatreById(theatreId);
 
-		model.addAttribute("movie", movie);
+		model.addAttribute("theatre", theatre);
 		model.addAttribute("shows", showService.getAllShows());
 
 		return "show-timings";

@@ -33,11 +33,18 @@ public class User {
 
     // Optional: if you have Booking entity
     // @OneToMany(mappedBy = "user")
-    // private List<Booking> bookings;
+    // private List<Booking> bookings;    
 
-    public User() {}
+    public User(String username, String password, Role role) {
+		super();
+		this.username = username;
+		this.password = password;
+		this.role = role;
+	}
 
-    // getters and setters
+
+
+	// getters and setters
     public Long getUserId() { return userId; }
     public void setUserId(Long userId) { this.userId = userId; }
 
