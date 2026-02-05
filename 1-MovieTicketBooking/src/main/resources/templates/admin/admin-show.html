@@ -41,7 +41,6 @@
         <th>Theatre</th>
         <th>Date</th>
         <th>Time</th>
-        <th>Price</th>
         <th>Actions</th>
       </tr>
       </thead>
@@ -52,7 +51,6 @@
         <td th:text="${s.theatre != null ? s.theatre.theatreName : 'N/A'}">Theatre</td>
         <td th:text="${s.showDate}">2026-02-01</td>
         <td th:text="${s.showTime}">18:00</td>
-        <td th:text="${'₹' + s.price}">₹250</td>
         <td class="text-nowrap">
           <a class="btn btn-sm btn-outline-primary" th:href="@{|/admin/shows/edit/${s.showId}|}">
             <i class="bi bi-pencil-square"></i>

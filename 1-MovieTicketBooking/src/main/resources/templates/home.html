@@ -1,23 +1,17 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>BookMyShow | Recommended Movies</title>
+    <title>TicketNest | Recommended Movies</title>
     <!-- Bootstrap 5 CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body class="bg-light">
 
-<!-- NAVBAR -->
-<nav class="navbar navbar-dark navbar-expand-lg py-2" style="background-color: #333545;">
-    <div class="container">
-        <a class="navbar-brand fw-bold fs-4" href="/">bookmyshow</a>
 
-        <form class="d-flex ms-auto w-50" method="get" action="/">
-            <input class="form-control" type="search" name="search" placeholder="Search for Movies, Events, Plays, Sports and Activities">
-        </form>
-    </div>
-</nav>
+<!-- Header fragment -->
+<div th:replace="fragments/header :: header"></div>
+
 
 <!-- MOVIES SECTION -->
 <div class="container mt-5">
@@ -60,7 +54,11 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net"></script>
+<!-- Footer fragment -->
+<div th:replace="fragments/footer :: footer"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
 </body>
 </html>
 
