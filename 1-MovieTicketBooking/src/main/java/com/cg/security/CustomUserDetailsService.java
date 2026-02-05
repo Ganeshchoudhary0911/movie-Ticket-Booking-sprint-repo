@@ -2,35 +2,34 @@ package com.cg.security;
 
 import com.cg.entity.User;
 import com.cg.repository.UserRepository;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
-
-import java.util.Collections;
-import java.util.Optional;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-	@Autowired
-    UserRepository userRepo;
+    private final UserRepository userRepo;
 
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public CustomUserDetailsService(UserRepository userRepo) {
+        this.userRepo = userRepo;
+    }
 
-	    User user = userRepo.findByUsername(username);
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-	    if (user == null) {
-	        throw new UsernameNotFoundException("User not found: " + username);
-	    }
+        // Try by username, then email — supports both login styles
+        User user = userRepo.findByUsername(username)
+                .or(() -> userRepo.findByEmail(username))
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
-	    return org.springframework.security.core.userdetails.User
-	            .withUsername(user.getUsername())
-	            .password(user.getPassword())
-	            .authorities("ROLE_" + user.getRole().name())
-	            .build();
-	}
+        // Build your Spring Security UserDetails here from your entity
+        return org.springframework.security.core.userdetails.User
+                .withUsername(user.getUsername()) // or use email as username if that’s your primary
+                .password(user.getPassword())
+                .authorities(user.getRole().name()) // adjust to your authorities/roles mapping
+                .accountLocked(!user.isEnabled())   // adjust to your flags
+                .build();
+    }
 }

@@ -3,6 +3,9 @@ package com.cg.service;
 import com.cg.entity.User;
 import com.cg.repository.UserRepository;
 import com.cg.service.UserService;
+
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +19,8 @@ public class UserService implements IUserService {
     public User saveUser(User user) { return userRepository.save(user); }
 
     @Override
-    public User findByEmail(String email) { return userRepository.findByEmail(email); }
+    public Optional<User> findByEmail(String email) { return userRepository.findByEmail(email); }
 
     @Override
-    public User findByUsername(String username) { return userRepository.findByUsername(username); }
+    public Optional<User> findByUsername(String username) { return userRepository.findByUsername(username); }
 }
