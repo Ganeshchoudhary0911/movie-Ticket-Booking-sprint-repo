@@ -88,4 +88,9 @@ public class BookingService implements IBookingService {
 		return null;
 
 	}
+
+	public Booking createBooking(User user, Show show, int seats, double amount) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

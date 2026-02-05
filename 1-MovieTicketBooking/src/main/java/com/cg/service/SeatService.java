@@ -27,9 +27,15 @@ public class SeatService implements ISeatService {
     }
  
     @Override
+    public List<Seat> getSeatsByIds(List<Long> seatIds) {
+        return seatRepository.findAllById(seatIds);
+    }
+ 
+    @Override
     public Seat markSeatAsBooked(Long seatId) {
         Seat seat = getSeatById(seatId);
         seat.setBooked(true);
         return seatRepository.save(seat);
     }
 }
+ 
