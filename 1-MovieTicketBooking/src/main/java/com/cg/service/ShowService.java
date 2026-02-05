@@ -55,7 +55,10 @@ public class ShowService {
         return showRepository.findAll();
     }
     
-    public List<Show> getShowsByMovieAndDate(long movieId, LocalDate date) {
+//    public List<Show> getShowsByMovieAndDate(long movieId, LocalDate date) {
+//        return showRepository.findByMovieMovieIdAndShowDate(movieId, date);
+//    }
+    public List<Show> getShowsByMovieAndDate(Long movieId, LocalDate date) {
         return showRepository.findByMovieMovieIdAndShowDate(movieId, date);
     }
      

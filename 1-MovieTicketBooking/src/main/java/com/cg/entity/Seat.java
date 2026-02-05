@@ -16,7 +16,7 @@ public class Seat {
 	private String seatNumber;
 	private String seatRow;
 	private String seatType;  // Regular/Premium
-	private double seatPrice;
+	private int seatPrice;
 	private boolean isBooked;
 
 	@ManyToOne
@@ -55,11 +55,11 @@ public class Seat {
 		this.seatType = seatType;
 	}
 
-	public double getSeatPrice() {
+	public int getSeatPrice() {
 		return seatPrice;
 	}
 
-	public void setSeatPrice(double seatPrice) {
+	public void setSeatPrice(int seatPrice) {
 		this.seatPrice = seatPrice;
 	}
 
@@ -79,7 +79,7 @@ public class Seat {
 		this.show = show;
 	}
 
-	public Seat(Long seatId, String seatNumber, String seatRow, String seatType, double seatPrice, boolean isBooked,
+	public Seat(Long seatId, String seatNumber, String seatRow, String seatType, int seatPrice, boolean isBooked,
 			Show show) {
 		super();
 		this.seatId = seatId;

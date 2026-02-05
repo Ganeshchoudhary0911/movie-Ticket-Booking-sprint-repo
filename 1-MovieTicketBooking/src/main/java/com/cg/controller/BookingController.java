@@ -28,20 +28,26 @@ public class BookingController {
 
 	// Create booking → goes to /payment page
 	@PostMapping("/confirm/{showId}")
-	public String confirmBooking(@PathVariable Long showId, @RequestParam double amount, Principal principal,
-			Model model) {
-
-		User user = userService.findByUsername(principal.getName());
-		Show show = showService.getShowById(showId);
-
-		if (user == null || show == null) {
-			return "error";
-		}
-
-		Booking booking = bookingService.createBooking(user, show, amount);
-		model.addAttribute("booking", booking);
-		return "payment"; // show payment page
+	public String confirmBooking(
+	        @PathVariable Long showId,
+	        @RequestParam int seats,
+	        @RequestParam double amount,
+	        Principal principal,
+	        Model model) {
+	 
+	    User user = userService.findByUsername(principal.getName());
+	    Show show = showService.getShowById(showId);
+	 
+	    Booking booking = bookingService.createBooking(user, show, seats, amount);
+	 
+	    // 🔥 THIS IS THE KEY
+	    model.addAttribute("booking", booking);
+	    model.addAttribute("seatCount", seats);
+	    model.addAttribute("totalAmount", amount);
+	 
+	    return "payment";
 	}
+	 
 
 	// Booking payment success
 	@GetMapping("/success/{bookingId}")
