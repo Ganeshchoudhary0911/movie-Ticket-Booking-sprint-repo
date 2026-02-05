@@ -26,8 +26,11 @@ public class Movie {
 	    @OneToMany(mappedBy = "movie")
 	    private List<Show> shows;
 	    
-	    public Movie() {
-	    	
+	    public Movie() {}
+	    
+	    public Movie(String movieName, String genre) { // Constructure for Testcases
+	    	this.movieName = movieName;
+	    	this.genre = genre;
 	    }
 	    
 

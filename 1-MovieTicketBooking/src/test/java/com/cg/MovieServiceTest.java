@@ -1,53 +1,60 @@
-package com.cg; 
+package com.cg;
+
 import static org.junit.jupiter.api.Assertions.*;
+import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import com.cg.entity.Movie;
 import com.cg.service.MovieService;
-
+@SpringBootTest
 public class MovieServiceTest {
+	@Autowired
+	private MovieService movieService;
 
-    static MovieService movieService;
+	@BeforeAll
+	public static void init() {
+		System.out.println("Movie Test Cases");
+	}
 
-    @BeforeAll
-    public static void init() {
-        movieService = new MovieService();
-    }
+	@Test
+	public void testAddMovie() {
+		Movie movie = new Movie("Inception", "Sci-Fi");
+		Movie saved = movieService.addMovie(movie);
 
-    @Test
-    public void testAddMovie() {
-        Movie m = new Movie("Inception", "Sci-Fi");
-        Movie saved = movieService.addMovie(m);
+		assertEquals("Inception", saved.getMovieName());
+	}
 
-        assertEquals("Inception", saved.getTitle());
-    }
+	@Test
+	public void testUpdateMovie() {
+		Movie movie = new Movie("Avatar", "Sci-Fi");
+		movieService.addMovie(movie);
 
-    @Test
-    public void testUpdateMovie() {
-        Movie m = new Movie("Avatar", "Sci-Fi");
-        movieService.addMovie(m);
+		movie.setGenre("Adventure");
+		Movie updated = movieService.saveOrUpdateMovie(movie);
 
-        m.setGenre("Adventure");
-        Movie updated = movieService.updateMovie(m);
+		assertEquals("Adventure", updated.getGenre());
+	}
 
-        assertEquals("Adventure", updated.getGenre());
-    }
+	@Test
+	public void testDeleteMovie() {
+		Movie movie = new Movie("Titanic", "Romance");
+		// Save and fetch back to get a generated id
+		Movie saved = movieService.saveOrUpdateMovie(movie);
 
-    @Test
-    public void testDeleteMovie() {
-        Movie m = new Movie("Titanic", "Romance");
-        movieService.addMovie(m);
+		movieService.deleteMovie(saved.getMovieId());
 
-        boolean result = movieService.deleteMovie(m.getId());
-        assertTrue(result);
-    }
+		Movie after = movieService.getMovieById(saved.getMovieId());
+		assertNull(after); // confirms deletion
+	}
 
-    @Test
-    public void testSearchMovie() {
-        movieService.addMovie(new Movie("RRR", "Action"));
+	@Test
+	public void testSearchMovie() {
+		movieService.addMovie(new Movie("RRR", "Action"));
 
-        Movie movie = movieService.searchMovie("RRR");
-        assertNotNull(movie);
-    }
+		List<Movie> movie = movieService.searchMovies("RRR");
+		assertNotNull(movie);
+	}
 }

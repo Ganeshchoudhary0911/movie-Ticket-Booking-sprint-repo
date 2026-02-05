@@ -75,13 +75,13 @@
             <!-- Actions -->
             <div class="d-flex gap-3">
                 <!-- Simulate success -->
-                <a th:href="@{|/bookings/success/${booking.bookingId}|}" class="btn btn-primary">
+                <a th:href="@{|/bookings/success/{bookingId}|}" class="btn btn-primary">
                     Pay Now
                 </a>
 
                 <!-- Simulate failure -->
-                <a th:href="@{|/bookings/fail/${booking.bookingId}|}" class="btn btn-outline-danger">
-                    Simulate Failure
+                <a th:href="@{/bookings/fail/{bookingId}}" class="btn btn-outline-danger">
+                    Cancel 
                 </a>
 
                 <!-- Optional: Cancel (POST) -->

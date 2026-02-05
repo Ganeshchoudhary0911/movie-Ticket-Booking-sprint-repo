@@ -35,7 +35,7 @@ public class User {
     
     public User() {	}
 
-    public User(String username, String password, Role role) {
+    public User(String username, String password, Role role) {   // Constructure for test cases
 		super();
 		this.username = username;
 		this.password = password;

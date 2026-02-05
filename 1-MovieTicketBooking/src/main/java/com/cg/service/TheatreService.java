@@ -58,4 +58,9 @@ public class TheatreService implements ITheatreService {
     public List<Theatre> getTheatresByCity(String city) {
         return theatreRepository.findByCityIgnoreCase(city);
     }
+
+	@Override
+	public Theatre save(Theatre theatre) {
+		return theatreRepository.save(theatre);
+	}
 }

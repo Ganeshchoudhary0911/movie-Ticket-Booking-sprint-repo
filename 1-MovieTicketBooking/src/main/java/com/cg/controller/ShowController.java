@@ -28,53 +28,50 @@ import com.cg.service.ShowService;
 
 public class ShowController {
 
-    @Autowired
+	@Autowired
 
-    private ShowService showService;
+	private ShowService showService;
 
-    @Autowired
+	@Autowired
 
-    private MovieService movieService;
+	private MovieService movieService;
 
-    // ================= USER =================
+	// ================= USER =================
 
-    // Show timings page
+	// Show timings page
 
-    @GetMapping("/shows/{movieId}")
+	@GetMapping("/shows/{movieId}")
 
-    public String showTimings(@PathVariable Long movieId, Model model) {
+	public String showTimings(@PathVariable Long movieId, Model model) {
 
-        // Get movie
+		// Get movie
 
-        Movie movie = movieService.getMovieById(movieId);
+		Movie movie = movieService.getMovieById(movieId);
 
-        // IMPORTANT: Get shows only for this movie
+		// IMPORTANT: Get shows only for this movie
 
-        List<Show> shows = showService.getShowsByMovie(movieId);
+		List<Show> shows = showService.getShowsByMovie(movieId);
 
-        // Group by theatre ID (NOT theatre object)
+		// Group by theatre ID (NOT theatre object)
 
-        Map<Long, List<Show>> groupedShows =
+		Map<Long, List<Show>> groupedShows =
 
-                shows.stream().collect(Collectors.groupingBy(
+				shows.stream().collect(Collectors.groupingBy(
 
-                        show -> show.getTheatre().getTheatreId()
+						show -> show.getTheatre().getTheatreId()
 
-                ));
+				));
 
-        model.addAttribute("movie", movie);
+		model.addAttribute("movie", movie);
 
-        model.addAttribute("groupedShows", groupedShows);
+		model.addAttribute("groupedShows", groupedShows);
 
-        return "show-timings";
+		return "show-timings";
 
-    }
+	}
 
 }
 
- 
- 
- 
 //package com.cg.controller;
 
 //
@@ -268,5 +265,3 @@ public class ShowController {
 //	}
 
 //}
-
- 

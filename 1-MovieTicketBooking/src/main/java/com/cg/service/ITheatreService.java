@@ -8,6 +8,8 @@ public interface ITheatreService {
     Theatre addTheatre(Theatre theatre);
 
     Theatre updateTheatre(Long theatreId, Theatre theatre);
+    
+    Theatre save(Theatre theatre);
 
     void deleteTheatre(Long theatreId);
 

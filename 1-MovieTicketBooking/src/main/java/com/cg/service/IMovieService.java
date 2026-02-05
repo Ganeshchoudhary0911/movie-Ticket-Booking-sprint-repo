@@ -9,7 +9,7 @@ public interface IMovieService {
 	    public List<Movie> getAllMovies(); 
 	    public Movie getMovieById(Long id); 
 	    public List<Movie> searchMovies(String name); 
-	    public void saveOrUpdateMovie(Movie movie); 
+	    public Movie saveOrUpdateMovie(Movie movie); 
 	    public void deleteMovie(Long id); 
 
 }

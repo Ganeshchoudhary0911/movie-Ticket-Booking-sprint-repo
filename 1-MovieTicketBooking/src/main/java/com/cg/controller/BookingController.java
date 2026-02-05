@@ -27,7 +27,7 @@ public class BookingController {
 	}
 
 	// Create booking → goes to /payment page
-	@PostMapping("/confirm/{showId}")
+	@GetMapping("/confirm/{showId}")
 	public String confirmBooking(@PathVariable Long showId, @RequestParam double amount, Principal principal,
 			Model model) {
 
@@ -40,7 +40,7 @@ public class BookingController {
 
 		Booking booking = bookingService.createBooking(user, show, amount);
 		model.addAttribute("booking", booking);
-		return "payment"; // show payment page
+		return "payment.html"; // show payment page
 	}
 
 	// Booking payment success

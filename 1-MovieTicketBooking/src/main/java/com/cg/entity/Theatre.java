@@ -37,6 +37,12 @@ public class Theatre {
 		this.shows = shows;
 	}
 
+	public Theatre(String theatreName, String location) {  // Constructe for TestCases
+		super();
+		this.theatreName = theatreName;
+		this.location = location;
+	}
+
 	public Long getTheatreId() {
 		return theatreId;
 	}

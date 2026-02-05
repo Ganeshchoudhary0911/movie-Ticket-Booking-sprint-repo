@@ -3,18 +3,20 @@ package com.cg;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import com.cg.entity.Role;
 import com.cg.entity.User;
 import com.cg.service.UserService;
-
+@SpringBootTest
 public class UserServiceTest {
-
-    static UserService userService;
+	@Autowired
+    private UserService userService;
 
     @BeforeAll
     public static void init() {
-        userService = new UserService();
+        System.out.println("User Test Cases");
     }
 
     @Test
@@ -29,17 +31,22 @@ public class UserServiceTest {
     @Test
     public void testAdminRoleAssignment() {
         User admin = new User("admin", "admin@123", Role.ADMIN);
-        assertEquals("ADMIN", admin.getRole());
+        assertEquals("ADMIN", admin.getRole().name());
     }
+
 
     @Test
-    public void testValidLogin() {
-        User user = new User("kiran", "1234", Role.USER);
-        userService.registerUser(user);
+       public void testValidLogin() {
+           User user = new User("kiran", "1234", Role.USER);
+           userService.registerUser(user);
 
-        User loggedIn = userService.login("kiran", "1234");
-        assertNotNull(loggedIn);
-    }
+           User loggedIn = userService.login("kiran", "1234");
+           assertNotNull(loggedIn);
+           // Optional stronger checks:
+           assertEquals("kiran", loggedIn.getUsername());
+           assertEquals(Role.USER, loggedIn.getRole());
+       }
+
 
     @Test
     public void testInvalidLogin() {
