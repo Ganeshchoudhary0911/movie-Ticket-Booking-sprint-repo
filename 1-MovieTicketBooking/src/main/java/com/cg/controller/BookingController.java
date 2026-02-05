@@ -1,12 +1,16 @@
 package com.cg.controller;
 
 import java.security.Principal;
+import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.cg.entity.*;
 import com.cg.service.*;
@@ -28,20 +32,36 @@ public class BookingController {
 
 	// Create booking → goes to /payment page
 	@PostMapping("/confirm/{showId}")
-	public String confirmBooking(@PathVariable Long showId, @RequestParam double amount, Principal principal,
-			Model model) {
+	public String confirmBooking(@PathVariable Long showId,
+	                             @RequestParam double amount,
+	                             Principal principal,
+	                             RedirectAttributes ra) {
 
-		User user = userService.findByUserName(principal.getName());
-		Show show = showService.getShowById(showId);
+	    // 1) Resolve current user by username or email (no exceptions)
+	    Optional<User> optUser = userService.findByUsername(principal.getName());
+	    if (optUser.isEmpty()) {
+	        optUser = userService.findByEmail(principal.getName());
+	    }
+	    if (optUser.isEmpty()) {
+	        return "redirect:/login?error=unauthorized";
+	    }
+	    User user = optUser.get();
 
-		if (user == null || show == null) {
-			return "error";
-		}
+	    // 2) Load the Show
+	    Show show = showService.getShowById(showId);
+	    if (show == null) {
+	        ra.addFlashAttribute("error", "Show not found");
+	        return "redirect:/";
+	    }
 
-		Booking booking = bookingService.createBooking(user, show, amount);
-		model.addAttribute("booking", booking);
-		return "payment"; // show payment page
+	    // 3) Create booking
+	    Booking booking = bookingService.createBooking(user, show, amount);
+
+	    // 4) Redirect to payment page (or success)
+	    ra.addFlashAttribute("booking", booking);
+	    return "redirect:/payment?bookingId=" + booking.getBookingId();
 	}
+	
 
 	// Booking payment success
 	@GetMapping("/success/{bookingId}")
@@ -81,16 +101,49 @@ public class BookingController {
 
 		model.addAttribute("booking", booking);
 		// Redirect to history or a cancel confirmation page
-		return "redirect:/history";
+		return "redirect:/bookings-history";
 	}
 
-	// Booking history
-	@GetMapping("/history")
-	public String bookingHistory(Model model, Principal principal) {
-
-		User user = userService.findByUsername(principal.getName());
-		List<Booking> bookings = bookingService.getUserBookings(user);
-		model.addAttribute("bookings", bookings);
-		return "history";
+	private static boolean equalsIgnoreCase(String a, String b) {
+	    return a != null && a.equalsIgnoreCase(b);
 	}
+	
+	@GetMapping("/bookings/current")
+	public String currentBookings(Model model, Principal principal) {
+	    Optional<User> optUser = userService.findByUsername(principal.getName());
+	    if (optUser.isEmpty()) {
+	        optUser = userService.findByEmail(principal.getName());
+	    }
+	    if (optUser.isEmpty()) {
+	        return "redirect:/login?error=unauthorized";
+	    }
+	    User user = optUser.get();
+
+	    List<Booking> bookings = bookingService.getUserBookings(user);
+
+	    // "current" = CONFIRMED or PAID (status-based)
+	    List<Booking> current = bookings.stream()
+	        .filter(b -> equalsIgnoreCase(b.getBookingStatus(), "CONFIRMED")
+	                  || equalsIgnoreCase(b.getPaymentStatus(), "PAID"))
+	        .sorted(Comparator.comparing(Booking::getBookingDate,
+	                 Comparator.nullsLast(LocalDate::compareTo)).reversed())
+	        .toList();
+
+	    model.addAttribute("bookings", current);
+	    return "bookings-current";
+	}
+
+	@GetMapping("/profile/edit")
+	public String editProfile(Model model, Principal principal) {
+	    Optional<User> optUser = userService.findByUsername(principal.getName());
+	    if (optUser.isEmpty()) {
+	        optUser = userService.findByEmail(principal.getName());
+	    }
+	    if (optUser.isEmpty()) {
+	        return "redirect:/login?error=unauthorized";
+	    }
+	    model.addAttribute("user", optUser.get());
+	    return "profile-edit";
+	}
+
 }

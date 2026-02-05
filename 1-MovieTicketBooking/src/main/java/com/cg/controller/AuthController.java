@@ -75,4 +75,5 @@ public class AuthController {
 
         return "redirect:/login?signup=true";
     }
+    
 }
