@@ -1,116 +1,209 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>BookMyShow | Movie Tickets</title>
- 
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-          rel="stylesheet">
- 
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
- 
-        /* ================= NAVBAR ================= */
-        .navbar {
-            background-color: #333545;
-        }
- 
-        .navbar-brand {
-            color: #f84464 !important;
-            font-weight: bold;
-            font-size: 22px;
-        }
- 
-        /* ================= MOVIE CARD ================= */
-        .movie-card {
-            border-radius: 10px;
-            overflow: hidden;
-            transition: transform 0.3s ease;
-            cursor: pointer;
-            background: #fff;
-        }
- 
-        .movie-card:hover {
-            transform: scale(1.03);
-        }
- 
-        /* ⭐ FINAL POSTER FIX (NO CROP, SAME SIZE) */
-        .movie-poster {
-            width: 100%;
-            height: 260px;            /* SAME HEIGHT FOR ALL */
-            object-fit: contain;      /* SHOW FULL IMAGE */
-            background-color: #000;   /* BLACK BARS (PRO LOOK) */
-            border-radius: 6px;
-        }
- 
-        .rating-badge {
-            background-color: #333;
-            color: #fff;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 13px;
-        }
-    </style>
+    <title>BookMyShow | Recommended Movies</title>
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
- 
-<body>
- 
-<!-- ================= NAVBAR ================= -->
-<nav class="navbar navbar-expand-lg sticky-top p-3">
+
+<body class="bg-light">
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-dark navbar-expand-lg py-2" style="background-color: #333545;">
     <div class="container">
-        <a class="navbar-brand" href="/">BookMyShow</a>
- 
-        <form class="d-flex ms-auto" method="get" action="/">
-            <input class="form-control me-2"
-                   type="search"
-                   name="search"
-                   placeholder="Search for Movies, Events">
+        <a class="navbar-brand fw-bold fs-4" href="/">bookmyshow</a>
+
+        <form class="d-flex ms-auto w-50" method="get" action="/">
+            <input class="form-control" type="search" name="search" placeholder="Search for Movies, Events, Plays, Sports and Activities">
         </form>
     </div>
 </nav>
- 
-<!-- ================= MOVIES ================= -->
+
+<!-- MOVIES SECTION -->
 <div class="container mt-5">
     <h3 class="fw-bold mb-4">Recommended Movies</h3>
- 
+
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
- 
-        <!-- MOVIE LOOP -->
+
+        <!-- Movie Card Loop -->
         <div class="col" th:each="movie : ${movies}">
-            <div class="card movie-card shadow-sm border-0">
- 
-                <!-- IMAGE -->
+            <div class="card h-100 border-0 shadow-sm transition-all" 
+                 style="transition: transform 0.2s ease, box-shadow 0.2s ease; cursor: pointer;"
+                 onmouseover="this.style.transform='translateY(-6px)'; this.className='card h-100 border-0 shadow-lg';"
+                 onmouseout="this.style.transform='translateY(0px)'; this.className='card h-100 border-0 shadow-sm';">
+
+                <!-- Poster -->
                 <a th:href="@{/movie/{id}(id=${movie.movieId})}">
+                    <img th:src="${movie.posterUrl}"
+                         alt="Poster"
+                         class="card-img-top rounded-top"
+                         style="height: 360px; object-fit: cover; background-color: #000;">
+                </a>
+
+                <!-- Details -->
+                <div class="card-body px-2">
+                    <h6 class="fw-bold mb-1 text-truncate" th:text="${movie.movieName}">Movie Name</h6>
+                    
+                    <div class="d-flex align-items-center mb-1">
+                        <span class="text-danger me-1">★</span>
+                        <span class="fw-medium" th:text="${movie.rating}">8.5</span>
+                        <span class="text-muted small ms-1">/10</span>
+                    </div>
+
+                    <p class="text-muted small mb-0 text-truncate" th:text="${movie.genre}">Action/Drama/Thriller</p>
+                </div>
+
+            </div>
+        </div>
+        <!-- /End Movie Card -->
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>BookMyShow | Movie Tickets</title>
+
+Bootstrap
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+
+<style>
+body {
+	background-color: #f8f9fa;
+}
+
+/* ================= NAVBAR ================= */
+.navbar {
+	background-color: #333545;
+}
+
+.navbar-brand {
+	color: #f84464 !important;
+	font-weight: bold;
+	font-size: 22px;
+}
+
+/* ================= MOVIE CARD ================= */
+.movie-card {
+	border-radius: 10px;
+	overflow: hidden;
+	transition: transform 0.3s ease;
+	cursor: pointer;
+	background: #fff;
+}
+
+.movie-card:hover {
+	transform: scale(1.03);
+}
+
+/* ⭐ FINAL POSTER FIX (NO CROP, SAME SIZE) */
+.movie-poster {
+	width: 100%;
+	height: 260px; /* SAME HEIGHT FOR ALL */
+	object-fit: contain; /* SHOW FULL IMAGE */
+	background-color: #000; /* BLACK BARS (PRO LOOK) */
+	border-radius: 6px;
+}
+
+.rating-badge {
+	background-color: #333;
+	color: #fff;
+	padding: 3px 8px;
+	border-radius: 4px;
+	font-size: 13px;
+}
+</style>
+</head>
+
+<body>
+
+	================= NAVBAR =================
+	<nav class="navbar navbar-expand-lg sticky-top p-3">
+		<div class="container">
+			<a class="navbar-brand" href="/">BookMyShow</a>
+
+			<form class="d-flex ms-auto" method="get" action="/">
+				<input class="form-control me-2" type="search" name="search"
+					placeholder="Search for Movies, Events">
+			</form>
+		</div>
+	</nav>
+
+	================= MOVIES =================
+	<div class="container mt-5">
+		<h3 class="fw-bold mb-4">Recommended Movies</h3>
+
+		<div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
+
+			MOVIE LOOP
+			<div class="col" th:each="movie : ${movies}">
+				<div class="card movie-card shadow-sm border-0">
+
+					IMAGE
+					<a th:href="@{/movie/{id}(id=${movie.movieId})}">
                     <img th:src="@{${movie.posterUrl}}"
                          alt="Movie Poster"
                          class="card-img-top movie-poster">
                 </a>
- 
-                <!-- CARD BODY -->
-                <div class="card-body px-0">
-                    <h6 class="fw-bold mb-1"
-                        th:text="${movie.movieName}">
-                        Movie Name
-                    </h6>
- 
-                    <div class="d-flex align-items-center mb-1">
-                        <span class="rating-badge me-2">★</span>
-                        <span th:text="${movie.rating}">5.0</span>/10
-                    </div>
- 
-                    <p class="text-muted small mb-0"
-                       th:text="${movie.genre}">
-                        Genre
-                    </p>
-                </div>
- 
-            </div>
-        </div>
- 
-    </div>
-</div>
- 
+					<a th:href="@{/movie/{id}(id=${movie.movieId})}"> Use ${...} for direct web URLs
+						<img th:src="${movie.posterUrl}" alt="Movie Poster"
+						class="card-img-top movie-poster"
+						onerror="this.src='https://via.placeholder.com'">
+					</a>
+
+
+					CARD BODY
+					<div class="card-body px-0">
+						<h6 class="fw-bold mb-1" th:text="${movie.movieName}">Movie
+							Name</h6>
+
+						<div class="d-flex align-items-center mb-1">
+							<span class="rating-badge me-2">★</span> <span
+								th:text="${movie.rating}">5.0</span>/10
+						</div>
+
+						<p class="text-muted small mb-0" th:text="${movie.genre}">
+							Genre</p>
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+	</div>
+
 </body>
-</html>
+</html> -->

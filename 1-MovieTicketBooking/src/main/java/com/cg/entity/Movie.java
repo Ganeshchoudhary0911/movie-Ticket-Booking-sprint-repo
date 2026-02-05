@@ -22,7 +22,7 @@ public class Movie {
 	private String language;
 	private int duration;
 
-	@Column(columnDefinition = "TEXT") // allow up to 2000 chars (adjust as you like)
+	@Column(columnDefinition = "TEXT" ) // allow up to 2000 chars (adjust as you like)
 	private String description;
 
 	private double rating;

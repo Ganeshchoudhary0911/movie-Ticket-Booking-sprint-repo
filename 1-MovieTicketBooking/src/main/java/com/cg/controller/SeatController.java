@@ -24,8 +24,10 @@ public class SeatController {
  
         Show show = showService.getShowById(showId);
  
-        model.addAttribute("show", show);
-        model.addAttribute("seats", seatService.getSeatsByShow(show));
+        model.addAttribute("movie", show.getMovie());
+        model.addAttribute("theatre", show.getTheatre());
+        model.addAttribute("showDate", show.getShowDate());
+        model.addAttribute("showTime", show.getShowTime());
  
         return "seat-selection";
     }
@@ -38,5 +40,18 @@ public class SeatController {
  
         return "redirect:/booking/confirm/" + seatId;
     }
+    
+//    @GetMapping("/seats/{id}")
+//    public String seatsPage(@PathVariable Long id, Model model) {
+//
+//        Show show = showService.getShowById(id);
+//
+//        model.addAttribute("movie", show.getMovie());
+//        model.addAttribute("theatre", show.getTheatre());
+//        model.addAttribute("showDate", show.getShowDate());
+//        model.addAttribute("showTime", show.getShowTime());
+//
+//        return "seat-selection";
+//    }
 }
  
