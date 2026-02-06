@@ -1,19 +1,19 @@
 package com.cg.service;
 
-import com.cg.entity.Theatre;
+import com.cg.dto.TheatreDto;
 import java.util.List;
 
 public interface ITheatreService {
 
-    Theatre addTheatre(Theatre theatre);
+    TheatreDto addTheatre(TheatreDto theatre);
 
-    Theatre updateTheatre(Long theatreId, Theatre theatre);
+    TheatreDto updateTheatre(Long theatreId, TheatreDto theatre);
 
     void deleteTheatre(Long theatreId);
 
-    Theatre getTheatreById(Long theatreId);
+    TheatreDto getTheatreById(Long theatreId);
 
-    List<Theatre> getAllTheatres();
+    List<TheatreDto> getAllTheatres();
 
-    List<Theatre> getTheatresByCity(String city);
+    List<TheatreDto> getTheatresByCity(String city);
 }

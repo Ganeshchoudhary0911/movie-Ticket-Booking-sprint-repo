@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.cg.entity.Movie;
 
 @Repository
-public interface MovieReposistory extends JpaRepository<Movie, Long> {
+public interface MovieRepository extends JpaRepository<Movie, Long> {
 	
 	    // Custom query to search movies by name
 	    List<Movie> findByMovieNameContainingIgnoreCase(String movieName);

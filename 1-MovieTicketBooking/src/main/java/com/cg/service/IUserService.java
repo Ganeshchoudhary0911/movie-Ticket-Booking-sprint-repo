@@ -1,11 +1,10 @@
 package com.cg.service;
 
 import java.util.Optional;
-
-import com.cg.entity.User;
+import com.cg.dto.UserDto;
 
 public interface IUserService {
-    User saveUser(User user);
-    Optional<User> findByEmail(String email);
-    Optional<User> findByUsername(String username);
+    UserDto saveUser(UserDto user);                 // create/update using safe DTO
+    Optional<UserDto> findByEmail(String email);    // returns safe DTO
+    Optional<UserDto> findByUsername(String username);
 }

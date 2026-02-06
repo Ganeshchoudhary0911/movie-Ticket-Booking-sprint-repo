@@ -19,17 +19,17 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        // Try by username, then email — supports both login styles
         User user = userRepo.findByUsername(username)
                 .or(() -> userRepo.findByEmail(username))
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
-        // Build your Spring Security UserDetails here from your entity
         return org.springframework.security.core.userdetails.User
-                .withUsername(user.getUsername()) // or use email as username if that’s your primary
+                .withUsername(user.getUsername())
                 .password(user.getPassword())
-                .authorities(user.getRole().name()) // adjust to your authorities/roles mapping
-                .accountLocked(!user.isEnabled())   // adjust to your flags
+                // ✅ This auto-adds ROLE_ prefix: "ADMIN" -> "ROLE_ADMIN"
+                .roles(user.getRole().name())
+                .accountLocked(!user.isEnabled())
+                .disabled(!user.isEnabled())
                 .build();
     }
 }
