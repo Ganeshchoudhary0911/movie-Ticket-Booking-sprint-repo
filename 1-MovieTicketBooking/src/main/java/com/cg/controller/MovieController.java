@@ -1,43 +1,49 @@
 package com.cg.controller;
 
-
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import com.cg.entity.Movie;
+import com.cg.dto.MovieDto;
 import com.cg.service.MovieService;
 
 @Controller
 public class MovieController {
+
     @Autowired
-    MovieService movieService;
+    private MovieService movieService;
 
     @GetMapping("/")
     public String home(Model model, @RequestParam(value = "search", required = false) String search) {
-        model.addAttribute("movies", (search != null) ? movieService.searchMovies(search) : movieService.getAllMovies());
+        List<MovieDto> movies = (search != null && !search.isBlank())
+                ? movieService.searchMovies(search)
+                : movieService.getAllMovies();
+        model.addAttribute("movies", movies);
         return "home";
     }
 
     @GetMapping("/movie/{id}")
     public String movieDetails(@PathVariable Long id, Model model) {
-        model.addAttribute("movie", movieService.getMovieById(id));
+        MovieDto movie = movieService.getMovieById(id);
+        if (movie == null) {
+            return "redirect:/?error=movie-not-found";
+        }
+        model.addAttribute("movie", movie);
         return "movie-details";
     }
 
     @GetMapping("/admin/movies")
     public String adminMovies(Model model) {
         model.addAttribute("movies", movieService.getAllMovies());
-        model.addAttribute("movie", new Movie());
+        model.addAttribute("movie", new MovieDto()); // bind DTO in the form
         return "admin/admin-movie";
     }
 
     @PostMapping("/admin/movies/save")
-    public String saveMovie(@ModelAttribute Movie movie) {
+    public String saveMovie(@ModelAttribute MovieDto movie) {
         movieService.saveOrUpdateMovie(movie);
         return "redirect:/admin/movies";
     }
@@ -47,20 +53,22 @@ public class MovieController {
         movieService.deleteMovie(id);
         return "redirect:/admin/movies";
     }
-    
+
     @GetMapping("/admin/movies/new")
     public String movieCreateForm(Model model) {
-        model.addAttribute("movie", new Movie());           // must NOT be null
-        model.addAttribute("ratings", List.of("U", "UA", "A")); // used by select
+        model.addAttribute("movie", new MovieDto());           // must NOT be null
+        model.addAttribute("ratings", List.of("U", "UA", "A")); // if you use this in the form
         return "admin/admin-movie-form";
     }
 
     @GetMapping("/admin/movies/{id}/edit")
     public String movieEditForm(@PathVariable Long id, Model model) {
-        Movie movie = movieService.getMovieById(id); // MUST be Movie, not Optional<Movie>
+        MovieDto movie = movieService.getMovieById(id);
+        if (movie == null) {
+            return "redirect:/admin/movies?error=movie-not-found";
+        }
         model.addAttribute("movie", movie);
         model.addAttribute("ratings", List.of("U", "UA", "A"));
         return "admin/admin-movie-form";
-    }    
-    
+    }
 }

@@ -26,7 +26,8 @@
 
 				<!-- Booking Details -->
 				<h5 class="fw-bold">Booking Details</h5>
-
+				
+				<div th:if="${booking != null}">
 				<ul class="list-group mb-4">
 					<li class="list-group-item d-flex justify-content-between"><strong>Booking
 							ID:</strong> <span th:text="${booking.bookingId}">123</span></li>
@@ -40,18 +41,16 @@
 						th:text="${booking.paymentStatus}"> PAID </span></li>
 
 					<li class="list-group-item d-flex justify-content-between"><strong>Amount
-							Paid:</strong> ₹<span
-						th:text="${#numbers.formatDecimal(booking.totalAmount, 0, 'COMMA', 2, 'POINT')}">
-							0.00 </span></li>
-				</ul>
+							Paid:</strong> ₹ <span th:text="${booking.totalAmount}">0.00</span></li>
+				</ul></div>
 
 				<!-- Actions -->
-				<a th:href="@{/Ticket}" class="btn btn-outline-primary">
-					View Ticket → </a>
+				<a th:href="@{/Ticket}" class="btn btn-outline-primary"> View
+					Ticket → </a>
 
 			</div>
 		</div>
 	</div>
 </body>
 </html>
-``
+
