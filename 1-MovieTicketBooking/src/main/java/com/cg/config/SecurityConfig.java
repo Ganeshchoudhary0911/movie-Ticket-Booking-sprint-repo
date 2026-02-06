@@ -48,12 +48,18 @@ public class SecurityConfig {
         http
             .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
             .csrf(csrf -> csrf.disable())
+         // SecurityConfig.java (only the authorizeHttpRequests part)
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/login", "/signup", "/css/**", "/js/**", "/images/**", "/h2-console/**")
-                .permitAll()
-                .requestMatchers("/admin/**", "/api/admin/**").hasRole("ADMIN")
-                .anyRequest().authenticated()
-            )
+            	    .requestMatchers("/", "/login", "/signup",
+            	                     "/css/**", "/js/**", "/images/**", "/webjars/**", "/h2-console/**", "/error")
+            	        .permitAll()
+            	    .requestMatchers("/admin/**", "/api/admin/**")
+            	        .hasRole("ADMIN")
+            	    .requestMatchers("/movie/**", "/profile/**", "/bookings/**","/booking/**")
+            	        .authenticated()
+            	    .anyRequest()
+            	        .permitAll()
+            	)
             .formLogin(form -> form
                 .loginPage("/login")
                 .loginProcessingUrl("/do-login")

@@ -5,11 +5,15 @@ import com.cg.entity.*;
 import com.cg.repository.UserRepository;
 import com.cg.service.UserService;
 
+<<<<<<< HEAD
 import jakarta.transaction.Transactional;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+=======
+import java.util.Optional;
+>>>>>>> a948f28cc119208da9844bcfe3de64e490875643
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,6 +32,7 @@ public class UserService implements IUserService {
 		return userRepository.save(user);
 	}
 
+<<<<<<< HEAD
 	@Override
 	public User findByEmail(String email) {
 		return userRepository.findByEmail(email);
@@ -55,4 +60,11 @@ public class UserService implements IUserService {
 		return u.getPassword().equals(password) ? u : null;
 	}
 
+=======
+    @Override
+    public Optional<User> findByEmail(String email) { return userRepository.findByEmail(email); }
+
+    @Override
+    public Optional<User> findByUsername(String username) { return userRepository.findByUsername(username); }
+>>>>>>> a948f28cc119208da9844bcfe3de64e490875643
 }

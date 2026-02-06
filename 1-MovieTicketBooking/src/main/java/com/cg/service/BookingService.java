@@ -2,6 +2,7 @@ package com.cg.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,8 +34,7 @@ public class BookingService implements IBookingService {
 		return bookingRepository.save(booking);
 	}
 
-	@Override
-	public List<Booking> getUserBookings(User user) {
+	public List<Booking> getUserBookings(Optional<User> user) {
 		return bookingRepository.findByUser(user);
 	}
 
@@ -87,5 +87,10 @@ public class BookingService implements IBookingService {
 		}
 		return null;
 
+	}
+
+	@Override
+	public List<Booking> getUserBookings(User user) {
+		return bookingRepository.findByUser(user);
 	}
 }

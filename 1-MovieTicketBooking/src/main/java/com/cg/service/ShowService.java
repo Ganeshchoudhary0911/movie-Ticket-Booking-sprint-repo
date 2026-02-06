@@ -53,7 +53,11 @@ public class ShowService {
 
 	public Object getAllShows() {
 		// TODO Auto-generated method stub
+<<<<<<< HEAD
 		return null;
+=======
+		return showRepository.findAll();
+>>>>>>> a948f28cc119208da9844bcfe3de64e490875643
 	}
 }
  
