@@ -1,18 +1,25 @@
 package com.cg.service;
 
-import com.cg.entity.Show;
+import com.cg.dto.ShowDto;
 import java.util.List;
 	 
 public interface IShowService {
 	 
-	    Show addShow(Show show);
-	 
-	    Show updateShow(Long id, Show show);
-	 
+
+	// Create a show using DTO (expects movieId & theatreId inside the DTO)
+	    ShowDto addShow(ShowDto showDto);
+
+	    // Update a show by id using DTO
+	    ShowDto updateShow(Long id, ShowDto showDto);
+
+	    // Delete by id
 	    void deleteShow(Long id);
-	 
-	    Show getShowById(Long id);
-	 
-	    List<Show> getAllShows();
+
+	    // Get single show by id as DTO
+	    ShowDto getShowById(Long id);
+
+	    // Get all shows as DTOs
+	    List<ShowDto> getAllShows();
+
 	}
 

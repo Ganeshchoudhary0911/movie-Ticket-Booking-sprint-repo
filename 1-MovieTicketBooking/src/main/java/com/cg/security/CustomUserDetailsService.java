@@ -2,35 +2,34 @@ package com.cg.security;
 
 import com.cg.entity.User;
 import com.cg.repository.UserRepository;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
-
-import java.util.Collections;
-import java.util.Optional;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-	@Autowired
-    UserRepository userRepo;
+    private final UserRepository userRepo;
 
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public CustomUserDetailsService(UserRepository userRepo) {
+        this.userRepo = userRepo;
+    }
 
-	    User user = userRepo.findByUsername(username);
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-	    if (user == null) {
-	        throw new UsernameNotFoundException("User not found: " + username);
-	    }
+        User user = userRepo.findByUsername(username)
+                .or(() -> userRepo.findByEmail(username))
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
-	    return org.springframework.security.core.userdetails.User
-	            .withUsername(user.getUsername())
-	            .password(user.getPassword())
-	            .authorities("ROLE_" + user.getRole().name())
-	            .build();
-	}
+        return org.springframework.security.core.userdetails.User
+                .withUsername(user.getUsername())
+                .password(user.getPassword())
+                // ✅ This auto-adds ROLE_ prefix: "ADMIN" -> "ROLE_ADMIN"
+                .roles(user.getRole().name())
+                .accountLocked(!user.isEnabled())
+                .disabled(!user.isEnabled())
+                .build();
+    }
 }

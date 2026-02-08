@@ -1,23 +1,21 @@
 package com.cg.service;
 
 import java.util.List;
-import com.cg.entity.Booking;
-import com.cg.entity.Show;
-import com.cg.entity.User;
+import com.cg.dto.BookingDto;
 
 public interface IBookingService {
 
-	public Booking createBooking(User user, Show show, double amount);
+    BookingDto createBooking(Long userId, Long showId, double amount);
 
-	public Booking confirmPayment(Long bookingId);
+    BookingDto confirmPayment(Long bookingId);
 
-	public Booking failPayment(Long bookingId);
+    BookingDto failPayment(Long bookingId);
 
-	public Booking cancelBooking(Long bookingId, String username);
+    BookingDto cancelBooking(Long bookingId, String username);
 
-	public Booking getBooking(Long bookingId, String username);
+    BookingDto getBooking(Long bookingId, String username);
 
-	public List<Booking> getUserBookings(User user);
+    List<BookingDto> getUserBookings(Long userId);
 
-	public Booking getBookingById(Long bookingId);
+    BookingDto getBookingById(Long bookingId);
 }

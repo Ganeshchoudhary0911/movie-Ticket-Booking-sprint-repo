@@ -1,12 +1,13 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title th:text="${movie.movieName} + ' | Show Timings'">Show Timings</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body class="bg-light">
 
-MOVIE HEADER
+<!-- MOVIE HEADER -->
 <div class="bg-white border-bottom py-4 mb-4">
     <div class="container">
         <h1 class="fw-bold mb-1" th:text="${movie.movieName}">Movie Name</h1>
@@ -17,49 +18,44 @@ MOVIE HEADER
     </div>
 </div>
 
-DATE SELECTOR
-<div class="container mb-4">
-    <div class="d-flex overflow-auto pb-2">
-        Loop through dates (Assume 'dateList' is passed from Backend)
-        Example: dateList = ['2024-02-03', '2024-02-04', ...]
-        <div th:each="dateStr : ${dateList}">
-            <a th:href="@{/movie/{id}/shows(id=${movie.movieId}, date=${dateStr})}" 
-               th:classappend="${selectedDate == dateStr} ? 'bg-danger text-white border-danger' : 'bg-white text-dark'"
-               class="btn border me-2 text-center py-2 px-3 shadow-sm" 
-               style="min-width: 80px; text-decoration: none;">
-                <small class="d-block text-uppercase" th:text="${#temporals.format(dateStr, 'EEE')}">TUE</small>
-                <strong th:text="${#temporals.format(dateStr, 'dd MMM')}">03 FEB</strong>
-            </a>
-        </div>
-    </div>
-</div>
 
-THEATRES & SHOWS
+<!-- THEATRES & SHOWS -->
 <div class="container">
-    
-    Empty State
-    <div th:if="${#maps.isEmpty(groupedShows)}" class="bg-white rounded-3 p-5 text-center shadow-sm">
-        <img src="https://cdn-icons-png.flaticon.com" width="80" class="opacity-25 mb-3">
-        <h5 class="text-muted">No shows available for the selected date.</h5>
-        <p class="small text-secondary">Try selecting a different date above.</p>
+
+    <!-- EMPTY STATE -->
+    <div th:if="${#maps.isEmpty(groupedShows)}"
+         class="bg-white rounded-3 p-5 text-center shadow-sm">
+        <h5 class="text-muted">No shows available.</h5>
     </div>
 
-    Theatre Cards
-    <div th:each="entry : ${groupedShows}" class="bg-white rounded-3 p-4 mb-3 shadow-sm border-start border-4 border-danger">
+    <!-- THEATRE CARDS -->
+    <div th:each="entry : ${groupedShows}"
+         class="bg-white rounded-3 p-4 mb-3 shadow-sm border-start border-4 border-danger">
+
         <div class="row align-items-center">
+
+            <!-- Theatre Info -->
             <div class="col-md-4 mb-3 mb-md-0">
                 <div class="d-flex align-items-center">
                     <span class="text-danger me-2">❤️</span>
-                    <h5 class="fw-bold mb-0" th:text="${entry.value[0].theatre.theatreName}">Theatre Name</h5>
+
+                    <!-- ⭐ FIX: use theatreName from ShowDto -->
+                    <h5 class="fw-bold mb-0"
+                        th:text="${entry.value[0].theatreName}">
+                        Theatre Name
+                    </h5>
+
                 </div>
                 <div class="text-muted mt-1" style="font-size: 0.8rem;">
-                    <span class="text-success">● M-Ticket</span> 
+                    <span class="text-success">● M‑Ticket</span>
                     <span class="ms-2 text-warning">● Food & Beverage</span>
                 </div>
             </div>
-            
+
+            <!-- Show Timings -->
             <div class="col-md-8">
                 <div class="d-flex flex-wrap gap-2">
+                    
                     <a th:each="show : ${entry.value}"
                        th:href="@{/seats/{id}(id=${show.showId})}"
                        th:text="${show.showTime}"
@@ -68,10 +64,12 @@ THEATRES & SHOWS
                         10:30 AM
                     </a>
                 </div>
+
                 <div class="mt-2 small text-muted">
-                    <span class="text-secondary">Non-cancellable</span>
+                    <span class="text-secondary">Non‑cancellable</span>
                 </div>
             </div>
+
         </div>
     </div>
 
@@ -80,183 +78,3 @@ THEATRES & SHOWS
 <script src="https://cdn.jsdelivr.net"></script>
 </body>
 </html>
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!--  <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title th:text="${movie.movieName} + ' | Show Timings'">Show Timings</title>
- 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-          rel="stylesheet">
- 
-    <style>
-        body {
-            background-color: #f2f2f2;
-        }
- 
-        .movie-header {
-            background: #ffffff;
-            padding: 20px;
-            border-bottom: 1px solid #ddd;
-        }
- 
-        .movie-title {
-            font-size: 28px;
-            font-weight: 700;
-        }
- 
-        .movie-info {
-            color: #666;
-            font-size: 14px;
-        }
- 
-        /* Date selector */
-        .date-box {
-            width: 90px;
-            text-align: center;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            margin-right: 10px;
-            cursor: pointer;
-            background: white;
-        }
- 
-        .date-box.active {
-            background: #dc3545;
-            color: white;
-            border-color: #dc3545;
-        }
- 
-        /* Theatre card */
-        .theatre-card {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
- 
-        .theatre-name {
-            font-size: 18px;
-            font-weight: 600;
-        }
- 
-        .cancel-text {
-            font-size: 13px;
-            color: #777;
-        }
- 
-        .show-time {
-            border: 1px solid #28a745;
-            color: #28a745;
-            padding: 6px 16px;
-            border-radius: 6px;
-            text-decoration: none;
-            margin-right: 10px;
-            margin-top: 10px;
-            display: inline-block;
-            font-weight: 500;
-        }
- 
-        .show-time:hover {
-            background: #28a745;
-            color: white;
-        }
- 
-        .no-shows {
-            text-align: center;
-            color: #777;
-            padding: 50px;
-            font-size: 18px;
-        }
-    </style>
-</head>
- 
-<body>
- 
-================= MOVIE HEADER =================
-<div class="movie-header">
-    <div class="container">
-        <div class="movie-title" th:text="${movie.movieName}">Movie Name</div>
-        <div class="movie-info">
-            <span th:text="${movie.language}">Language</span> •
-            <span th:text="${movie.duration}">Duration</span> mins
-        </div>
-    </div>
-</div>
- 
-================= DATE SELECTOR =================
-<div class="container my-4">
-    <div class="d-flex">
-        <div class="date-box active">Tue<br>03 Feb</div>
-        <div class="date-box">Wed<br>04 Feb</div>
-        <div class="date-box">Thu<br>05 Feb</div>
-        <div class="date-box">Fri<br>06 Feb</div>
-    </div>
-</div>
- 
-================= THEATRES & SHOWS =================
-<div class="container">
- 
-    ❌ No shows
-    <div th:if="${#maps.isEmpty(groupedShows)}" class="no-shows">
-        No shows available for this movie.
-    </div>
- 
-    ✅ Shows available
-    <div th:each="entry : ${groupedShows}">
-        <div class="theatre-card">
- 
-            <div class="theatre-name"
-                 th:text="${entry.value[0].theatre.theatreName}">
-                Theatre Name
-            </div>
- 
-            <div class="cancel-text">Non-cancellable</div>
- 
-            <div class="mt-3">
-                <a th:each="show : ${entry.value}"
-                   th:href="@{/seats/{id}(id=${show.showId})}"
-                   th:text="${show.showTime}"
-                   class="show-time">
-                    10:30 AM
-                </a>
-            </div>
- 
-        </div>
-    </div>
- 
-</div>
- 
-</body>
-</html>
- -->

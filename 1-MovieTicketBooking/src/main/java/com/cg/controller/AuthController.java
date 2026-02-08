@@ -1,30 +1,27 @@
 package com.cg.controller;
 
-import com.cg.entity.*;
+import com.cg.dto.SignupDto;
+import com.cg.entity.Role;
+import com.cg.entity.User;
 import com.cg.repository.UserRepository;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class AuthController {
 
-	@Autowired
-    UserRepository userRepo;
-	
-	@Autowired
-    PasswordEncoder encoder;
-    
+    @Autowired
+    private UserRepository userRepo;
+
+    @Autowired
+    private PasswordEncoder encoder;
+
     public AuthController(UserRepository userRepo, PasswordEncoder encoder) {
         this.userRepo = userRepo;
         this.encoder = encoder;
@@ -41,12 +38,13 @@ public class AuthController {
 
     @GetMapping("/signup")
     public String signupPage(Model model) {
-        model.addAttribute("user", new User());  // MUST MATCH th:object="${user}"
+        // Bind DTO to the form
+        model.addAttribute("user", new SignupDto()); // MUST MATCH th:object="${user}"
         return "signup";
     }
 
     @PostMapping("/signup")
-    public String doSignup(@Valid @ModelAttribute("user") User user,
+    public String doSignup(@Valid @ModelAttribute("user") SignupDto signupDto,
                            BindingResult result,
                            Model model) {
 
@@ -54,20 +52,24 @@ public class AuthController {
             return "signup";
         }
 
-        if (userRepo.existsByUsername(user.getUsername())) {
+        if (userRepo.existsByUsername(signupDto.getUsername())) {
             result.rejectValue("username", "exists", "Username already taken");
             return "signup";
         }
 
-        if (userRepo.existsByEmail(user.getEmail())) {
+        if (userRepo.existsByEmail(signupDto.getEmail())) {
             result.rejectValue("email", "exists", "Email already registered");
             return "signup";
         }
 
-        // ENCODE THE PASSWORD BEFORE SAVE
-        user.setPassword(encoder.encode(user.getPassword()));
+        // Map DTO -> Entity and ENCODE the password before saving
+        User user = new User();
+        user.setUsername(signupDto.getUsername());
+        user.setEmail(signupDto.getEmail());
+        user.setPassword(encoder.encode(signupDto.getPassword()));
+        user.setPhoneNumber(signupDto.getPhoneNumber());
 
-        // Set default role
+        // Defaults
         user.setRole(Role.USER);
         user.setEnabled(true);
 
@@ -75,5 +77,4 @@ public class AuthController {
 
         return "redirect:/login?signup=true";
     }
-    
 }

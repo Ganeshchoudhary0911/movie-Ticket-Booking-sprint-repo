@@ -2,14 +2,22 @@ package com.cg.service;
 
 import java.util.List;
 
-import com.cg.entity.Movie;
+import com.cg.dto.MovieDto;
 
 public interface IMovieService {
-	
-	    public List<Movie> getAllMovies(); 
-	    public Movie getMovieById(Long id); 
-	    public List<Movie> searchMovies(String name); 
-	    public void saveOrUpdateMovie(Movie movie); 
-	    public void deleteMovie(Long id); 
+    
+    List<MovieDto> getAllMovies();
 
+    MovieDto getMovieById(Long id);
+
+    List<MovieDto> searchMovies(String name);
+
+    /**
+     * Create or update a movie using a DTO.
+     * If dto.movieId is null -> create; otherwise -> update.
+     * Returns the saved DTO (with generated id on create).
+     */
+    MovieDto saveOrUpdateMovie(MovieDto movie);
+
+    void deleteMovie(Long id);
 }
