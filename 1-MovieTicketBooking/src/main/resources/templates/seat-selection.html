@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Seat Selection</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+    <div class="container bg-white shadow rounded my-4 p-0">
+
+        <!-- HEADER -->
+        <div class="bg-dark text-white p-3 d-flex justify-content-between align-items-center rounded-top">
+            <div>
+                :text="${theatre.theatreName}">Theatre Name</small>
+            </div>
+            <button class="btn btn-outline-light" onclick="history.back()">✕</button>
+        </div>
+
+        <!-- DATE & TIME -->
+        <div class="border-bottom px-3 py-2">
+            <span th:text="${showDate}">14 March</span> ·
+            <span th:text="${showTime}">02:40 PM</span>
+        </div>
+
+        <!-- SEAT LAYOUT -->
+		<div class="p-4">
+
+			<!-- GOLD -->
+			<h6 class="fw-bold mb-3 ms-4">GOLD - Rs. 150</h6>
+
+			<div class="d-flex justify-content-center gap-5">
+
+				<!-- LEFT BLOCK -->
+				<div>
+					<!-- ROW A -->
+					<div class="d-flex align-items-center mb-2">
+						<strong class="me-2">A</strong>
+						<div class="d-flex flex-wrap gap-2">
+							<button class="seat btn btn-sm btn-primary opacity-75">1</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">2</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">3</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">4</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">5</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">6</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">7</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">8</button>
+						</div>
+					</div>
+
+					<!-- ROW B -->
+					<div class="d-flex align-items-center mb-2">
+						<strong class="me-2">B</strong>
+						<div class="d-flex flex-wrap gap-2">
+							<button class="seat btn btn-sm btn-primary opacity-75">1</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">2</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">3</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">4</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">5</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">6</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">7</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">8</button>
+						</div>
+					</div>
+
+					<!-- ROW C -->
+					<div class="d-flex align-items-center mb-2">
+						<strong class="me-2">C</strong>
+						<div class="d-flex flex-wrap gap-2">
+							<button class="seat btn btn-sm btn-primary opacity-75">1</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">2</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">3</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">4</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">5</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">6</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">7</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">8</button>
+						</div>
+					</div>
+
+					<!-- ROW D -->
+					<div class="d-flex align-items-center mb-2">
+						<strong class="me-2">D</strong>
+						<div class="d-flex flex-wrap gap-2">
+							<button class="seat btn btn-sm btn-primary opacity-75">1</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">2</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">3</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">4</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">5</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">6</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">7</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">8</button>
+						</div>
+					</div>
+				</div>
+
+				<!-- RIGHT BLOCK -->
+				<div>
+					<!-- ROW A -->
+					<div class="d-flex align-items-center mb-2">
+						<span class="me-2"></span>
+						<div class="d-flex flex-wrap gap-2">
+							<button class="seat btn btn-sm btn-primary opacity-75">9</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">10</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">11</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">12</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">13</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">14</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">15</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">16</button>
+						</div>
+					</div>
+
+					<!-- ROW B -->
+					<div class="d-flex align-items-center mb-2">
+						<span class="me-2"></span>
+						<div class="d-flex flex-wrap gap-2">
+							<button class="seat btn btn-sm btn-primary opacity-75">9</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">10</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">11</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">12</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">13</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">14</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">15</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">16</button>
+						</div>
+					</div>
+
+					<!-- ROW C -->
+					<div class="d-flex align-items-center mb-2">
+						<span class="me-2"></span>
+						<div class="d-flex flex-wrap gap-2">
+							<button class="seat btn btn-sm btn-primary opacity-75">9</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">10</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">11</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">12</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">13</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">14</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">15</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">16</button>
+						</div>
+					</div>
+
+					<!-- ROW D -->
+					<div class="d-flex align-items-center mb-2">
+						<span class="me-2"></span>
+						<div class="d-flex flex-wrap gap-2">
+							<button class="seat btn btn-sm btn-primary opacity-75">9</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">10</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">11</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">12</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">13</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">14</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">15</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">16</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- SILVER SECTION -->
+
+
+			<h6 class="fw-bold mt-5 mb-3 ms-4">SILVER - Rs. 100</h6>
+
+			<div class="d-flex justify-content-center gap-5">
+
+				<!-- LEFT SILVER BLOCK -->
+				<div>
+
+					<!-- ROW A -->
+					<div class="d-flex align-items-center mb-2">
+						<strong class="me-2">A</strong>
+						<div class="d-flex flex-wrap gap-2">
+							<button class="seat btn btn-sm btn-primary opacity-75">1</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">2</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">3</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">4</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">5</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">6</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">7</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">8</button>
+						</div>
+					</div>
+
+					<!-- ROW B -->
+					<div class="d-flex align-items-center mb-2">
+						<strong class="me-2">B</strong>
+						<div class="d-flex flex-wrap gap-2">
+							<button class="seat btn btn-sm btn-primary opacity-75">1</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">2</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">3</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">4</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">5</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">6</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">7</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">8</button>
+						</div>
+					</div>
+
+					<!-- ROW C -->
+					<div class="d-flex align-items-center mb-2">
+						<strong class="me-2">C</strong>
+						<div class="d-flex flex-wrap gap-2">
+							<button class="seat btn btn-sm btn-primary opacity-75">1</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">2</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">3</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">4</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">5</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">6</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">7</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">8</button>
+						</div>
+					</div>
+
+					<!-- ROW D -->
+					<div class="d-flex align-items-center mb-2">
+						<strong class="me-2">D</strong>
+						<div class="d-flex flex-wrap gap-2">
+							<button class="seat btn btn-sm btn-primary opacity-75">1</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">2</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">3</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">4</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">5</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">6</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">7</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">8</button>
+						</div>
+					</div>
+
+				</div>
+
+				<!-- RIGHT SILVER BLOCK -->
+				<div>
+
+					<!-- ROW A -->
+					<div class="d-flex align-items-center mb-2">
+						<span class="me-2"></span>
+						<div class="d-flex flex-wrap gap-2">
+							<button class="seat btn btn-sm btn-primary opacity-75">9</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">10</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">11</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">12</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">13</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">14</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">15</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">16</button>
+						</div>
+					</div>
+
+					<!-- ROW B -->
+					<div class="d-flex align-items-center mb-2">
+						<span class="me-2"></span>
+						<div class="d-flex flex-wrap gap-2">
+							<button class="seat btn btn-sm btn-primary opacity-75">9</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">10</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">11</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">12</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">13</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">14</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">15</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">16</button>
+						</div>
+					</div>
+
+					<!-- ROW C -->
+					<div class="d-flex align-items-center mb-2">
+						<span class="me-2"></span>
+						<div class="d-flex flex-wrap gap-2">
+							<button class="seat btn btn-sm btn-primary opacity-75">9</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">10</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">11</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">12</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">13</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">14</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">15</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">16</button>
+						</div>
+					</div>
+
+					<!-- ROW D -->
+					<div class="d-flex align-items-center mb-2">
+						<span class="me-2"></span>
+						<div class="d-flex flex-wrap gap-2">
+							<button class="seat btn btn-sm btn-primary opacity-75">9</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">10</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">11</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">12</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">13</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">14</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">15</button>
+							<button class="seat btn btn-sm btn-primary opacity-75">16</button>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+
+		</div>
+
+		<!-- CONFIRM BUTTON -->
+        <div class="text-center pb-4">
+            <button id="confirmBtn" class="btn btn-danger px-5 py-2 d-none" onclick="goToPayment()">
+                Confirm
+            </button>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="text-center text-muted border-top py-3">
+            All eyes this way please.
+        </div>
+    </div>
+
+    <script>
+        let selectedSeats = [];
+
+        document.querySelectorAll(".seat").forEach(btn => {
+            btn.addEventListener("click", () => {
+                btn.classList.toggle("active");
+
+                const seat = btn.textContent.trim();
+
+                if (btn.classList.contains("active")) {
+                    selectedSeats.push(seat);
+                    btn.classList.remove("opacity-75");
+                    btn.classList.add("btn-dark");
+                } else {
+                    selectedSeats = selectedSeats.filter(s => s !== seat);
+                    btn.classList.add("opacity-75");
+                    btn.classList.remove("btn-dark");
+                }
+
+                document.getElementById("confirmBtn")
+                    .classList.toggle("d-none", selectedSeats.length === 0);
+            });
+        });
+
+        function goToPayment() {
+            const params = new URLSearchParams({
+                movie: document.querySelector(".movie-title").innerText,
+                theatre: document.querySelector(".cinema-location").innerText,
+                seats: selectedSeats.join(',')
+            });
+
+            window.location.href = "/payment?" + params.toString();
+        }
+    </script>
+
+    <!-- Bootstrap JS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" rel="stylesheet">
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title> Seat Selection</title>
+
+  Bootstrap 5.3
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+    crossorigin="anonymous"
+  />
+
+  Merged style.css
+  <style>
+    :root{
+      --brand-dark: #263238;
+      --bg: #f4f4f4;
+      --seat-available-bg: #e0f2fe;
+      --seat-available-border: #4fc3f7;
+      --seat-available-text: #01579b;
+      --seat-unavailable-bg: #bdbdbd;
+      --seat-unavailable-border: #9e9e9e;
+      --seat-selected-bg: #0d6efd; /* Bootstrap primary */
+      --seat-selected-text: #ffffff;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg);
+    }
+
+    .cinema-container {
+      max-width: 1200px;
+      margin: 24px auto;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0,0,0,0.08);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    /* --- Header Styling --- */
+    .header-bar {
+      background-color: var(--brand-dark);
+      color: white;
+      padding: 15px 20px;
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .movie-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+      line-height: 1.2;
+    }
+
+    .cinema-location {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    .close-btn {
+      font-size: 1.25rem;
+      cursor: pointer;
+      opacity: 0.9;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      transition: background-color .2s ease, opacity .2s ease;
+    }
+    .close-btn:hover {
+      background-color: rgba(255,255,255,0.12);
+      opacity: 1;
+    }
+
+    /* --- Date Time Bar --- */
+    .datetime-bar {
+      background-color: #fff;
+      padding: 12px 20px;
+      border-bottom: 1px solid #eee;
+      color: #555;
+      font-size: 0.95rem;
+    }
+
+    /* --- Seat Layout Styling --- */
+    .seat-layout {
+      padding: 32px 20px;
+      text-align: center;
+    }
+
+    .section-title {
+      font-weight: bold;
+      margin-bottom: 16px;
+      color: #666;
+      text-align: left;
+      margin-left: 10%; /* Align with seat blocks */
+    }
+
+    .seat-map-area {
+      display: flex;
+      justify-content: center; /* Center the two blocks */
+      gap: 50px;               /* Space between the two seat blocks */
+      flex-wrap: wrap;
+    }
+
+    .seat-block {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .seat-row {
+      display: flex;
+      align-items: center;
+      gap: 5px; /* Space between seats */
+    }
+
+    .row-label {
+      width: 20px;
+      font-weight: bold;
+      color: #777;
+      text-align: right;
+      margin-right: 10px;
+      user-select: none;
+    }
+
+    .seat {
+      width: 35px;
+      height: 35px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 0.7rem;
+      border-radius: 4px;
+      box-sizing: border-box;
+      cursor: pointer;
+      transition: background-color 0.2s, color 0.2s, transform 0.1s;
+      user-select: none;
+    }
+
+    .seat:active {
+      transform: scale(0.96);
+    }
+
+    .available {
+      background-color: var(--seat-available-bg);
+      border: 1px solid var(--seat-available-border);
+      color: var(--seat-available-text);
+    }
+
+    .available:hover {
+      background-color: #4fc3f7;
+      color: #ffffff;
+    }
+
+    .unavailable {
+      background-color: var(--seat-unavailable-bg);
+      border: 1px solid var(--seat-unavailable-border);
+      cursor: not-allowed;
+      pointer-events: none; /* Prevent clicking/hovering unavailable seats */
+    }
+
+    /* Toggle class for selected seats (optional enhancement) */
+    .selected {
+      background-color: var(--seat-selected-bg) !important;
+      color: var(--seat-selected-text) !important;
+      border: 1px solid var(--seat-selected-bg) !important;
+    }
+
+    /* --- Footer Text --- */
+    .footer-text {
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9rem;
+      color: #9e9e9e;
+      border-top: 1px solid #eee;
+    }
+
+    /* Responsive polish */
+    @media (max-width: 576px) {
+      .movie-title { font-size: 1.25rem; }
+      .cinema-location { font-size: 0.85rem; }
+      .seat { width: 32px; height: 32px; }
+      .seat-map-area { gap: 28px; }
+      .section-title { margin-left: 0; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="cinema-container">
+
+    Header Section
+    <header class="header-bar">
+      <div class="header-content">
+        <div class="movie-info">
+         <div class="movie-title" th:text="${movie.movieName}">Movie Name</div>
+
+		<div class="cinema-location" th:text="${theatre.theatreName}">
+		    Theatre Name
+		</div>
+        </div>
+        <div class="close-btn" role="button" aria-label="Close seat selection">×</div>
+      </div>
+    </header>
+
+    Date and Time Bar
+    <div class="datetime-bar">
+      14 March · 02:40 PM
+    </div>
+
+    Seat Layout Section
+    <div class="seat-layout">
+
+      Gold Section
+      <div class="section-title">GOLD - Rs. 150</div>
+      <div class="seat-map-area">
+        Left Gold Block
+        <div class="seat-block">
+          Row A
+          <div class="seat-row">
+            <span class="row-label">A</span>
+            <div class="seat available">1</div>
+            <div class="seat available">2</div>
+            <div class="seat available">3</div>
+            <div class="seat available">4</div>
+            <div class="seat available">5</div>
+            <div class="seat available">6</div>
+            <div class="seat available">7</div>
+            <div class="seat available">8</div>
+          </div>
+          Row B
+          <div class="seat-row">
+            <span class="row-label">B</span>
+            <div class="seat available">1</div>
+            <div class="seat available">2</div>
+            <div class="seat available">3</div>
+            <div class="seat available">4</div>
+            <div class="seat available">5</div>
+            <div class="seat available">6</div>
+            <div class="seat available">7</div>
+            <div class="seat available">8</div>
+          </div>
+          Row C
+          <div class="seat-row">
+            <span class="row-label">C</span>
+            <div class="seat available">1</div>
+            <div class="seat available">2</div>
+            <div class="seat available">3</div>
+            <div class="seat available">4</div>
+            <div class="seat available">7</div>
+            <div class="seat available">6</div>
+            <div class="seat available">7</div>
+            <div class="seat available">8</div>
+          </div>
+          Row D
+          <div class="seat-row">
+            <span class="row-label">D</span>
+            <div class="seat available">1</div>
+            <div class="seat available">2</div>
+            <div class="seat available">3</div>
+            <div class="seat available">4</div>
+            <div class="seat available">5</div>
+            <div class="seat available">6</div>
+            <div class="seat available">7</div>
+            <div class="seat available">8</div>
+          </div>
+        </div>
+
+        Right Gold Block
+        <div class="seat-block">
+          Row A
+          <div class="seat-row">
+            <span class="row-label"></span>
+            <div class="seat available">9</div>
+            <div class="seat available">10</div>
+            <div class="seat available">11</div>
+            <div class="seat available">12</div>
+            <div class="seat available">13</div>
+            <div class="seat available">14</div>
+            <div class="seat available">15</div>
+            <div class="seat available">16</div>
+          </div>
+          Row B
+          <div class="seat-row">
+            <span class="row-label"></span>
+            <div class="seat available">9</div>
+            <div class="seat available">10</div>
+            <div class="seat available">11</div>
+            <div class="seat available">12</div>
+            <div class="seat available">13</div>
+            <div class="seat available">14</div>
+            <div class="seat available">15</div>
+            <div class="seat available">16</div>
+          </div>
+          Row C
+          <div class="seat-row">
+            <span class="row-label"></span>
+            <div class="seat available">9</div>
+            <div class="seat available">10</div>
+            <div class="seat available">11</div>
+           <div class="seat available">12</div>
+            <div class="seat available">13</div>
+            <div class="seat available">14</div>
+            <div class="seat available">15</div>
+            <div class="seat available">16</div>
+          </div>
+          Row D
+          <div class="seat-row">
+            <span class="row-label"></span>
+            <div class="seat available">9</div>
+            <div class="seat available">10</div>
+            <div class="seat available">11</div>
+            <div class="seat available">12</div>
+            <div class="seat available">13</div>
+            <div class="seat available">14</div>
+            <div class="seat available">15</div>
+            <div class="seat available">16</div>
+          </div>
+        </div>
+      </div>
+
+      Silver Section
+      <div class="section-title mt-5">SILVER - Rs. 100</div>
+      <div class="seat-map-area">
+        Left Silver Block
+        <div class="seat-block">
+          Row A
+          <div class="seat-row">
+            <span class="row-label">A</span>
+            <div class="seat available">1</div>
+            <div class="seat available">2</div>
+            <div class="seat available">3</div>
+            <div class="seat available">4</div>
+            <div class="seat available">5</div>
+            <div class="seat available">6</div>
+            <div class="seat available">7</div>
+            <div class="seat available">8</div>
+          </div>
+          Row B
+          <div class="seat-row">
+            <span class="row-label">B</span>
+            <div class="seat available">1</div>
+            <div class="seat available">2</div>
+            <div class="seat available">3</div>
+            <div class="seat available">4</div>
+            <div class="seat available">5</div>
+            <div class="seat available">6</div>
+            <div class="seat available">7</div>
+            <div class="seat available">8</div>
+          </div>
+          Row C
+          <div class="seat-row">
+            <span class="row-label">C</span>
+           <div class="seat available">1</div>
+            <div class="seat available">2</div>
+            <div class="seat available">3</div>
+            <div class="seat available">4</div>
+            <div class="seat available">5</div>
+            <div class="seat available">6</div>
+            <div class="seat available">7</div>
+            <div class="seat available">8</div>
+          </div>
+          Row D
+          <div class="seat-row">
+            <span class="row-label">D</span>
+            <div class="seat available">1</div>
+            <div class="seat available">2</div>
+            <div class="seat available">3</div>
+            <div class="seat available">4</div>
+            <div class="seat available">5</div>
+            <div class="seat available">6</div>
+            <div class="seat available">7</div>
+            <div class="seat available">8</div>
+          </div>
+        </div>
+
+        Right Silver Block
+        <div class="seat-block">
+          Row A
+          <div class="seat-row">
+            <span class="row-label"></span>
+            <div class="seat available">9</div>
+            <div class="seat available">10</div>
+             <div class="seat available">11</div>
+            <div class="seat available">12</div>
+            <div class="seat available">13</div>
+            <div class="seat available">14</div>
+            <div class="seat available">15</div>
+            <div class="seat available">16</div>
+          </div>
+          Row B
+          <div class="seat-row">
+            <span class="row-label"></span>
+            <div class="seat available">9</div>
+            <div class="seat available">10</div>
+            <div class="seat available">11</div>
+            <div class="seat available">12</div>
+            <div class="seat available">13</div>
+            <div class="seat available">14</div>
+            <div class="seat available">15</div>
+            <div class="seat available">16</div>
+          </div>
+          Row C
+          <div class="seat-row">
+            <span class="row-label"></span>
+            <div class="seat available">9</div>
+            <div class="seat available">10</div>
+            <div class="seat available">11</div>
+            <div class="seat available">12</div>
+            <div class="seat available">13</div>
+            <div class="seat available">14</div>
+            <div class="seat available">15</div>
+            <div class="seat available">16</div>
+          </div>
+          Row D
+          <div class="seat-row">
+            <span class="row-label"></span>
+            <div class="seat available">9</div>
+            <div class="seat available">10</div>
+            <div class="seat available">11</div>
+            <div class="seat available">12</div>
+           <div class="seat available">13</div>
+            <div class="seat available">14</div>
+            <div class="seat available">15</div>
+            <div class="seat available">16</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    Footer/Instruction Text
+    <div class="footer-text">
+      All eyes this way please.
+    </div>
+  </div>
+
+  Optional: small script to toggle seat selection for "available" seats
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.seat.available').forEach(seat => {
+        seat.addEventListener('click', () => {
+          seat.classList.toggle('selected');
+        });
+      });
+
+      // Close button demo behavior
+      document.querySelector('.close-btn')?.addEventListener('click', () => {
+        // Replace with your navigation logic
+        window.history.back();
+      });
+    });
+  </script>
+
+  Bootstrap JS bundle (for future components if needed)
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-q2pyh7Z4V8H0jYkYw8cP0wV7kz7k7o2Hctv0b1pQW5w8q+oRrVf3I8u5x8j0t7gQ"
+    crossorigin="anonymous"
+  ></script>
+</body>
+</html> -->

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Booking Successful</title>
+<meta charset="UTF-8" />
+
+<!-- Bootstrap 5 -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+
+</head>
+
+<body class="bg-light">
+
+	<div class="container mt-5">
+		<div class="card shadow-sm border-success">
+			<div class="card-body">
+
+				<h2 class="text-success fw-bold">✅ Payment Successful</h2>
+
+				<p class="text-muted">Your booking is confirmed. Thank you for
+					choosing our service!</p>
+
+				<hr>
+
+				<!-- Booking Details -->
+				<h5 class="fw-bold">Booking Details</h5>
+
+				<ul class="list-group mb-4">
+					<li class="list-group-item d-flex justify-content-between"><strong>Booking
+							ID:</strong> <span th:text="${booking.bookingId}">123</span></li>
+
+					<li class="list-group-item d-flex justify-content-between"><strong>Booking
+							Status:</strong> <span class="badge bg-success"
+						th:text="${booking.bookingStatus}"> CONFIRMED </span></li>
+
+					<li class="list-group-item d-flex justify-content-between"><strong>Payment
+							Status:</strong> <span class="badge bg-primary"
+						th:text="${booking.paymentStatus}"> PAID </span></li>
+
+					<li class="list-group-item d-flex justify-content-between"><strong>Amount
+							Paid:</strong> ₹<span
+						th:text="${#numbers.formatDecimal(booking.totalAmount, 0, 'COMMA', 2, 'POINT')}">
+							0.00 </span></li>
+				</ul>
+
+				<!-- Actions -->
+				<a th:href="@{/Ticket}" class="btn btn-outline-primary">
+					View Ticket → </a>
+
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+``

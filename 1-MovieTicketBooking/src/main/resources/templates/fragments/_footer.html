@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<footer class="text-center text-muted py-4" th:fragment="footer">
+  <small>&copy; <span th:text="${#dates.format(#dates.createNow(), 'yyyy')}"></span> Admin Portal</small>
+</footer>
+</body>
+</html>
