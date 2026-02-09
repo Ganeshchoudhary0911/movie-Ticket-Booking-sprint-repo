@@ -1,10 +1,14 @@
 package com.cg.entity;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 
 @Entity
@@ -22,6 +26,26 @@ public class Seat {
 	@ManyToOne
 	@JoinColumn(name = "show_id")
 	private Show show;
+	
+	@ManyToMany(mappedBy = "seats")
+	private Set<Booking> bookings = new HashSet<>();
+
+	public Seat(Long seatId, String seatNumber, String seatRow, String seatType, double seatPrice, boolean isBooked,
+			Show show, Set<Booking> bookings) {
+		super();
+		this.seatId = seatId;
+		this.seatNumber = seatNumber;
+		this.seatRow = seatRow;
+		this.seatType = seatType;
+		this.seatPrice = seatPrice;
+		this.isBooked = isBooked;
+		this.show = show;
+		this.bookings = bookings;
+	}
+
+	public Seat() {
+
+	}
 
 	public Long getSeatId() {
 		return seatId;
@@ -78,25 +102,12 @@ public class Seat {
 	public void setShow(Show show) {
 		this.show = show;
 	}
-
-	public Seat(Long seatId, String seatNumber, String seatRow, String seatType, double seatPrice, boolean isBooked,
-			Show show) {
-		super();
-		this.seatId = seatId;
-		this.seatNumber = seatNumber;
-		this.seatRow = seatRow;
-		this.seatType = seatType;
-		this.seatPrice = seatPrice;
-		this.isBooked = isBooked;
-		this.show = show;
+	
+	public Set<Booking> getBookings() {
+		return bookings;
 	}
 
-	public Seat() {
-		super();
+	public void setBookings(Set<Booking> bookings) {
+		this.bookings = bookings;
 	}
-	
-	
-	
-	
-
 }

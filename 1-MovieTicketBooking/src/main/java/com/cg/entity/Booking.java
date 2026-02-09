@@ -1,34 +1,46 @@
 package com.cg.entity;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 import jakarta.persistence.*;
 
 @Entity
-@Table
+@Table(name = "booking")
 public class Booking {
-	@Id
+
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bookingId;
- 
+
     private LocalDate bookingDate;
     private double totalAmount;
-    private String paymentStatus;
-    private String bookingStatus;
- 
+
+    // Keeping as String since your model uses it. (Consider Enum later.)
+    private String paymentStatus;  // e.g., "PAID", "PENDING", "FAILED"
+    private String bookingStatus;  // e.g., "CONFIRMED", "CANCELLED"
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
- 
+
     @ManyToOne
     @JoinColumn(name = "show_id")
     private Show show;
 
-  public Booking() {
-		super();
-	}
+    // NEW: Seats booked in this booking
+    @ManyToMany
+    @JoinTable(
+        name = "booking_seat",
+        joinColumns = @JoinColumn(name = "booking_id"),
+        inverseJoinColumns = @JoinColumn(name = "seat_id")
+    )
+    private Set<Seat> seats = new HashSet<>();
 
-public Booking(Long bookingId, LocalDate bookingDate, double totalAmount, String paymentStatus,
-			String bookingStatus, User user, Show show) {
+    public Booking() {}
+
+	public Booking(Long bookingId, LocalDate bookingDate, double totalAmount, String paymentStatus,
+			String bookingStatus, User user, Show show, Set<Seat> seats) {
 		super();
 		this.bookingId = bookingId;
 		this.bookingDate = bookingDate;
@@ -37,9 +49,9 @@ public Booking(Long bookingId, LocalDate bookingDate, double totalAmount, String
 		this.bookingStatus = bookingStatus;
 		this.user = user;
 		this.show = show;
+		this.seats = seats;
 	}
 
-// Getter and Setter
 	public Long getBookingId() {
 		return bookingId;
 	}
@@ -96,6 +108,13 @@ public Booking(Long bookingId, LocalDate bookingDate, double totalAmount, String
 		this.show = show;
 	}
 
-    
+	public Set<Seat> getSeats() {
+		return seats;
+	}
+
+	public void setSeats(Set<Seat> seats) {
+		this.seats = seats;
+	}
+
     
 }
