@@ -39,6 +39,17 @@ public class Show {
 
 	public Show() {
 	}
+	
+// Constructor for Show Test cases.
+	public Show(Long showId, LocalDate showDate, LocalTime showTime,
+            double price, Movie movie, Theatre theatre) {
+    this.showId = showId;
+    this.showDate = showDate;
+    this.showTime = showTime;
+    this.price = price;
+    this.movie = movie;
+    this.theatre = theatre;
+}
 
 	public Long getShowId() {
 		return showId;

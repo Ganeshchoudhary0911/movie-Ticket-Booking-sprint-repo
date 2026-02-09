@@ -39,7 +39,7 @@ public class UserService implements IUserService {
         User saved = userRepository.save(user);
         return toDto(saved);
     }
-
+    
     @Override
     public Optional<UserDto> findByEmail(String email) {
         return userRepository.findByEmail(email).map(this::toDto);
@@ -62,4 +62,6 @@ public class UserService implements IUserService {
         dto.setEnabled(u.isEnabled());
         return dto;
     }
+
+	
 }

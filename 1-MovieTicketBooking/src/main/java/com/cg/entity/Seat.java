@@ -22,6 +22,15 @@ public class Seat {
 	@ManyToOne
 	@JoinColumn(name = "show_id")
 	private Show show;
+	
+// Constructor for Seat Test cases.
+	public Seat(Long seatId, String seatNumber, boolean isBooked) {
+		super();
+		this.seatId = seatId;
+		this.seatNumber = seatNumber;
+		this.isBooked = isBooked;
+		
+	}
 
 	public Long getSeatId() {
 		return seatId;
