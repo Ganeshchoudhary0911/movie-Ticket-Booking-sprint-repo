@@ -39,7 +39,7 @@ https://maven.apache.org/xsd/maven-4.0.0.xsd">
 			<groupId>org.thymeleaf.extras</groupId>
 			<artifactId>thymeleaf-extras-springsecurity6</artifactId>
 		</dependency>
-		
+
 		<!-- JPA -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -84,6 +84,14 @@ https://maven.apache.org/xsd/maven-4.0.0.xsd">
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
+		</dependency>
+		
+		<!-- Spring Security test support for MockMvc testing 
+     Provides @WithMockUser, csrf(), and other security test utilities -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
 		</dependency>
 
 

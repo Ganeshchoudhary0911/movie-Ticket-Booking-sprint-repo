@@ -1,0 +1,84 @@
+/* RESET */
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    overflow: hidden;
+    background: #000;
+}
+
+/* 🎞️ VERTICAL FILM REEL BACKGROUND — continuous, no gap */
+.reel-bg {
+    position: fixed;
+    inset: 0; /* full viewport */
+    z-index: 0;
+    opacity: 0.7;
+
+    /* Two identical layers to ensure seamless continuous scroll */
+    background-image: url("/images/film-reel.jpg"), url("/images/film-reel.jpg");
+    background-repeat: repeat-y, repeat-y;
+    background-size: 100% auto, 100% auto; /* avoid 'cover' to prevent rescale seams */
+    background-position: center 0, center -100%;
+
+    animation: reelMove 25s linear infinite; /* same speed as before */
+}
+
+/* ✅ FIXED: Smooth vertical motion with dual layers (no jump at loop) */
+@keyframes reelMove {
+    from {
+           background-position: center 100%, center 0;     }
+    to {
+            background-position: center 0, center -100%;
+    }
+}
+
+/* Dark overlay for readability */
+.reel-bg::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+}
+
+/* LOGIN CARD */
+.login-card {
+    position: relative;
+    z-index: 2;
+
+    width: 380px;
+    padding: 30px;
+    border-radius: 15px;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(6px);
+    color: #fff;
+
+    box-shadow: 0 0 35px rgba(255, 100, 100, 0.4);
+}
+
+/* INPUTS */
+.form-control {
+    background: transparent;
+    color: #fff;
+    border: 1px solid #bbb;
+}
+
+.form-control:focus {
+    background: transparent;
+    border-color: #ff3b3b;
+    box-shadow: none;
+}
+
+/* BUTTON */
+.btn-danger {
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+/* LINKS */
+a {
+    color: #ff5c5c;
+    text-decoration: none;
+}
