@@ -1,207 +1,262 @@
+<!-- <!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Movies | MyTicket</title>
+ 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+ 
+Anime cinema-style black/red background
+<body class="text-white"
+
+      style="background:black;
+
+             background-image:url('https://i.imgur.com/SLy7l2h.jpeg');
+
+             background-size:cover;
+
+             background-position:center;
+
+             background-attachment:fixed;">
+ 
+DARK OVERLAY
+<div class="position-fixed top-0 start-0 w-100 h-100"
+
+     style="background:rgba(0,0,0,0.8);"></div>
+ 
+<div class="position-relative" style="z-index:2;">
+ 
+    HERO
+<div class="position-relative">
+<div style="background:url('https://i.imgur.com/ZzHhQz0.jpeg') center/cover no-repeat; height:300px;"></div>
+ 
+        <div class="position-absolute top-0 start-0 w-100 h-100"
+
+             style="background:linear-gradient(to bottom, rgba(255,0,0,0.35), black);"></div>
+ 
+        <div class="position-absolute top-50 start-50 translate-middle text-center">
+<h1 class="fw-bold text-danger">Movies Near You</h1>
+<p class="text-light">Explore the best movies playing now</p>
+</div>
+</div>
+ 
+    NAVBAR
+<nav class="navbar navbar-dark" style="background:#111;">
+<div class="container">
+<a class="navbar-brand fw-bold text-danger" href="/">MyTicket</a>
+ 
+            <form class="d-flex ms-auto" method="get" action="/">
+<input class="form-control bg-dark text-white border-danger"
+
+                       type="search" name="search" placeholder="Search Movies">
+</form>
+</div>
+</nav>
+ 
+    MAIN CONTENT
+<div class="container my-5">
+ 
+        <div class="d-flex justify-content-between align-items-center mb-4">
+<h3 class="fw-bold text-danger">Recommended Movies</h3>
+ 
+            <button class="btn btn-outline-danger" data-bs-toggle="offcanvas" data-bs-target="#filters">
+
+                Filters
+</button>
+</div>
+ 
+        FILTER PANEL
+<div class="offcanvas offcanvas-end bg-dark text-white" id="filters">
+<div class="offcanvas-header">
+<h5 class="text-danger">Filter Movies</h5>
+<button class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+</div>
+ 
+            <div class="offcanvas-body">
+<form method="get" action="/">
+<label class="form-label">Genre</label>
+<select class="form-select bg-dark text-white border-danger mb-3" name="genre">
+<option value="">Any</option>
+<option>Action</option>
+<option>Drama</option>
+<option>Comedy</option>
+<option>Romance</option>
+</select>
+ 
+                    <label class="form-label">Language</label>
+<select class="form-select bg-dark text-white border-danger mb-3" name="language">
+<option value="">Any</option>
+<option>Telugu</option>
+<option>Hindi</option>
+<option>Tamil</option>
+<option>English</option>
+</select>
+ 
+                    <button class="btn btn-danger w-100">Apply</button>
+</form>
+</div>
+</div>
+ 
+        MOVIE GRID
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-5 g-4">
+ 
+            <div class="col movie-card" th:each="movie : ${movies}">
+<div class="card bg-dark"
+
+                     style="transition:transform 0.2s;">
+ 
+                    <a th:href="@{/movie/{id}(id=${movie.movieId})}">
+<img th:src="${movie.posterUrl}"
+
+                             class="img-fluid w-100"
+
+                             style="height:260px;object-fit:cover;border-radius:6px;">
+</a>
+ 
+                    <div class="card-body">
+<h6 class="fw-bold text-truncate" th:text="${movie.movieName}"></h6>
+ 
+                        <div class="d-flex gap-2 mt-2 flex-wrap">
+<span class="badge bg-danger">
+
+                                ★ <span th:text="${movie.rating}"></span>
+</span>
+<span class="badge bg-secondary" th:text="${movie.genre}"></span>
+</div>
+</div>
+ 
+                    <div class="card-footer bg-transparent border-0">
+<div class="d-grid gap-2">
+<a th:href="@{/movie/{id}(id=${movie.movieId})}"
+
+                               class="btn btn-danger btn-sm">Book Tickets</a>
+<a th:href="@{/movie/{id}(id=${movie.movieId})}"
+
+                               class="btn btn-outline-light btn-sm">View Details</a>
+</div>
+</div>
+ 
+                </div>
+</div>
+ 
+        </div>
+ 
+    </div>
+</div>
+ 
+Bootstrap JS
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+ 
+FLOATING CARD EFFECT (NO CSS)
+<script>
+
+document.addEventListener("mousemove", function (e) {
+
+    document.querySelectorAll(".movie-card .card").forEach(card => {
+ 
+        const rect = card.getBoundingClientRect();
+
+        const cardX = rect.left + rect.width / 2;
+
+        const cardY = rect.top + rect.height / 2;
+ 
+        const dist = Math.hypot(e.clientX - cardX, e.clientY - cardY);
+ 
+        if (dist < 220) {
+
+            card.style.transform = "scale(1.06)";
+
+            card.style.transition = "transform 0.15s ease";
+
+        } else {
+
+            card.style.transform = "scale(1)";
+
+        }
+
+    });
+
+});
+</script>
+</body>
+</html>  -->
+ 
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>TicketNest | Recommended Movies</title>
-    <!-- Bootstrap 5 CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<title>BookMyShow | Recommended Movies</title>
+<link
+
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+
+	rel="stylesheet">
 </head>
-
+ 
 <body class="bg-light">
-
-
+ 
+ 
 <!-- Header fragment -->
 <div th:replace="fragments/header :: header"></div>
+ 
+	<div class="container mt-5">
+<h3 class="fw-bold mb-4">Recommended Movies</h3>
+ 
+		<div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
+ 
+ 
+			<div class="col" th:each="movie : ${movies}">
+<div class="card h-100 border-0 shadow-sm transition-all"
 
+					style="transition: transform 0.2s ease, box-shadow 0.2s ease; cursor: pointer;"
 
-<!-- MOVIES SECTION -->
-<div class="container mt-5">
-    <h3 class="fw-bold mb-4">Recommended Movies</h3>
+					onmouseover="this.style.transform='translateY(-6px)'; this.className='card h-100 border-0 shadow-lg';"
 
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
+					onmouseout="this.style.transform='translateY(0px)'; this.className='card h-100 border-0 shadow-sm';">
+ 
+ 
+					<a th:href="@{/movie/{id}(id=${movie.movieId})}"> <img
 
-        <!-- Movie Card Loop -->
-        <div class="col" th:each="movie : ${movies}">
-            <div class="card h-100 border-0 shadow-sm transition-all" 
-                 style="transition: transform 0.2s ease, box-shadow 0.2s ease; cursor: pointer;"
-                 onmouseover="this.style.transform='translateY(-6px)'; this.className='card h-100 border-0 shadow-lg';"
-                 onmouseout="this.style.transform='translateY(0px)'; this.className='card h-100 border-0 shadow-sm';">
+						th:src="${movie.posterUrl}" alt="Poster"
 
-                <!-- Poster -->
-                <a th:href="@{/movie/{id}(id=${movie.movieId})}">
-                    <img th:src="${movie.posterUrl}"
-                         alt="Poster"
-                         class="card-img-top rounded-top"
-                         style="height: 360px; object-fit: cover; background-color: #000;">
-                </a>
+						class="card-img-top rounded-top"
 
-                <!-- Details -->
-                <div class="card-body px-2">
-                    <h6 class="fw-bold mb-1 text-truncate" th:text="${movie.movieName}">Movie Name</h6>
-                    
-                    <div class="d-flex align-items-center mb-1">
-                        <span class="text-danger me-1">★</span>
-                        <span class="fw-medium" th:text="${movie.rating}">8.5</span>
-                        <span class="text-muted small ms-1">/10</span>
-                    </div>
+						style="height: 360px; object-fit: cover; background-color: #000;">
+</a>
+ 
+ 
+					<div class="card-body px-2">
+<h6 class="fw-bold mb-1 text-truncate"
 
-                    <p class="text-muted small mb-0 text-truncate" th:text="${movie.genre}">Action/Drama/Thriller</p>
-                </div>
+							th:text="${movie.movieName}">Movie Name</h6>
+<div class="d-flex align-items-center mb-1">
+<span class="text-danger me-1">★</span> <span class="fw-medium"
 
-            </div>
-        </div>
-        <!-- /End Movie Card -->
+								th:text="${movie.rating}">8.5</span> <span
 
-    </div>
+								class="text-muted small ms-1">/10</span>
 </div>
+ 
+						<p class="text-muted small mb-0 text-truncate"
 
-<!-- Footer fragment -->
-<div th:replace="fragments/footer :: footer"></div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+							th:text="${movie.genre}">Action/Drama/Thriller</p>
+ 
+						<div class="card-footer bg-transparent border-0">
+<div class="d-grid gap-2">
+<a th:href="@{/movie/{id}(id=${movie.movieId})}"
 
+									class="btn btn-dark rounded-pill px-4 py-2 fw-semibold text-white">
+
+										Book Tickets</a> </a>
+</div>
+</div>
+ 
+					</div>
+</div>
+</div>
+</div>
+ 
+		<script src="https://cdn.jsdelivr.net"></script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-<title>BookMyShow | Movie Tickets</title>
-
-Bootstrap
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-	rel="stylesheet">
-
-<style>
-body {
-	background-color: #f8f9fa;
-}
-
-/* ================= NAVBAR ================= */
-.navbar {
-	background-color: #333545;
-}
-
-.navbar-brand {
-	color: #f84464 !important;
-	font-weight: bold;
-	font-size: 22px;
-}
-
-/* ================= MOVIE CARD ================= */
-.movie-card {
-	border-radius: 10px;
-	overflow: hidden;
-	transition: transform 0.3s ease;
-	cursor: pointer;
-	background: #fff;
-}
-
-.movie-card:hover {
-	transform: scale(1.03);
-}
-
-/* ⭐ FINAL POSTER FIX (NO CROP, SAME SIZE) */
-.movie-poster {
-	width: 100%;
-	height: 260px; /* SAME HEIGHT FOR ALL */
-	object-fit: contain; /* SHOW FULL IMAGE */
-	background-color: #000; /* BLACK BARS (PRO LOOK) */
-	border-radius: 6px;
-}
-
-.rating-badge {
-	background-color: #333;
-	color: #fff;
-	padding: 3px 8px;
-	border-radius: 4px;
-	font-size: 13px;
-}
-</style>
-</head>
-
-<body>
-
-	================= NAVBAR =================
-	<nav class="navbar navbar-expand-lg sticky-top p-3">
-		<div class="container">
-			<a class="navbar-brand" href="/">BookMyShow</a>
-
-			<form class="d-flex ms-auto" method="get" action="/">
-				<input class="form-control me-2" type="search" name="search"
-					placeholder="Search for Movies, Events">
-			</form>
-		</div>
-	</nav>
-
-	================= MOVIES =================
-	<div class="container mt-5">
-		<h3 class="fw-bold mb-4">Recommended Movies</h3>
-
-		<div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
-
-			MOVIE LOOP
-			<div class="col" th:each="movie : ${movies}">
-				<div class="card movie-card shadow-sm border-0">
-
-					IMAGE
-					<a th:href="@{/movie/{id}(id=${movie.movieId})}">
-                    <img th:src="@{${movie.posterUrl}}"
-                         alt="Movie Poster"
-                         class="card-img-top movie-poster">
-                </a>
-					<a th:href="@{/movie/{id}(id=${movie.movieId})}"> Use ${...} for direct web URLs
-						<img th:src="${movie.posterUrl}" alt="Movie Poster"
-						class="card-img-top movie-poster"
-						onerror="this.src='https://via.placeholder.com'">
-					</a>
-
-
-					CARD BODY
-					<div class="card-body px-0">
-						<h6 class="fw-bold mb-1" th:text="${movie.movieName}">Movie
-							Name</h6>
-
-						<div class="d-flex align-items-center mb-1">
-							<span class="rating-badge me-2">★</span> <span
-								th:text="${movie.rating}">5.0</span>/10
-						</div>
-
-						<p class="text-muted small mb-0" th:text="${movie.genre}">
-							Genre</p>
-					</div>
-
-				</div>
-			</div>
-
-		</div>
-	</div>
-
-</body>
-</html> -->
+ 
