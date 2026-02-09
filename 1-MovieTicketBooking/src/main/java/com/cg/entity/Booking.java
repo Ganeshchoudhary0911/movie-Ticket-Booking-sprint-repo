@@ -1,43 +1,46 @@
 package com.cg.entity;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 import jakarta.persistence.*;
 
 @Entity
-@Table
+@Table(name = "booking")
 public class Booking {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long bookingId;
 
-	private LocalDate bookingDate;
-	private double totalAmount;
-	private String paymentStatus;
-	private String bookingStatus;
-	private String seatNumber;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long bookingId;
 
-	@ManyToOne
-	@JoinColumn(name = "user_id")
-	private User user;
+    private LocalDate bookingDate;
+    private double totalAmount;
 
-	@ManyToOne
-	@JoinColumn(name = "show_id")
-	private Show show;
+    // Keeping as String since your model uses it. (Consider Enum later.)
+    private String paymentStatus;  // e.g., "PAID", "PENDING", "FAILED"
+    private String bookingStatus;  // e.g., "CONFIRMED", "CANCELLED"
 
-	public Booking() {
-		super();
-	}
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-	// constructor for Booking Test case.
-	public Booking(Long bookingId, double totalAmount, String bookingStatus) {
-		super();
-		this.bookingId = bookingId;
-		this.totalAmount = totalAmount;
-		this.bookingStatus = bookingStatus;
-	}
+    @ManyToOne
+    @JoinColumn(name = "show_id")
+    private Show show;
+
+    // NEW: Seats booked in this booking
+    @ManyToMany
+    @JoinTable(
+        name = "booking_seat",
+        joinColumns = @JoinColumn(name = "booking_id"),
+        inverseJoinColumns = @JoinColumn(name = "seat_id")
+    )
+    private Set<Seat> seats = new HashSet<>();
+
+    public Booking() {}
 
 	public Booking(Long bookingId, LocalDate bookingDate, double totalAmount, String paymentStatus,
-			String bookingStatus, User user, Show show, String seatNumber) {
+			String bookingStatus, User user, Show show, Set<Seat> seats) {
 		super();
 		this.bookingId = bookingId;
 		this.bookingDate = bookingDate;
@@ -46,10 +49,9 @@ public class Booking {
 		this.bookingStatus = bookingStatus;
 		this.user = user;
 		this.show = show;
-		this.seatNumber = seatNumber;
+		this.seats = seats;
 	}
 
-	// Getter and Setter
 	public Long getBookingId() {
 		return bookingId;
 	}
@@ -106,12 +108,13 @@ public class Booking {
 		this.show = show;
 	}
 
-	public String getSeatNumber() {
-		return seatNumber;
+	public Set<Seat> getSeats() {
+		return seats;
 	}
 
-	public void setSeatNumber(String seatNumber) {
-		this.seatNumber = seatNumber;
+	public void setSeats(Set<Seat> seats) {
+		this.seats = seats;
 	}
 
+    
 }

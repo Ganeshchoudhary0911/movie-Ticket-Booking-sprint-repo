@@ -7,6 +7,9 @@
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
 	rel="stylesheet" />
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+	rel="stylesheet">
 <style>
 .tear {
 	height: 10px;
@@ -44,11 +47,12 @@
 		<div
 			class="d-flex justify-content-between align-items-center no-print mb-3">
 			<div class="d-flex align-items-center gap-2">
-				<span class="fs-5 fw-semibold">🎬 CineBook</span> <span
-					class="text-muted">• e‑Ticket</span>
+				<i class="bi bi-film fs-5 text-warning"></i> <span
+					class="fs-5 fw-semibold">TicketNest</span> <span class="text-muted">•
+					e‑Ticket</span>
 			</div>
 			<div class="d-flex gap-2">
-				<a th:href="@{/bookings/history}" class="btn btn-outline-secondary">Back
+				<a th:href="@{/history}" class="btn btn-outline-secondary">Back
 					to History</a>
 				<button class="btn btn-primary" onclick="window.print()">Print
 					Ticket</button>
@@ -67,8 +71,8 @@
 							ticket handy</small>
 					</div>
 					<small
-						th:text="${#dates.format(#dates.createNow(), 'dd MMM yyyy, hh:mm a')}">02
-						Feb 2026, 10:00 AM</small>
+						th:text="${#dates.format(#dates.createNow(), 'dd MMM yyyy, hh:mm a')}">
+						02 Feb 2026, 10:00 AM </small>
 				</div>
 			</div>
 
@@ -79,55 +83,30 @@
 			<div class="card-body">
 				<div class="row g-4">
 
-					<!-- LEFT: Movie & Show info -->
+					<!-- LEFT -->
 					<div class="col-md-8">
 
-						<!-- Movie / Show title and badges -->
+						<!-- Title row -->
 						<div class="d-flex align-items-center gap-2 mb-1">
-							<h3 class="mb-0" th:if="${booking.show != null}"
-								th:text="${booking.show.title}">Movie Name</h3>
-
-							<!-- Optional rating -->
-							<span class="badge text-bg-dark"
-								th:if="${booking.show != null && booking.show.rating != null}"
-								th:text="${booking.show.rating}">U/A</span>
-
-							<!-- Optional format -->
-							<span class="badge badge-soft"
-								th:if="${booking.show != null && booking.show.format != null}"
-								th:text="${booking.show.format}">2D</span>
-
-							<!-- Optional language -->
-							<span class="badge text-bg-secondary"
-								th:if="${booking.show != null && booking.show.language != null}"
-								th:text="${booking.show.language}">EN</span>
+							<h3 class="mb-0"
+								th:text="${(booking != null and booking.movieName != null) ? booking.movieName : 'Your Movie Ticket'}">
+								Your Movie Ticket</h3>
 						</div>
 
-						<!-- Optional meta: genre & duration -->
-						<div class="mb-2">
-							<small
-								th:if="${booking.show != null && booking.show.genre != null}">
-								Genre: <span th:text="${booking.show.genre}">Action</span>
-							</small> <small class="ms-3"
-								th:if="${booking.show != null && booking.show.durationMinutes != null}">
-								Duration: <span th:text="${booking.show.durationMinutes}">150</span>
-								mins
-							</small>
-						</div>
-
-						<!-- Venue, screen, start time -->
+						<!-- Theatre / Date / Time -->
 						<p class="text-muted mb-2">
 							<span class="me-3"
-								th:if="${booking.show != null && booking.show.venue != null}">
-								📍 <span th:text="${booking.show.venue}">Venue</span>
-							</span> <span
-								th:if="${booking.show != null && booking.show.screen != null}">
-								• Screen <span th:text="${booking.show.screen}">3</span>
+								th:if="${booking != null and booking.theatreName != null}">
+								📍 <span th:text="${booking.theatreName}">Theatre</span>
+							</span> <span th:if="${booking != null and booking.showDate != null}">
+								<span
+								th:text="${#temporals.format(booking.showDate, 'EEE, dd MMM yyyy')}">Fri,
+									14 Feb 2026</span>
 							</span> <span class="ms-3"
-								th:if="${booking.show != null && booking.show.startTime != null}">
-								🗓️ <span
-								th:text="${#temporals.format(booking.show.startTime, 'EEE, dd MMM yyyy • hh:mm a')}">
-									Fri 14 Feb • 07:30 PM </span>
+								th:if="${booking != null and booking.showTime != null}">
+								🕒 <span
+								th:text="${#temporals.format(booking.showTime, 'hh:mm a')}">07:30
+									PM</span>
 							</span>
 						</p>
 
@@ -138,24 +117,10 @@
 								<div class="fs-6 fw-semibold" th:text="${booking.bookingId}">123456</div>
 							</div>
 
-							<div class="col-sm-6" th:if="${booking.user != null}">
-								<div class="text-uppercase text-muted small">Booked By</div>
-								<div class="fs-6 fw-semibold" th:text="${booking.user.username}">user</div>
-							</div>
-
-							<!-- Seats: list -->
-							<div class="col-sm-6" th:if="${booking.seats != null}">
-								<div class="text-uppercase text-muted small">Seats</div>
-								<div class="fs-6 fw-semibold"
-									th:text="${#strings.arrayJoin(#lists.toArray(booking.seats), ', ')}">A10,
-									A11</div>
-							</div>
-
-							<!-- Seats: single string -->
 							<div class="col-sm-6"
-								th:if="${booking.seats == null && booking.seatNumbers != null}">
-								<div class="text-uppercase text-muted small">Seats</div>
-								<div class="fs-6 fw-semibold" th:text="${booking.seatNumbers}">A10</div>
+								th:if="${booking != null and booking.userUsername != null}">
+								<div class="text-uppercase text-muted small">Booked By</div>
+								<div class="fs-6 fw-semibold" th:text="${booking.userUsername}">user</div>
 							</div>
 
 							<div class="col-sm-6">
@@ -166,7 +131,8 @@
 								</div>
 							</div>
 
-							<div class="col-sm-6" th:if="${booking.bookingDate != null}">
+							<div class="col-sm-6"
+								th:if="${booking != null and booking.bookingDate != null}">
 								<div class="text-uppercase text-muted small">Booking Date</div>
 								<div class="fs-6 fw-semibold" th:text="${booking.bookingDate}">2026-02-02</div>
 							</div>
@@ -188,47 +154,14 @@
 							the name on this ticket. </small>
 					</div>
 
-					<!-- RIGHT: Reference & (optional) price breakdown -->
+					<!-- RIGHT -->
 					<div class="col-md-4 text-md-end">
-
-						<!-- Booking reference / PNR -->
 						<div class="mt-2">
 							<small class="text-muted">PNR / Ref</small>
 							<div class="fw-semibold" th:text="${'BK-' + booking.bookingId}">BK-123456</div>
 						</div>
 
-						<!-- Optional price breakdown (each field shown only if present) -->
-						<div class="mt-4"
-							th:if="${booking.baseAmount != null || booking.convenienceFee != null || booking.taxAmount != null}">
-							<div class="text-start text-md-end">
-								<div th:if="${booking.baseAmount != null}">
-									<small class="text-muted">Base Amount</small>
-									<div>
-										₹<span
-											th:text="${#numbers.formatDecimal(booking.baseAmount, 0, 'COMMA', 2, 'POINT')}">1,000.00</span>
-									</div>
-								</div>
-								<div th:if="${booking.convenienceFee != null}">
-									<small class="text-muted">Convenience Fee</small>
-									<div>
-										₹<span
-											th:text="${#numbers.formatDecimal(booking.convenienceFee, 0, 'COMMA', 2, 'POINT')}">120.00</span>
-									</div>
-								</div>
-								<div th:if="${booking.taxAmount != null}">
-									<small class="text-muted">Taxes</small>
-									<div>
-										₹<span
-											th:text="${#numbers.formatDecimal(booking.taxAmount, 0, 'COMMA', 2, 'POINT')}">80.00</span>
-									</div>
-								</div>
-								<hr class="my-2" />
-								<div class="fw-bold">
-									Total Paid: ₹<span
-										th:text="${#numbers.formatDecimal(booking.totalAmount, 0, 'COMMA', 2, 'POINT')}">1,200.00</span>
-								</div>
-							</div>
-						</div>
+						<!-- (Optional breakdown removed to avoid missing BookingDto fields) -->
 
 					</div>
 					<!-- /RIGHT -->

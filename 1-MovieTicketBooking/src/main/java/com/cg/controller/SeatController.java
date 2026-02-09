@@ -45,6 +45,7 @@ public class SeatController {
 
         List<String> bookedSeats = bookingRepository.findBookedSeatsByShowId(showId);
 
+        model.addAttribute("showId", showId);
         model.addAttribute("movieName", show.getMovieName());
         model.addAttribute("theatreName", show.getTheatreName());
         model.addAttribute("showDate", show.getShowDate());
