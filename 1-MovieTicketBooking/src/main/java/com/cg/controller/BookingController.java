@@ -119,6 +119,11 @@ public class BookingController {
         return "redirect:/success/" + bookingId;
 
     }
+    @GetMapping("/payment/fail")
+    public String paymentFail() {
+        return "payment-fail";
+    }
+    
 
     @GetMapping("/payment/fail")
 
@@ -230,6 +235,7 @@ public class BookingController {
         return "redirect:/history";
 
     }
+  
 
  
     // ============================================================================
@@ -259,9 +265,13 @@ public class BookingController {
 
     public String seatSelection() {
 
+    
+    @GetMapping("/seat-selection")
+    public String seatSelection() {
         return "seat-selection";
 
     }
+    
 
  
     // ============================================================================

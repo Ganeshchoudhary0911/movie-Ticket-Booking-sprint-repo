@@ -5,7 +5,7 @@
 <meta charset="UTF-8" />
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
 </head>
- 
+
 <body class="bg-light">
  
 <div class="container mt-5">
@@ -13,19 +13,19 @@
 <div class="card-body">
  
             <h2 class="text-danger fw-bold">❌ Payment Failed</h2>
-<p class="text-muted mb-2">Unfortunately, your payment could not be processed.</p>
-<p class="text-muted mb-4">Please try again or choose a different payment method.</p>
- 
+            <p class="text-muted mb-2">Unfortunately, your payment could not be processed.</p>
+            <p class="text-muted mb-4">Please try again or choose a different payment method.</p>
+
             <hr>
- 
+
             <div class="d-flex gap-3 mt-3">
-<!-- TRY AGAIN BUTTON -->
-<a th:href="@{/home}" class="btn btn-primary">🔄 Try Again</a>
- 
+                <!-- TRY AGAIN BUTTON -->
+                <a href="/seat-selection" class="btn btn-primary">🔄 Try Again</a>
+
                 <!-- OPTIONAL: View History -->
-<a href="/bookings/history" class="btn btn-outline-secondary">View Booking History</a>
-</div>
- 
+                <a href="/bookings/history" class="btn btn-outline-secondary">View Booking History</a>
+            </div>
+
         </div>
 </div>
 </div>
@@ -33,5 +33,3 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
- 
