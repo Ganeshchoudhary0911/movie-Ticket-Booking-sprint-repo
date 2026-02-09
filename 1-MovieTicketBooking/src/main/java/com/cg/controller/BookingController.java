@@ -119,11 +119,7 @@ public class BookingController {
         return "redirect:/success/" + bookingId;
 
     }
-    @GetMapping("/payment/fail")
-    public String paymentFail() {
-        return "payment-fail";
-    }
-    
+ 
 
     @GetMapping("/payment/fail")
 
@@ -260,15 +256,11 @@ public class BookingController {
      
  
     
-
-    @GetMapping("/seat-selection")
-
-    public String seatSelection() {
-
     
-    @GetMapping("/seat-selection")
-    public String seatSelection() {
-        return "seat-selection";
+    @GetMapping("/home")
+    public String homepage(Model model) {
+    	model.addAttribute("movies",movieService.getAllMovies());
+        return "home";
 
     }
     
