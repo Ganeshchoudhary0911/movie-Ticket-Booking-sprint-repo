@@ -34,50 +34,39 @@ public class BookingController {
     }
 
     // ============================================================================
-    // OLD SIMPLE PAYMENT FLOW (seat selection → payment)
+    // PAYMENT (BOOKING-ONLY FLOW)
     // ============================================================================
 
-    // IMPORTANT: THIS METHOD MUST COME FIRST
+    // Payment entry: requires bookingId; forwards to /payment/dto
     @GetMapping("/payment")
-    public String basicPayment(@RequestParam(required = false) Integer seats,
-                               @RequestParam(required = false) Integer amount,
-                               @RequestParam(required = false) Long bookingId,
-                               Model model) {
-
-        // CASE 1: Simple seat-selection flow
-        if (bookingId == null && seats != null && amount != null) {
-            model.addAttribute("seats", seats);
-            model.addAttribute("amount", amount);
-            return "payment";
+    public String paymentEntry(@RequestParam(value = "bookingId", required = false) Long bookingId) {
+        if (bookingId == null) {
+            return "redirect:/history?error=missingBookingId";
         }
-
-        // CASE 2: DTO flow
-        if (bookingId != null) {
-            return "forward:/payment/dto?bookingId=" + bookingId;
-        }
-
-        // CASE 3: fallback if parameters missing
-        return "payment";   // Never return "error" here
+        return "forward:/payment/dto?bookingId=" + bookingId;
     }
 
-    @GetMapping("/booking/success")
-    public String basicSuccess(@RequestParam Long bookingId, Model model) {
+    // Loads the booking and returns the "payment" view
+    @GetMapping("/payment/dto")
+    public String dtoPayment(@RequestParam Long bookingId, Model model) {
         BookingDto booking = bookingService.getBookingById(bookingId);
+        if (booking == null) {
+            return "redirect:/history?error=bookingNotFound";
+        }
         model.addAttribute("booking", booking);
-        return "success";
+        return "payment";
     }
 
-    @GetMapping("/booking/cancel")
-    public String basicCancel() { return "payment-fail"; }
-
-    @GetMapping("/shows")
-    public String showsPage() { return "home"; }
-
-    @GetMapping("/tryagain")
-    public String tryAgain() { return "seat-selection"; }
+    // Confirms payment and redirects to success
+    @PostMapping("/payment/confirm")
+    public String confirmPayment(@RequestParam Long bookingId, RedirectAttributes ra) {
+        BookingDto updated = bookingService.confirmPayment(bookingId);
+        ra.addFlashAttribute("booking", updated);
+        return "redirect:/success/" + bookingId;
+    }
 
     // ============================================================================
-    // DTO BOOKING SYSTEM (confirm → payment → success)
+    // BOOKING CREATION → PAYMENT → SUCCESS
     // ============================================================================
 
     @PostMapping("/confirm/{showId}")
@@ -86,13 +75,17 @@ public class BookingController {
                                  Principal principal,
                                  RedirectAttributes ra) {
 
+        if (principal == null) {
+            return "redirect:/login?error=unauthorized";
+        }
+
         Optional<UserDto> userOpt = userService.findByUsername(principal.getName());
         if (userOpt.isEmpty()) userOpt = userService.findByEmail(principal.getName());
         if (userOpt.isEmpty()) return "redirect:/login?error=unauthorized";
 
         UserDto user = userOpt.get();
-        ShowDto show = showService.getShowById(showId);
 
+        ShowDto show = showService.getShowById(showId);
         if (show == null) {
             ra.addFlashAttribute("error", "Show not found");
             return "redirect:/";
@@ -104,33 +97,16 @@ public class BookingController {
                 amount
         );
 
+        // Go to payment with bookingId; payment page shows booking details
         return "redirect:/payment?bookingId=" + booking.getBookingId();
-    }
-
-    // DTO Payment Page
-    @GetMapping("/payment/dto")
-    public String dtoPayment(@RequestParam Long bookingId, Model model) {
-
-        BookingDto booking = bookingService.getBookingById(bookingId);
-        if (booking == null) return "error";
-
-        model.addAttribute("booking", booking);
-        return "payment";
-    }
-    
-    @PostMapping("/payment/confirm")
-    public String confirmPayment(@RequestParam Long bookingId,
-                                 RedirectAttributes ra) {
-
-        BookingDto updated = bookingService.confirmPayment(bookingId);
-        ra.addFlashAttribute("booking", updated);
-
-        return "redirect:/success/" + bookingId;
     }
 
     @GetMapping("/success/{bookingId}")
     public String dtoSuccess(@PathVariable Long bookingId, Model model) {
         BookingDto booking = bookingService.getBookingById(bookingId);
+        if (booking == null) {
+            return "redirect:/history?error=bookingNotFound";
+        }
         model.addAttribute("booking", booking);
         return "success";
     }
@@ -144,8 +120,30 @@ public class BookingController {
 
     @PostMapping("/cancel/{bookingId}")
     public String cancelBooking(@PathVariable Long bookingId, Principal principal) {
+        if (principal == null) {
+            return "redirect:/login?error=unauthorized";
+        }
         bookingService.cancelBooking(bookingId, principal.getName());
         return "redirect:/history";
+    }
+
+    // ============================================================================
+    // AUX PAGES
+    // ============================================================================
+
+    @GetMapping("/booking/cancel")
+    public String basicCancel() {
+        return "payment-fail";
+    }
+
+    @GetMapping("/shows")
+    public String showsPage() {
+        return "home";
+    }
+
+    @GetMapping("/tryagain")
+    public String tryAgain() {
+        return "seat-selection";
     }
 
     // ============================================================================
@@ -154,6 +152,10 @@ public class BookingController {
 
     @GetMapping("/current")
     public String current(Model model, Principal principal) {
+
+        if (principal == null) {
+            return "redirect:/login?error=unauthorized";
+        }
 
         Optional<UserDto> userOpt = userService.findByUsername(principal.getName());
         if (userOpt.isEmpty()) userOpt = userService.findByEmail(principal.getName());
@@ -178,6 +180,10 @@ public class BookingController {
     @GetMapping("/history")
     public String history(Model model, Principal principal) {
 
+        if (principal == null) {
+            return "redirect:/login?error=unauthorized";
+        }
+
         Optional<UserDto> userOpt = userService.findByUsername(principal.getName());
         if (userOpt.isEmpty()) userOpt = userService.findByEmail(principal.getName());
         if (userOpt.isEmpty()) return "redirect:/login?error=unauthorized";
@@ -196,15 +202,38 @@ public class BookingController {
         model.addAttribute("bookings", history);
         return "bookings-history";
     }
+
+    // ============================================================================
+    // Ticket view (renders Ticket.html)
+    // ============================================================================
+
+ // Ticket view (renders Ticket.html)
+    @GetMapping("/ticket/{bookingId}")
+    public String viewTicket(@PathVariable Long bookingId, Model model) {
+        BookingDto booking = bookingService.getBookingById(bookingId);
+        if (booking == null) {
+            return "redirect:/history?error=bookingNotFound";
+        }
+
+        // Fetch the show by showId from the booking DTO (adjust getter name if different)
+        ShowDto show = null;
+        try {
+            Long showId = booking.getShowId(); // <-- BookingDto should expose this
+            if (showId != null) {
+                show = showService.getShowById(showId);
+            }
+        } catch (Exception ignored) {
+            // swallow - template is guarded with "show != null"
+        }
+
+        model.addAttribute("booking", booking);
+        model.addAttribute("show", show); // <-- add separate 'show' object
+        return "Ticket"; // file must be templates/Ticket.html (case-sensitive in some OS)
+    }
 }
 
 
-
-
-
-
-
-
+	
 
 //package com.cg.controller;
 //
