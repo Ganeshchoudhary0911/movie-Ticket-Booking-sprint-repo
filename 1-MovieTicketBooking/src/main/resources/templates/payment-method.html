@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>Select Payment Method</title>
+
+  <!-- Bootstrap 5 & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet"/>
+
+  <style>
+    .method-card {
+      border: 1px solid rgba(0,0,0,.08);
+      transition: transform .12s ease-out, box-shadow .12s ease-out, border-color .12s ease-out;
+      cursor: pointer;
+      background: #fff;
+      border-radius: .75rem;
+      height: 100%;
+    }
+    .method-card:hover,
+    .method-card:focus-within {
+      transform: translateY(-2px);
+      box-shadow: 0 .5rem 1rem rgba(0,0,0,.08);
+      border-color: rgba(13,110,253,.35);
+      outline: none;
+    }
+    .method-card .icon-wrap {
+      width: 48px; height: 48px;
+      display: inline-flex; align-items: center; justify-content: center;
+      border-radius: .5rem;
+      background: #f6f8ff;
+      border: 1px solid rgba(0,0,0,.05);
+    }
+    .method-card .sub {
+      font-size: .875rem; color: #6c757d;
+    }
+    .brand-badges .badge {
+      font-weight: 500;
+    }
+    .upi-badge {
+      background: linear-gradient(90deg,#5f8e00,#2c5f2d); color: #fff;
+    }
+    .card-badge {
+      background: linear-gradient(90deg,#004aad,#0099ff); color: #fff;
+    }
+    .bank-badge {
+      background: linear-gradient(90deg,#6a11cb,#2575fc); color: #fff;
+    }
+    .wallet-badge {
+      background: linear-gradient(90deg,#ff7a18,#af002d 70%); color:#fff;
+    }
+    .pay-amount {
+      font-weight: 700;
+      font-size: 1.15rem;
+    }
+    /* Make entire card clickable while keeping semantics */
+    .method-card button {
+      all: unset;
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 1rem 1rem 1.1rem 1rem;
+      border-radius: .75rem;
+    }
+    .method-card button:focus-visible {
+      outline: 3px solid rgba(13,110,253,.6);
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body class="bg-light">
+
+<div class="container py-5">
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+
+      <!-- Header row -->
+      <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+        <div class="d-flex align-items-center gap-2">
+          <i class="bi bi-credit-card-2-front fs-5 text-primary"></i>
+          <h3 class="mb-0">Choose a payment method</h3>
+        </div>
+
+        <div class="brand-badges d-flex align-items-center gap-2">
+          <span class="badge text-bg-secondary">Booking #<span th:text="${booking.bookingId}">0</span></span>
+          <span class="badge text-bg-dark">Amount: ₹ <span th:text="${#numbers.formatDecimal(booking.totalAmount, 0, 'COMMA', 2, 'POINT')}">0.00</span></span>
+        </div>
+      </div>
+
+      <hr class="mt-0 mb-4"/>
+
+      <!-- Methods Grid -->
+      <div class="row g-3">
+
+        <!-- UPI -->
+        <div class="col-12 col-md-6 col-lg-4">
+          <form th:action="@{/payment/choose}" method="post" class="h-100">
+            <input type="hidden" name="bookingId" th:value="${booking.bookingId}"/>
+            <input type="hidden" name="method" value="UPI"/>
+            <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+            <div class="method-card h-100">
+              <button type="submit" aria-label="Pay via UPI">
+                <div class="d-flex align-items-start gap-3">
+                  <div class="icon-wrap">
+                    <!-- Minimal UPI-like glyph -->
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M3 12h18" stroke="#2c5f2d" stroke-width="2" stroke-linecap="round"/>
+                      <path d="M7 7l-4 5 4 5" stroke="#5f8e00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M17 7l4 5-4 5" stroke="#5f8e00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+                  <div class="flex-grow-1">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div class="fw-semibold">UPI</div>
+                      <span class="badge upi-badge">Fastest</span>
+                    </div>
+                    <div class="sub mt-1">Pay with any UPI app (BHIM, GPay, PhonePe)</div>
+                  </div>
+                </div>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Debit Card -->
+        <div class="col-12 col-md-6 col-lg-4">
+          <form th:action="@{/payment/choose}" method="post" class="h-100">
+            <input type="hidden" name="bookingId" th:value="${booking.bookingId}"/>
+            <input type="hidden" name="method" value="DEBIT_CARD"/>
+            <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+            <div class="method-card h-100">
+              <button type="submit" aria-label="Pay via Debit Card">
+                <div class="d-flex align-items-start gap-3">
+                  <div class="icon-wrap">
+                    <i class="bi bi-credit-card-2-back text-primary fs-5" aria-hidden="true"></i>
+                  </div>
+                  <div class="flex-grow-1">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div class="fw-semibold">Debit Card</div>
+                      <span class="badge card-badge">VISA / RuPay / MasterCard</span>
+                    </div>
+                    <div class="sub mt-1">Secure OTP flow via your bank</div>
+                  </div>
+                </div>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Credit Card -->
+        <div class="col-12 col-md-6 col-lg-4">
+          <form th:action="@{/payment/choose}" method="post" class="h-100">
+            <input type="hidden" name="bookingId" th:value="${booking.bookingId}"/>
+            <input type="hidden" name="method" value="CREDIT_CARD"/>
+            <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+            <div class="method-card h-100">
+              <button type="submit" aria-label="Pay via Credit Card">
+                <div class="d-flex align-items-start gap-3">
+                  <div class="icon-wrap">
+                    <i class="bi bi-credit-card text-primary fs-5" aria-hidden="true"></i>
+                  </div>
+                  <div class="flex-grow-1">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div class="fw-semibold">Credit Card</div>
+                      <span class="badge card-badge">VISA / Amex / MasterCard</span>
+                    </div>
+                    <div class="sub mt-1">Enjoy rewards & easy EMI options</div>
+                  </div>
+                </div>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Net Banking -->
+        <div class="col-12 col-md-6 col-lg-4">
+          <form th:action="@{/payment/choose}" method="post" class="h-100">
+            <input type="hidden" name="bookingId" th:value="${booking.bookingId}"/>
+            <input type="hidden" name="method" value="NET_BANKING"/>
+            <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+            <div class="method-card h-100">
+              <button type="submit" aria-label="Pay via Net Banking">
+                <div class="d-flex align-items-start gap-3">
+                  <div class="icon-wrap">
+                    <i class="bi bi-bank text-primary fs-5" aria-hidden="true"></i>
+                  </div>
+                  <div class="flex-grow-1">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div class="fw-semibold">Net Banking</div>
+                      <span class="badge bank-badge">All major banks</span>
+                    </div>
+                    <div class="sub mt-1">Redirect to your bank portal</div>
+                  </div>
+                </div>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Wallet -->
+        <div class="col-12 col-md-6 col-lg-4">
+          <form th:action="@{/payment/choose}" method="post" class="h-100">
+            <input type="hidden" name="bookingId" th:value="${booking.bookingId}"/>
+            <input type="hidden" name="method" value="WALLET"/>
+            <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+            <div class="method-card h-100">
+              <button type="submit" aria-label="Pay via Wallet">
+                <div class="d-flex align-items-start gap-3">
+                  <div class="icon-wrap">
+                    <!-- Minimal wallet glyph -->
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <rect x="3" y="6" width="18" height="12" rx="2.5" stroke="#af002d" stroke-width="2"/>
+                      <path d="M15 12h4" stroke="#ff7a18" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                  </div>
+                  <div class="flex-grow-1">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div class="fw-semibold">Wallet</div>
+                      <span class="badge wallet-badge">Instant</span>
+                    </div>
+                    <div class="sub mt-1">Pay with your preferred wallet</div>
+                  </div>
+                </div>
+              </button>
+            </div>
+          </form>
+        </div>
+
+      </div>
+
+      <hr class="my-4"/>
+
+      <div class="d-flex justify-content-between align-items-center">
+        <a class="text-decoration-none" th:href="@{/payment(bookingId=${booking.bookingId})}">
+          ← Back to Payment
+        </a>
+        <div class="text-muted">
+          Payable: <span class="pay-amount">₹ <span th:text="${#numbers.formatDecimal(booking.totalAmount, 0, 'COMMA', 2, 'POINT')}">0.00</span></span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
