@@ -34,7 +34,21 @@ public class Movie {
 	private List<Show> shows;
 
 	public Movie() {
+	}
+	
+// Constructor for Movie Test cases.
+	public Movie(Long movieId, String movieName, String genre) {
+		super();
+		this.movieId = movieId;
+		this.movieName = movieName;
+		this.genre = genre;
+	}
 
+//  Constructor for Show Test cases.
+	public Movie(Long movieId, String movieName) {
+		super();
+		this.movieId = movieId;
+		this.movieName = movieName;
 	}
 
 	public Long getMovieId() {

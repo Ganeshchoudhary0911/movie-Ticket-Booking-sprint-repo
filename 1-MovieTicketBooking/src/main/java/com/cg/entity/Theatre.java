@@ -24,6 +24,13 @@ public class Theatre {
 	public Theatre() {
 
 	}
+	
+// Constructor for Theatre 
+	public Theatre(String theatreName, String location) {
+		super();
+		this.theatreName = theatreName;
+		this.location = location;
+	}
 
 	public Theatre(Long theatreId, String theatreName, String location, String city, int totalSeats,
 			String contactNumber, List<Show> shows) {

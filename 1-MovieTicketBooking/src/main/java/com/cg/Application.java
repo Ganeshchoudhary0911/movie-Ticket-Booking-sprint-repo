@@ -4,6 +4,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.cg.entity.Role;
@@ -18,7 +19,8 @@ public class Application {
 	}
 
 	@Bean
-    CommandLineRunner seedAdmin(UserRepository userRepo, PasswordEncoder encoder) {
+	@Profile("!test")  // disable during tests
+    public CommandLineRunner seedAdmin(UserRepository userRepo, PasswordEncoder encoder) {
         return args -> {
             if (!userRepo.existsByUsername("admin")) {
                 User admin = new User();

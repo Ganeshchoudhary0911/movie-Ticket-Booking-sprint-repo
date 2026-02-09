@@ -7,28 +7,37 @@ import jakarta.persistence.*;
 @Table
 public class Booking {
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long bookingId;
- 
-    private LocalDate bookingDate;
-    private double totalAmount;
-    private String paymentStatus;
-    private String bookingStatus;
- 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
- 
-    @ManyToOne
-    @JoinColumn(name = "show_id")
-    private Show show;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long bookingId;
 
-  public Booking() {
+	private LocalDate bookingDate;
+	private double totalAmount;
+	private String paymentStatus;
+	private String bookingStatus;
+	private String seatNumber;
+
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	private User user;
+
+	@ManyToOne
+	@JoinColumn(name = "show_id")
+	private Show show;
+
+	public Booking() {
 		super();
 	}
 
-public Booking(Long bookingId, LocalDate bookingDate, double totalAmount, String paymentStatus,
-			String bookingStatus, User user, Show show) {
+	// constructor for Booking Test case.
+	public Booking(Long bookingId, double totalAmount, String bookingStatus) {
+		super();
+		this.bookingId = bookingId;
+		this.totalAmount = totalAmount;
+		this.bookingStatus = bookingStatus;
+	}
+
+	public Booking(Long bookingId, LocalDate bookingDate, double totalAmount, String paymentStatus,
+			String bookingStatus, User user, Show show, String seatNumber) {
 		super();
 		this.bookingId = bookingId;
 		this.bookingDate = bookingDate;
@@ -37,9 +46,10 @@ public Booking(Long bookingId, LocalDate bookingDate, double totalAmount, String
 		this.bookingStatus = bookingStatus;
 		this.user = user;
 		this.show = show;
+		this.seatNumber = seatNumber;
 	}
 
-// Getter and Setter
+	// Getter and Setter
 	public Long getBookingId() {
 		return bookingId;
 	}
@@ -96,6 +106,12 @@ public Booking(Long bookingId, LocalDate bookingDate, double totalAmount, String
 		this.show = show;
 	}
 
-    
-    
+	public String getSeatNumber() {
+		return seatNumber;
+	}
+
+	public void setSeatNumber(String seatNumber) {
+		this.seatNumber = seatNumber;
+	}
+
 }
