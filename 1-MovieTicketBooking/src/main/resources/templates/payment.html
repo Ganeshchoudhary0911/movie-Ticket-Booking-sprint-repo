@@ -1,72 +1,72 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>Payment</title>
-  <meta charset="UTF-8" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<title>Payment</title>
+<meta charset="UTF-8" />
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+	rel="stylesheet">
 </head>
 
 <body class="bg-light">
-  <div class="container py-5">
-    <div class="card shadow-sm">
-      <div class="card-body">
+	<div class="container py-5">
+		<div class="card shadow-sm">
+			<div class="card-body">
 
-        <h2 class="mb-1">Complete Your Payment</h2>
-        <p class="text-muted mb-4">Review your booking details and proceed.</p>
+				<h2 class="mb-1">Complete Your Payment</h2>
+				<p class="text-muted mb-4">Review your booking details and
+					proceed.</p>
 
-        <div th:if="${booking != null}">
+				<div th:if="${booking != null}">
 
-          <h4 class="mb-3">Booking Details</h4>
+					<h4 class="mb-3">Booking Details</h4>
 
-          <div class="row g-3">
+					<div class="row g-3">
 
-            <div class="col-12 col-md-6">
-              <div class="d-flex justify-content-between">
-                <span class="text-muted">Booking ID</span>
-                <span th:text="${booking.bookingId}">123</span>
-              </div>
-            </div>
+						<div class="col-12 col-md-6">
+							<div class="d-flex justify-content-between">
+								<span class="text-muted">Booking ID</span> <span
+									th:text="${booking.bookingId}">123</span>
+							</div>
+						</div>
 
-            <div class="col-12 col-md-6">
-              <div class="d-flex justify-content-between">
-                <span class="text-muted">Date</span>
-                <span th:text="${booking.bookingDate}">2026-02-02</span>
-              </div>
-            </div>
+						<div class="col-12 col-md-6">
+							<div class="d-flex justify-content-between">
+								<span class="text-muted">Date</span> <span
+									th:text="${booking.bookingDate}">2026-02-02</span>
+							</div>
+						</div>
 
-            <div class="col-12 col-md-6">
-              <div class="d-flex justify-content-between">
-                <span class="text-muted">Amount</span>
-                <span th:text="${booking.totalAmount}">0</span></span>
-              </div>
-            </div>
+						<div class="col-12 col-md-6">
+							<div class="d-flex justify-content-between">
+								<span class="text-muted">Amount</span> <span
+									th:text="${booking.totalAmount}">0</span></span>
+							</div>
+						</div>
 
-            <div class="col-12 col-md-6">
-              <div class="d-flex justify-content-between">
-                <span class="text-muted">Status</span>
-                <span th:text="${booking.paymentStatus}" class="badge bg-primary">PENDING</span>
-              </div>
-            </div>
+						<div class="col-12 col-md-6">
+							<div class="d-flex justify-content-between">
+								<span class="text-muted">Status</span> <span
+									th:text="${booking.paymentStatus}" class="badge bg-primary">PENDING</span>
+							</div>
+						</div>
 
-          </div>
+					</div>
 
-          <hr class="my-4" />
+					<hr class="my-4" />
 
-          <!-- DTO PAYMENT BUTTON -->
-          <form th:action="@{/payment/confirm}" method="post">
-            <input type="hidden" name="bookingId" th:value="${booking.bookingId}" />
-            <!-- CSRF (optional if Spring Security is enabled) -->
-            <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-            <button type="submit" class="btn btn-primary">Pay Now</button>
-          </form>
+					<!-- DTO PAYMENT BUTTON -->
+					<a th:href="@{/payment/method(bookingId=${booking.bookingId})}" class="btn btn-primary">Pay Now</a>
+					 <a
+						th:href="@{/fail/{id}(id=${booking.bookingId})}"
+						class="btn btn-outline-danger"> Simulate Failure </a>
+				</div>
 
-          <a th:href="@{/fail/{id}(id=${booking.bookingId})}" class="btn btn-outline-danger">Simulate Failure</a>
-        </div>
+			</div>
+		</div>
+	</div>
 
-      </div>
-    </div>
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html>	
+</html>
