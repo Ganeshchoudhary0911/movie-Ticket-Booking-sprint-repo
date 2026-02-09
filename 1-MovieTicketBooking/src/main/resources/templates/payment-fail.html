@@ -5,6 +5,7 @@
     <meta charset="UTF-8" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
 </head>
+
 <body class="bg-light">
 
 <div class="container mt-5">
@@ -13,38 +14,16 @@
 
             <h2 class="text-danger fw-bold">❌ Payment Failed</h2>
             <p class="text-muted mb-2">Unfortunately, your payment could not be processed.</p>
-            <p class="text-muted">Please try again or choose a different payment method.</p>
+            <p class="text-muted mb-4">Please try again or choose a different payment method.</p>
 
             <hr>
 
-            <h5 class="fw-bold">Booking Details</h5>
-            <ul class="list-group mb-4">
-                <li class="list-group-item d-flex justify-content-between">
-                    <strong>Booking ID:</strong>
-                    <span th:text="${booking.bookingId}">123</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between" th:if="${booking.show != null}">
-                    <strong>Show:</strong>
-                    <span th:text="${booking.show.title}">Show</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between">
-                    <strong>Status:</strong>
-                    <span class="badge bg-danger" th:text="${booking.bookingStatus}">CANCELLED</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between">
-                    <strong>Payment Status:</strong>
-                    <span class="badge bg-secondary" th:text="${booking.paymentStatus}">FAILED</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between">
-                    <strong>Amount:</strong>
-                    ₹<span th:text="${booking.totalAmount}">0.00</span>
-                </li>
-            </ul>
+            <div class="d-flex gap-3 mt-3">
+                <!-- TRY AGAIN BUTTON -->
+                <a href="/seat-selection" class="btn btn-primary">🔄 Try Again</a>
 
-            <div class="d-flex gap-3">
-                <a th:href="@{/bookings/history}" class="btn btn-outline-secondary">View Booking History</a>
-                <a th:href="@{|/bookings/confirm/${booking.show.showId}?amount=${booking.totalAmount}|}"
-                   class="btn btn-primary" th:if="${booking.show != null}">Retry Payment</a>
+                <!-- OPTIONAL: View History -->
+                <a href="/bookings/history" class="btn btn-outline-secondary">View Booking History</a>
             </div>
 
         </div>

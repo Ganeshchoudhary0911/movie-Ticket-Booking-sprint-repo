@@ -67,6 +67,11 @@ public class BookingController {
         ra.addFlashAttribute("booking", updated);
         return "redirect:/success/" + bookingId;
     }
+    @GetMapping("/payment/fail")
+    public String paymentFail() {
+        return "payment-fail";
+    }
+    
 
     // ============================================================================
     // BOOKING CREATION → PAYMENT → SUCCESS
@@ -129,6 +134,7 @@ public class BookingController {
         bookingService.cancelBooking(bookingId, principal.getName());
         return "redirect:/history";
     }
+  
 
     // ============================================================================
     // AUX PAGES
@@ -144,10 +150,12 @@ public class BookingController {
         return "home";
     }
 
-    @GetMapping("/tryagain")
-    public String tryAgain() {
+    
+    @GetMapping("/seat-selection")
+    public String seatSelection() {
         return "seat-selection";
     }
+    
 
     // ============================================================================
     // BOOKING LISTS
