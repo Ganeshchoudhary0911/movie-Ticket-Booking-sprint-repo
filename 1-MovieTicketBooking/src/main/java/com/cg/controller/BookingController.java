@@ -10,6 +10,7 @@ import com.cg.dto.BookingDto;
 import com.cg.dto.ShowDto;
 import com.cg.dto.UserDto;
 import com.cg.service.BookingService;
+import com.cg.service.PaymentService;
 import com.cg.service.ShowService;
 import com.cg.service.UserService;
 
@@ -24,13 +25,15 @@ public class BookingController {
     private final BookingService bookingService;
     private final ShowService showService;
     private final UserService userService;
-
+    private final PaymentService paymentService;
+    
     public BookingController(BookingService bookingService,
                              ShowService showService,
-                             UserService userService) {
+                             UserService userService, PaymentService paymentService) {
         this.bookingService = bookingService;
         this.showService = showService;
         this.userService = userService;
+		this.paymentService = paymentService;
     }
 
     // ============================================================================
@@ -230,6 +233,28 @@ public class BookingController {
         model.addAttribute("show", show); // <-- add separate 'show' object
         return "Ticket"; // file must be templates/Ticket.html (case-sensitive in some OS)
     }
+    
+// // --- Show the payment method selection page ---
+//    @GetMapping("/payment/method")
+//    public String selectPaymentMethod(@RequestParam Long bookingId, Model model) {
+//        BookingDto booking = bookingService.getBookingById(bookingId);
+//        if (booking == null) {
+//            return "redirect:/history?error=bookingNotFound";
+//        }
+//        model.addAttribute("booking", booking);
+//        return "payment-method"; // templates/payment-method.html
+//    }
+//
+//    // --- Handle the chosen method, create/mark payment, then go to success ---
+//    @PostMapping("/payment/choose")
+//    public String chooseAndPay(@RequestParam Long bookingId,
+//                               @RequestParam String method,
+//                               RedirectAttributes ra) {
+//        // methods: UPI | DEBIT_CARD | CREDIT_CARD | NET_BANKING | WALLET
+//        paymentService.chooseMethodAndPay(bookingId, method);
+//        ra.addFlashAttribute("paidBy", method);
+//        return "redirect:/success/" + bookingId;
+//    }
 }
 
 
