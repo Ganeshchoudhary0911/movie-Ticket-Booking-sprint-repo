@@ -5,7 +5,7 @@ import com.cg.dto.BookingDto;
 
 public interface IBookingService {
 
-    BookingDto createBooking(Long userId, Long showId, double amount);
+    public BookingDto createBooking(Long userId, Long showId, List<String> seatNames, double amount);
 
     BookingDto confirmPayment(Long bookingId);
 

@@ -20,6 +20,7 @@
 
         <div th:if="${booking != null}">
           <ul class="list-group mb-4">
+
             <li class="list-group-item d-flex justify-content-between">
               <strong>Booking ID:</strong>
               <span th:text="${booking.bookingId}">123</span>
@@ -39,6 +40,15 @@
               <strong>Amount Paid:</strong>
               ₹ <span th:text="${booking.totalAmount}">0.00</span>
             </li>
+
+            <!-- ⭐ ADDED: Seats -->
+            <li class="list-group-item d-flex justify-content-between">
+              <strong>Seats:</strong>
+              <span>
+                <span th:each="s : ${booking.seatNumbers}" th:text="${s} + ' '"></span>
+              </span>
+            </li>
+
           </ul>
         </div>
 

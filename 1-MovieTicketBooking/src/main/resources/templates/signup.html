@@ -1,131 +1,183 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8" />
-<title>Signup</title>
+  <meta charset="UTF-8" />
+  <title>Signup</title>
 
-<!-- Bootstrap -->
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-	rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
-<!-- Signup CSS -->
-<link rel="stylesheet" th:href="@{/css/signup.css}">
+  <style>
+    :root{
+      --gold:#ffd166;
+      --amber:#ffb703;
+      --orange:#fb8500;
+      --glass: rgba(255,255,255,.12);
+      --glass-border: rgba(255,255,255,.25);
+    }
+
+    /* Gradient cinematic background */
+    body{
+      min-height:100vh;
+      background:
+        radial-gradient(1200px 600px at 10% 0%, rgba(255,235,59,.35), transparent 60%),
+        radial-gradient(900px 500px at 90% 20%, rgba(255,87,34,.25), transparent 60%),
+        radial-gradient(700px 400px at 50% 80%, rgba(3,169,244,.22), transparent 60%),
+        linear-gradient(135deg, #0f0f1a 0%, #191925 35%, #201a1a 100%);
+      background-attachment: fixed;
+      color:#fff;
+    }
+
+    body::before{
+      content:"";
+      position:fixed; inset:0;
+      z-index:-1;
+      background-image:url('https://images.unsplash.com/photo-1517604931442-7e0c8ed2963f?auto=format&fit=crop&w=1800&q=80');
+      background-position:center;
+      background-size:cover;
+      opacity:.28;
+    }
+
+    .vignette{
+      position: fixed; inset:0;
+      pointer-events:none;
+      background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,.4) 100%);
+      z-index:0;
+    }
+
+    .film-strip{
+      position:fixed; top:-40px; left:0; right:0; height:140px;
+      z-index:0; pointer-events:none;
+      background:
+        linear-gradient(#000000aa, #00000044 60%, transparent),
+        repeating-linear-gradient(90deg,
+          transparent 0 50px,
+          rgba(255,255,255,.18) 50px 60px,
+          transparent 60px 110px),
+        linear-gradient(180deg, #101010 0%, #1a1a1a 60%, transparent);
+      mask: linear-gradient(#000 70%, transparent);
+    }
+
+    .popcorn-watermark{
+      position: fixed; right:2rem; bottom:2rem;
+      width:140px; height:140px; opacity:.25; z-index:0;
+      pointer-events:none;
+      background-size:contain;
+      background-repeat:no-repeat;
+      background-image:url("data:image/svg+xml;utf8,\
+      <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'>\
+        <defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'>\
+          <stop offset='0%' stop-color='%23FFD166'/>\
+          <stop offset='100%' stop-color='%23FB8500'/>\
+        </linearGradient></defs>\
+        <g fill='url(%23g)' stroke='%23ffffff' stroke-opacity='.6' stroke-width='2'>\
+          <path d='M36 36c4-10 16-18 28-14 7-8 23-5 28 6 10-2 18 12 12 20 8 12-2 26-14 26H46c-14 0-22-16-14-28-6-6-2-10 4-10z' opacity='.85'/>\
+          <path d='M30 58l10 54h12L58 60m12-2l6 54h12l10-54' fill='none'/>\
+          <rect x='42' y='60' width='8' height='46' rx='2'/>\
+          <rect x='58' y='60' width='8' height='46' rx='2'/>\
+          <rect x='74' y='60' width='8' height='46' rx='2'/>\
+          <rect x='90' y='60' width='8' height='46' rx='2'/>\
+        </g></svg>");
+    }
+
+    .signup-wrapper{
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      position:relative;
+      z-index:1;
+      padding:24px;
+    }
+
+    .signup-card{
+      background:var(--glass);
+      border:1px solid var(--glass-border);
+      border-radius:18px;
+      padding:28px 24px;
+      box-shadow:0 10px 30px rgba(0,0,0,.35);
+      backdrop-filter:blur(8px);
+      color:#fff;
+    }
+
+    .btn-ticket{
+      background:linear-gradient(135deg, var(--amber), var(--orange));
+      border:none;
+      color:#1f1f1f;
+      font-weight:700;
+      box-shadow:0 6px 18px rgba(251,133,0,.35);
+    }
+
+    .btn-ticket:hover{
+      background:linear-gradient(135deg, #ffc53d, #ff9900);
+    }
+
+    .brand-title{
+      font-weight:600;
+      letter-spacing:.4px;
+      font-size:32px;
+    }
+  </style>
 </head>
 
 <body>
-	<!-- Animated background -->
-	<div class="position-fixed top-0 start-0 w-100 h-100 overflow-hidden">
-		<div class="reel-bg"></div>
-	</div>
 
+  <div class="film-strip"></div>
+  <div class="popcorn-watermark"></div>
+  <div class="vignette"></div>
 
-	<!-- Background Animation -->
-	<div class="signup-bg"></div>
+  <div class="signup-wrapper container">
 
-	<div
-		class="container vh-100 d-flex justify-content-center align-items-center position-relative">
-		<div class="signup-card p-4">
+    <!-- ⭐ Broadened width here -->
+    <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
 
-			<h2 class="text-center mb-4">Create Account</h2>
+      <div class="signup-card">
 
-			<form th:action="@{/signup}" th:object="${user}" method="post">
+        <!-- ⭐ FIXED: Icon + Title PERFECTLY SIDE‑BY‑SIDE -->
+        <div class="d-flex align-items-center justify-content-center gap-2 mb-3">
+          <i class="bi bi-ticket-perforated"
+             style="font-size:55px;color:#ffd166;text-shadow:0 0 10px #ffd166;"></i>
 
-				<!-- Username -->
-				<div class="mb-3">
-					<label class="form-label">Username</label> <input
-						th:field="*{username}" type="text" class="form-control"
-						placeholder="Your username" required>
-					<div class="text-danger" th:if="${#fields.hasErrors('username')}"
-						th:errors="*{username}"></div>
-				</div>
+          <span class="brand-title">TicketNest</span>
+        </div>
 
-				<!-- Email -->
-				<div class="mb-3">
-					<label class="form-label">Email</label> <input th:field="*{email}"
-						type="email" class="form-control" placeholder="you@example.com"
-						required>
-					<div class="text-danger" th:if="${#fields.hasErrors('email')}"
-						th:errors="*{email}"></div>
-				</div>
+        <h2 class="text-center mb-3">Create Account</h2>
 
-				<!-- Phone -->
-				<div class="mb-3">
-					<label class="form-label">Phone</label> <input
-						th:field="*{phoneNumber}" type="text" class="form-control"
-						placeholder="Optional">
-				</div>
+        <form th:action="@{/signup}" th:object="${user}" method="post">
 
-				<!-- Password -->
-				<div class="mb-3">
-					<label class="form-label">Password</label> <input
-						th:field="*{password}" type="password" class="form-control"
-						placeholder="Create a password" required>
-					<div class="text-danger" th:if="${#fields.hasErrors('password')}"
-						th:errors="*{password}"></div>
-				</div>
+          <div class="mb-3">
+            <label class="form-label">Username</label>
+            <input th:field="*{username}" type="text" class="form-control" required>
+          </div>
 
-				<!-- Submit -->
-				<button class="btn btn-success w-100" type="submit">Sign Up</button>
-			</form>
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input th:field="*{email}" type="email" class="form-control" required>
+          </div>
 
-			<div class="text-center mt-3">
-				<a th:href="@{/login}">Already have an account? Login</a>
-			</div>
-			<!-- Background container -->
-			<div class="reel-bg">
-				<div class="overlay"></div>
-				<!-- keeps text readable -->
-			</div>
+          <div class="mb-3">
+            <label class="form-label">Phone</label>
+            <input th:field="*{phoneNumber}" type="text" class="form-control">
+          </div>
 
-		</div>
-	</div>
-<body class="bg-light">
+          <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input th:field="*{password}" type="password" class="form-control" required>
+          </div>
 
+          <button class="btn btn-ticket w-100" type="submit">Sign Up</button>
+        </form>
 
-<div class="container mt-5">
-  <div class="col-md-6 offset-md-3">
-    <h2 class="text-center mb-4">Create Account</h2>
+        <div class="text-center mt-3">
+          <a th:href="@{/login}" style="color:#ffe08a;">Already have an account? Login</a>
+        </div>
 
-    <form th:action="@{/signup}" th:object="${user}" method="post" class="card p-4 shadow-sm">
-      <div class="mb-3">
-        <label class="form-label">Username</label>
-        <input th:field="*{username}" type="text" class="form-control" placeholder="Your username" required>
-        <div class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
       </div>
-
-      <div class="mb-3">
-        <label class="form-label">Email</label>
-        <input th:field="*{email}" type="email" class="form-control" placeholder="you@example.com" required>
-        <div class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">Phone</label>
-        <input th:field="*{phoneNumber}" type="text" class="form-control">
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">Password</label>
-        <input th:field="*{password}" type="password" class="form-control" placeholder="Create a password" required>
-        <div class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
-      </div>
-
-      <button class="btn btn-success w-100" type="submit">Sign Up</button>
-    </form>
-
-    <div class="text-center mt-3">
-      <a th:href="@{/login}">Already have an account? Login</a>
     </div>
   </div>
-</div>
 
-<!-- Footer fragment -->
-<div th:replace="fragments/footer :: footer"></div>
+  <div th:replace="fragments/footer :: footer"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

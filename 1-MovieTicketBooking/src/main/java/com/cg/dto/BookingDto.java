@@ -2,6 +2,7 @@ package com.cg.dto;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 public class BookingDto {
 
@@ -23,23 +24,33 @@ public class BookingDto {
     private String theatreName;
     private LocalDate showDate;
     private LocalTime showTime;
-    private Double showPrice; // optional
+    
+    private List<String> seatNumbers;
 
     public BookingDto() {}
 
     public BookingDto(Long bookingId, LocalDate bookingDate, double totalAmount, String paymentStatus,
-                      String bookingStatus, Long userId, Long showId, String userUsername) {
-        this.bookingId = bookingId;
-        this.bookingDate = bookingDate;
-        this.totalAmount = totalAmount;
-        this.paymentStatus = paymentStatus;
-        this.bookingStatus = bookingStatus;
-        this.userId = userId;
-        this.showId = showId;
-        this.userUsername = userUsername;
-    }
+			String bookingStatus, Long userId, Long showId, String userUsername, String movieName, String theatreName,
+			LocalDate showDate, LocalTime showTime, List<String> seatNumbers) {
+		super();
+		this.bookingId = bookingId;
+		this.bookingDate = bookingDate;
+		this.totalAmount = totalAmount;
+		this.paymentStatus = paymentStatus;
+		this.bookingStatus = bookingStatus;
+		this.userId = userId;
+		this.showId = showId;
+		this.userUsername = userUsername;
+		this.movieName = movieName;
+		this.theatreName = theatreName;
+		this.showDate = showDate;
+		this.showTime = showTime;
+		this.seatNumbers = seatNumbers;
+	}
 
-    // getters/setters
+
+
+	// getters/setters
     public Long getBookingId() { return bookingId; }
     public void setBookingId(Long bookingId) { this.bookingId = bookingId; }
     public LocalDate getBookingDate() { return bookingDate; }
@@ -65,6 +76,13 @@ public class BookingDto {
     public void setShowDate(LocalDate showDate) { this.showDate = showDate; }
     public LocalTime getShowTime() { return showTime; }
     public void setShowTime(LocalTime showTime) { this.showTime = showTime; }
-    public Double getShowPrice() { return showPrice; }
-    public void setShowPrice(Double showPrice) { this.showPrice = showPrice; }
+
+	public List<String> getSeatNumbers() {
+		return seatNumbers;
+	}
+
+	public void setSeatNumbers(List<String> seatNumbers) {
+		this.seatNumbers = seatNumbers;
+	}
+    
 }

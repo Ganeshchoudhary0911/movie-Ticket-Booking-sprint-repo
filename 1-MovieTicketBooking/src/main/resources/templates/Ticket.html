@@ -1,185 +1,158 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>e‑Ticket</title>
-<meta charset="UTF-8" />
-<!-- Bootstrap 5 -->
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-	rel="stylesheet" />
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
-	rel="stylesheet">
+    <title>e‑Ticket</title>
+    <meta charset="UTF-8" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
 <style>
-.tear {
-	height: 10px;
-	background: repeating-linear-gradient(90deg, transparent 0 8px, rgba(0, 0, 0, .08)
-		8px 10px);
-}
-
-.badge-soft {
-	background: #eef2ff;
-	color: #3730a3;
-}
-
-@media print {
-	.no-print {
-		display: none !important;
-	}
-	body {
-		background: #fff;
-	}
-	.card {
-		box-shadow: none !important;
-		border: 1px solid #ddd;
-	}
-	.container {
-		padding-top: 0 !important;
-	}
-}
+    .tear {
+        height: 10px;
+        background: repeating-linear-gradient(90deg, transparent 0 8px, rgba(0,0,0,.08) 8px 10px);
+    }
+    .badge-soft {
+        background: #eef2ff;
+        color: #3730a3;
+    }
+    @media print {
+        .no-print { display: none !important; }
+        body { background: #fff; }
+        .card { box-shadow: none !important; border: 1px solid #ddd; }
+        .container { padding-top: 0 !important; }
+    }
 </style>
 </head>
+
 <body class="bg-light">
 
-	<div class="container py-4">
+<div class="container py-4">
 
-		<!-- Top actions -->
-		<div
-			class="d-flex justify-content-between align-items-center no-print mb-3">
-			<div class="d-flex align-items-center gap-2">
-				<i class="bi bi-film fs-5 text-warning"></i> <span
-					class="fs-5 fw-semibold">TicketNest</span> <span class="text-muted">•
-					e‑Ticket</span>
-			</div>
-			<div class="d-flex gap-2">
-				<a th:href="@{/history}" class="btn btn-outline-secondary">Back
-					to History</a>
-				<button class="btn btn-primary" onclick="window.print()">Print
-					Ticket</button>
-			</div>
-		</div>
+    <!-- Top actions -->
+    <div class="d-flex justify-content-between align-items-center no-print mb-3">
+        <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-film fs-5 text-warning"></i>
+            <span class="fs-5 fw-semibold">TicketNest</span>
+            <span class="text-muted">• e‑Ticket</span>
+        </div>
 
-		<!-- Ticket card -->
-		<div class="card shadow-sm">
+        <div class="d-flex gap-2">
+            <a th:href="@{/history}" class="btn btn-outline-secondary">Back to History</a>
+            <button class="btn btn-primary" onclick="window.print()">Print Ticket</button>
+        </div>
+    </div>
 
-			<!-- Header -->
-			<div class="card-header bg-dark text-white">
-				<div class="d-flex justify-content-between align-items-center">
-					<div>
-						<div class="fw-semibold">e‑Ticket</div>
-						<small class="text-white-50">Present at entry • Keep this
-							ticket handy</small>
-					</div>
-					<small
-						th:text="${#dates.format(#dates.createNow(), 'dd MMM yyyy, hh:mm a')}">
-						02 Feb 2026, 10:00 AM </small>
-				</div>
-			</div>
+    <!-- Ticket card -->
+    <div class="card shadow-sm">
 
-			<!-- Decorative tear -->
-			<div class="tear"></div>
+        <!-- Header -->
+        <div class="card-header bg-dark text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="fw-semibold">e‑Ticket</div>
+                    <small class="text-white-50">Present at entry • Keep this ticket handy</small>
+                </div>
 
-			<!-- Body -->
-			<div class="card-body">
-				<div class="row g-4">
+                <small th:text="${#dates.format(#dates.createNow(), 'dd MMM yyyy, hh:mm a')}">
+                    02 Feb 2026, 10:00 AM
+                </small>
+            </div>
+        </div>
 
-					<!-- LEFT -->
-					<div class="col-md-8">
+        <div class="tear"></div>
 
-						<!-- Title row -->
-						<div class="d-flex align-items-center gap-2 mb-1">
-							<h3 class="mb-0"
-								th:text="${(booking != null and booking.movieName != null) ? booking.movieName : 'Your Movie Ticket'}">
-								Your Movie Ticket</h3>
-						</div>
+        <!-- Body -->
+        <div class="card-body">
+            <div class="row g-4">
 
-						<!-- Theatre / Date / Time -->
-						<p class="text-muted mb-2">
-							<span class="me-3"
-								th:if="${booking != null and booking.theatreName != null}">
-								📍 <span th:text="${booking.theatreName}">Theatre</span>
-							</span> <span th:if="${booking != null and booking.showDate != null}">
-								<span
-								th:text="${#temporals.format(booking.showDate, 'EEE, dd MMM yyyy')}">Fri,
-									14 Feb 2026</span>
-							</span> <span class="ms-3"
-								th:if="${booking != null and booking.showTime != null}">
-								🕒 <span
-								th:text="${#temporals.format(booking.showTime, 'hh:mm a')}">07:30
-									PM</span>
-							</span>
-						</p>
+                <!-- LEFT -->
+                <div class="col-md-8">
 
-						<!-- Core ticket fields -->
-						<div class="row gy-3 gx-4 mt-1">
-							<div class="col-sm-6">
-								<div class="text-uppercase text-muted small">Booking ID</div>
-								<div class="fs-6 fw-semibold" th:text="${booking.bookingId}">123456</div>
-							</div>
+                    <!-- Title -->
+                    <h3 th:text="${booking.movieName}">Movie Title</h3>
 
-							<div class="col-sm-6"
-								th:if="${booking != null and booking.userUsername != null}">
-								<div class="text-uppercase text-muted small">Booked By</div>
-								<div class="fs-6 fw-semibold" th:text="${booking.userUsername}">user</div>
-							</div>
+                    <!-- Theatre / Date / Time -->
+                    <p class="text-muted mb-2">
+                        📍 <span th:text="${booking.theatreName}">Theatre</span>
+                        &nbsp;&nbsp;
+                        <span th:text="${booking.showDate}">2026-02-10</span>
+                        &nbsp;&nbsp;🕒
+                        <span th:text="${booking.showTime}">07:30 PM</span>
+                    </p>
 
-							<div class="col-sm-6">
-								<div class="text-uppercase text-muted small">Amount Paid</div>
-								<div class="fs-6 fw-semibold">
-									₹<span
-										th:text="${#numbers.formatDecimal(booking.totalAmount, 0, 'COMMA', 2, 'POINT')}">1,200.00</span>
-								</div>
-							</div>
+                    <!-- Ticket fields -->
+                    <div class="row gy-3 gx-4 mt-1">
 
-							<div class="col-sm-6"
-								th:if="${booking != null and booking.bookingDate != null}">
-								<div class="text-uppercase text-muted small">Booking Date</div>
-								<div class="fs-6 fw-semibold" th:text="${booking.bookingDate}">2026-02-02</div>
-							</div>
+                        <div class="col-sm-6">
+                            <div class="text-uppercase text-muted small">Booking ID</div>
+                            <div class="fs-6 fw-semibold" th:text="${booking.bookingId}">123456</div>
+                        </div>
 
-							<div class="col-sm-6">
-								<div class="text-uppercase text-muted small">Status</div>
-								<div class="fs-6 fw-semibold">
-									<span class="badge text-bg-success"
-										th:text="${booking.bookingStatus}">CONFIRMED</span> <span
-										class="badge text-bg-primary ms-1"
-										th:text="${booking.paymentStatus}">PAID</span>
-								</div>
-							</div>
-						</div>
+                        <div class="col-sm-6">
+                            <div class="text-uppercase text-muted small">Booked By</div>
+                            <div class="fs-6 fw-semibold" th:text="${booking.userUsername}">user</div>
+                        </div>
 
-						<hr class="my-3" />
-						<small class="text-muted d-block"> Please arrive at least
-							15 minutes before show time. Carry a valid photo ID that matches
-							the name on this ticket. </small>
-					</div>
+                        <div class="col-sm-6">
+                            <div class="text-uppercase text-muted small">Amount Paid</div>
+                            <div class="fs-6 fw-semibold">
+                                ₹<span th:text="${booking.totalAmount}">1,200.00</span>
+                            </div>
+                        </div>
 
-					<!-- RIGHT -->
-					<div class="col-md-4 text-md-end">
-						<div class="mt-2">
-							<small class="text-muted">PNR / Ref</small>
-							<div class="fw-semibold" th:text="${'BK-' + booking.bookingId}">BK-123456</div>
-						</div>
+                        <div class="col-sm-6">
+                            <div class="text-uppercase text-muted small">Booking Date</div>
+                            <div class="fs-6 fw-semibold" th:text="${booking.bookingDate}">2026-02-02</div>
+                        </div>
 
-						<!-- (Optional breakdown removed to avoid missing BookingDto fields) -->
+                        <div class="col-sm-6">
+                            <div class="text-uppercase text-muted small">Status</div>
+                            <div class="fs-6 fw-semibold">
+                                <span class="badge text-bg-success" th:text="${booking.bookingStatus}">CONFIRMED</span>
+                                <span class="badge text-bg-primary ms-1" th:text="${booking.paymentStatus}">PAID</span>
+                            </div>
+                        </div>
 
-					</div>
-					<!-- /RIGHT -->
+                        <!-- ⭐ ADDED: SEAT NUMBERS -->
+                        <div class="col-sm-6">
+                            <div class="text-uppercase text-muted small">Seats</div>
+                            <div class="fs-6 fw-semibold">
+                                <span th:each="s : ${booking.seatNumbers}" th:text="${s} + ' '"></span>
+                            </div>
+                        </div>
 
-				</div>
-				<!-- /row -->
-			</div>
-			<!-- /card-body -->
+                    </div>
 
-			<div class="card-footer text-center">
-				<small class="text-muted">This is a system‑generated ticket.
-					No signature required.</small>
-			</div>
-		</div>
-	</div>
+                    <hr class="my-3" />
+                    <small class="text-muted d-block">
+                        Please arrive at least 15 minutes before show time. Carry a valid photo ID.
+                    </small>
 
-	<!-- Bootstrap 5 JS -->
-	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+                </div>
+
+                <!-- RIGHT -->
+                <div class="col-md-4 text-md-end">
+                    <div class="mt-2">
+                        <small class="text-muted">PNR / Ref</small>
+                        <div class="fw-semibold" th:text="${'BK-' + booking.bookingId}">BK-123456</div>
+                    </div>
+
+                    <!-- Optional QR -->
+                    <div class="mt-4">
+                        <img th:src="${'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' + booking.bookingId}"
+                             alt="QR Code" class="img-fluid" />
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="card-footer text-center">
+            <small class="text-muted">This is a system‑generated ticket. No signature required.</small>
+        </div>
+    </div>
+
+</div>
+
 </body>
 </html>

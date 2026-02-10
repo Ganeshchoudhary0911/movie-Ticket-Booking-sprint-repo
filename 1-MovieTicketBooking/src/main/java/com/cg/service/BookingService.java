@@ -1,7 +1,7 @@
 package com.cg.service;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +9,11 @@ import org.springframework.stereotype.Service;
 
 import com.cg.dto.BookingDto;
 import com.cg.entity.Booking;
+import com.cg.entity.Seat;
 import com.cg.entity.Show;
 import com.cg.entity.User;
 import com.cg.repository.BookingRepository;
+import com.cg.repository.SeatRepository;
 import com.cg.repository.ShowRepository;
 import com.cg.repository.UserRepository;
 
@@ -27,97 +29,180 @@ public class BookingService implements IBookingService {
     @Autowired
     private ShowRepository showRepository;
 
-    public BookingService(BookingRepository bookingRepository) {
-        this.bookingRepository = bookingRepository;
+    @Autowired
+    private SeatRepository seatRepository;
+
+    @Autowired
+    private SeatService seatService;  // to book seats
+
+    // ============================================================
+    // CREATE BOOKING WITH SEATS (BookMyShow style)
+    // ============================================================
+    public BookingDto createBooking(Long userId, Long showId, List<String> seatNames, double amount) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Show show = showRepository.findById(showId)
+                .orElseThrow(() -> new RuntimeException("Show not found"));
+
+        // Convert seatNames (e.g., "A1", "B3") → Seat entities
+        List<Long> seatIds = mapSeatNamesToIds(showId, seatNames);
+
+        // Ask SeatService to validate + mark seats as booked
+        Set<Seat> seats = seatService.bookSeats(seatIds);
+
+        // Create booking
+        Booking booking = new Booking();
+        booking.setBookingDate(LocalDate.now());
+        booking.setTotalAmount(amount);
+        booking.setPaymentStatus("PENDING");
+        booking.setBookingStatus("CREATED");
+        booking.setUser(user);
+        booking.setShow(show);
+        booking.setSeats(seats);
+
+        booking = bookingRepository.save(booking);
+
+        return toBookingDto(booking);
     }
 
-    // ============== CREATE ==============
-//    @Override
-//    public BookingDto createBooking(Long userId, Long showId, double amount) {
-//        User user = userRepository.findById(userId)
-//                .orElseThrow(() -> new RuntimeException("User not found: " + userId));
-//        Show show = showRepository.findById(showId)
-//                .orElseThrow(() -> new RuntimeException("Show not found: " + showId));
-//
-//        Booking booking = new Booking();
-//        booking.setBookingDate(LocalDate.now());
-//        booking.setTotalAmount(amount);
-//        booking.setPaymentStatus("PENDING");
-//        booking.setBookingStatus("CREATED");
-//        booking.setUser(user);
-//        booking.setShow(show);
-//
-//        return toDto(bookingRepository.save(booking));
-//    }
+    // ============================================================
+    // MAP seatName "A1" → seatId
+    // ============================================================
+    private List<Long> mapSeatNamesToIds(Long showId, List<String> seatNames) {
+        List<Seat> allSeats = seatRepository.findByShowShowId(showId);
 
-    // ============== READ BY USER ==============
+        // 1. Define the normalization logic once
+        java.util.function.Function<String, String> normalize = seat -> {
+            if (seat == null || seat.trim().isEmpty()) return "";
+            String clean = seat.trim().toUpperCase();
+            
+            // Extract letters (Row) and digits (Number)
+            String row = clean.replaceAll("[^A-Z]", "");
+            String digits = clean.replaceAll("[^0-9]", "");
+
+            // Remove leading zeros from digits (e.g., "07" -> "7")
+            try {
+                if (!digits.isEmpty()) {
+                    digits = String.valueOf(Integer.parseInt(digits));
+                }
+            } catch (Exception ignored) { }
+
+            return row + digits;
+        };
+
+        // 2. Build the DB Map using multiple key strategies for maximum compatibility
+        Map<String, Long> dbMap = new HashMap<>();
+        for (Seat s : allSeats) {
+            String row = (s.getSeatRow() == null ? "" : s.getSeatRow().trim().toUpperCase());
+            String num = (s.getSeatNumber() == null ? "" : s.getSeatNumber().trim().toUpperCase());
+
+            // Strategy A: Concatenated Key (e.g., Row "B" + Num "7" = "B7")
+            String concatKey = normalize.apply(row + num);
+            dbMap.put(concatKey, s.getSeatId());
+
+            // Strategy B: Raw Number Key (e.g., if Num is "B7" and Row is null)
+            String rawNumKey = normalize.apply(num);
+            dbMap.put(rawNumKey, s.getSeatId());
+
+            // Debugging logs
+            System.out.println("Mapped Seat ID " + s.getSeatId() + " to keys: [" + concatKey + ", " + rawNumKey + "]");
+        }
+
+        // 3. Match UI seats to DB seats
+        List<Long> matchedSeatIds = new ArrayList<>();
+        for (String seatName : seatNames) {
+            String clientKey = normalize.apply(seatName);
+
+            if (!dbMap.containsKey(clientKey)) {
+                // Log what was available to help diagnose missing data
+                System.err.println("Failed to match: " + clientKey + ". Available keys: " + dbMap.keySet());
+                throw new RuntimeException("Invalid seat: " + seatName);
+            }
+
+            matchedSeatIds.add(dbMap.get(clientKey));
+        }
+
+        return matchedSeatIds;
+    }
+
+
+    // ============================================================
+    // READ METHODS
+    // ============================================================
     @Override
     public List<BookingDto> getUserBookings(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found: " + userId));
+                .orElseThrow(() -> new RuntimeException("User not found"));
         return bookingRepository.findByUser(user).stream()
                 .map(this::toBookingDto)
                 .collect(Collectors.toList());
     }
 
-    // ============== READ BY ID ==============
-//    @Override
-//    public BookingDto getBookingById(Long bookingId) {
-//        Booking booking = bookingRepository.findById(bookingId).orElse(null);
-//        return toDto(booking);
-//    }
+    @Override
+    public BookingDto getBooking(Long bookingId, String username) {
+        Booking booking = bookingRepository.findById(bookingId).orElse(null);
+        if (booking != null && booking.getUser() != null &&
+                username != null && username.equals(booking.getUser().getUsername())) {
+            return toBookingDto(booking);
+        }
+        return null;
+    }
 
-    // ============== CONFIRM PAYMENT ==============
-//    @Override
-//    public BookingDto confirmPayment(Long bookingId) {
-//        Booking booking = bookingRepository.findById(bookingId).orElse(null);
-//        if (booking != null) {
-//            booking.setPaymentStatus("PAID");
-//            booking.setBookingStatus("CONFIRMED");
-//            return toDto(bookingRepository.save(booking));
-//        }
-//        return null;
-//    }
+    public BookingDto getBookingById(Long bookingId) {
+        return bookingRepository.findById(bookingId)
+                .map(this::toBookingDto)
+                .orElse(null);
+    }
 
-    // ============== FAIL PAYMENT ==============
+    // ============================================================
+    // PAYMENT CONFIRMATION
+    // ============================================================
+    public BookingDto confirmPayment(Long bookingId) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+
+        booking.setPaymentStatus("PAID");
+        booking.setBookingStatus("CONFIRMED");
+
+        booking = bookingRepository.save(booking);
+        return toBookingDto(booking);
+    }
+
+    // ============================================================
+    // FAIL / CANCEL
+    // ============================================================
     @Override
     public BookingDto failPayment(Long bookingId) {
         Booking booking = bookingRepository.findById(bookingId).orElse(null);
         if (booking != null) {
             booking.setPaymentStatus("FAILED");
             booking.setBookingStatus("CANCELLED");
-            return toBookingDto(bookingRepository.save(booking));
+            booking = bookingRepository.save(booking);
         }
-        return null;
+        return toBookingDto(booking);
     }
 
-    // ============== CANCEL BOOKING ==============
     @Override
     public BookingDto cancelBooking(Long bookingId, String username) {
         Booking booking = bookingRepository.findById(bookingId).orElse(null);
-        if (booking != null && booking.getUser() != null &&
-            username != null && username.equals(booking.getUser().getUsername())) {
+        if (booking != null &&
+                booking.getUser() != null &&
+                username.equals(booking.getUser().getUsername())) {
+
             booking.setBookingStatus("CANCELLED");
-            return toBookingDto(bookingRepository.save(booking));
+            booking = bookingRepository.save(booking);
         }
-        return null;
+        return toBookingDto(booking);
     }
 
-    // ============== GET BOOKING (WITH USERNAME CHECK) ==============
-    @Override
-    public BookingDto getBooking(Long bookingId, String username) {
-        Booking booking = bookingRepository.findById(bookingId).orElse(null);
-        if (booking != null && booking.getUser() != null &&
-            username != null && username.equals(booking.getUser().getUsername())) {
-            return toBookingDto(booking);
-        }
-        return null;
-    }
-
-    // ===== Inline mapping: Entity -> DTO =====
- // In BookingService (or wherever you build the DTO)
-    private BookingDto toBookingDto(com.cg.entity.Booking b) {
+    // ============================================================
+    // MAPPING Booking → BookingDto
+    // ============================================================
+    private BookingDto toBookingDto(Booking b) {
         if (b == null) return null;
+
         BookingDto dto = new BookingDto();
         dto.setBookingId(b.getBookingId());
         dto.setBookingDate(b.getBookingDate());
@@ -125,52 +210,31 @@ public class BookingService implements IBookingService {
         dto.setPaymentStatus(b.getPaymentStatus());
         dto.setBookingStatus(b.getBookingStatus());
 
+        // User
         if (b.getUser() != null) {
             dto.setUserId(b.getUser().getUserId());
-            dto.setUserUsername(b.getUser().getUsername()); // adjust getter if needed
+            dto.setUserUsername(b.getUser().getUsername());
         }
+
+        // Show
         if (b.getShow() != null) {
             dto.setShowId(b.getShow().getShowId());
             dto.setShowDate(b.getShow().getShowDate());
             dto.setShowTime(b.getShow().getShowTime());
-            dto.setShowPrice(b.getShow().getPrice());
-
-            if (b.getShow().getMovie() != null) {
-                dto.setMovieName(b.getShow().getMovie().getMovieName()); // adjust getter name if different
-            }
-            if (b.getShow().getTheatre() != null) {
-                dto.setTheatreName(b.getShow().getTheatre().getTheatreName()); // adjust if different
-            }
+            dto.setTheatreName(b.getShow().getTheatre().getTheatreName());
+            dto.setMovieName(b.getShow().getMovie().getMovieName());
         }
+
+        // ⭐ Seats
+        if (b.getSeats() != null) {
+            List<String> seatNames = b.getSeats().stream()
+                    .map(s -> s.getSeatRow() + s.getSeatNumber())
+                    .sorted()
+                    .collect(Collectors.toList());
+            dto.setSeatNumbers(seatNames);
+        }
+
         return dto;
     }
 
-    public BookingDto getBookingById(Long bookingId) {
-        var b = bookingRepository.findById(bookingId).orElse(null);
-        return toBookingDto(b);
-    }
-
-    public BookingDto createBooking(Long userId, Long showId, double amount) {
-        var b = new com.cg.entity.Booking();
-        b.setUser(userRepository.getReferenceById(userId));
-        b.setShow(showRepository.getReferenceById(showId));
-        b.setTotalAmount(amount);
-        b.setBookingDate(java.time.LocalDate.now());
-
-        // Ensure PENDING (so your payment page shows PENDING before Pay Now)
-        b.setPaymentStatus("PENDING");
-        b.setBookingStatus("CREATED");
-
-        b = bookingRepository.save(b);
-        return toBookingDto(b);
-    }
-
-    public BookingDto confirmPayment(Long bookingId) {
-        var b = bookingRepository.findById(bookingId)
-            .orElseThrow(() -> new IllegalArgumentException("Booking not found: " + bookingId));
-        b.setPaymentStatus("PAID");
-        b.setBookingStatus("CONFIRMED");
-        b = bookingRepository.save(b);
-        return toBookingDto(b);
-    }
 }

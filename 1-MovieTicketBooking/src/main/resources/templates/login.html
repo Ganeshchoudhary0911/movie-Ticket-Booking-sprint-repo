@@ -3,47 +3,218 @@
 <head>
   <meta charset="UTF-8" />
   <title>Login</title>
+
+  <!-- Bootstrap + Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+  <style>
+    /* -------------------------------------------------------
+       BACKGROUND LAYERS:
+       1) Vibrant marquee gradient (no image)
+       2) Optional bright cinematic photo
+       3) Soft vignette for depth
+       You can toggle the image layer ON/OFF below.
+       ------------------------------------------------------- */
+
+    :root{
+      --gold:#ffd166;
+      --amber:#ffb703;
+      --orange:#fb8500;
+      --ink:#121212;
+      --glass: rgba(255,255,255,.12);
+      --glass-border: rgba(255,255,255,.25);
+    }
+
+    /* Base: marquee-style multi-color gradient */
+    body{
+      min-height:100vh;
+      background:
+        radial-gradient(1200px 600px at 10% 0%, rgba(255,235,59,.35), transparent 60%),
+        radial-gradient(900px 500px at 90% 20%, rgba(255,87,34,.25), transparent 60%),
+        radial-gradient(700px 400px at 50% 80%, rgba(3,169,244,.22), transparent 60%),
+        linear-gradient(135deg, #0f0f1a 0%, #191925 35%, #201a1a 100%);
+      background-attachment: fixed, fixed, fixed, fixed;
+      color:#fff;
+    }
+
+    /* OPTIONAL: enable one of these bright, non-spooky image overlays.
+       Uncomment ONE of the background-image lines to add a cinematic photo.
+       (Kept as background layer so layout stays fast and readable.)
+    */
+    body::before{
+      content:"";
+      position:fixed; inset:0;
+      z-index:-1;
+      background-position:center;
+      background-size:cover;
+      background-repeat:no-repeat;
+      opacity:.28; /* keep it light so the form is readable */
+      /* --- Option B: Clapperboard (warm, cinematic) --- */
+      background-image:url('https://images.unsplash.com/photo-1517604931442-7e0c8ed2963f?auto=format&fit=crop&w=1800&q=80');
+      /* --- Option C: Cinema marquee lights (energetic) ---
+      background-image:url('https://images.unsplash.com/photo-1512428290761-94c4e05f9e8b?auto=format&fit=crop&w=1800&q=80');
+      */
+    }
+
+    /* Gentle vignette to frame the center */
+    .vignette {
+      position: fixed; inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,.4) 100%);
+      z-index:0;
+    }
+
+    /* Decorative FILM STRIP accent on the top edge */
+    .film-strip {
+      position: fixed; top: -40px; left: 0; right: 0; height: 140px;
+      z-index: 0; pointer-events: none;
+      background:
+        linear-gradient(#000000aa, #00000044 60%, transparent),
+        repeating-linear-gradient(90deg,
+          transparent 0 50px,
+          rgba(255,255,255,.18) 50px 60px,
+          transparent 60px 110px),
+        linear-gradient(180deg, #101010 0%, #1a1a1a 60%, transparent);
+      mask:
+        linear-gradient(#000 70%, transparent); /* fade bottom */
+    }
+
+    /* Subtle popcorn watermark in the bottom-right via inline SVG (data URI) */
+    .popcorn-watermark{
+      position: fixed; right: 2rem; bottom: 2rem;
+      width: 140px; height: 140px; opacity: .25; z-index: 0; pointer-events: none;
+      background-size: contain; background-repeat: no-repeat; background-position: center;
+      background-image: url("data:image/svg+xml;utf8,\
+      <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'>\
+        <defs>\
+          <linearGradient id='g' x1='0' y1='0' x2='1' y2='1'>\
+            <stop offset='0%' stop-color='%23FFD166'/>\
+            <stop offset='100%' stop-color='%23FB8500'/>\
+          </linearGradient>\
+        </defs>\
+        <g fill='url(%23g)' stroke='%23ffffff' stroke-opacity='.6' stroke-width='2'>\
+          <path d='M36 36c4-10 16-18 28-14 7-8 23-5 28 6 10-2 18 12 12 20 8 12-2 26-14 26H46c-14 0-22-16-14-28-6-6-2-10 4-10z' opacity='.85'/>\
+          <path d='M30 58l10 54h12L58 60m12-2l6 54h12l10-54' fill='none'/>\
+          <rect x='42' y='60' width='8' height='46' rx='2'/>\
+          <rect x='58' y='60' width='8' height='46' rx='2'/>\
+          <rect x='74' y='60' width='8' height='46' rx='2'/>\
+          <rect x='90' y='60' width='8' height='46' rx='2'/>\
+        </g>\
+      </svg>");
+      filter: drop-shadow(0 6px 12px rgba(0,0,0,.25));
+    }
+
+    /* Centering wrapper */
+    .login-wrapper{
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      position: relative;
+      z-index: 1; /* above decorations */
+      padding: 24px;
+    }
+
+    /* Glass card */
+    .login-card{
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 18px;
+      padding: 28px 24px;
+      color:#fff;
+      box-shadow:
+        0 10px 30px rgba(0,0,0,.35),
+        0 0 0 1px rgba(255,255,255,.06) inset;
+      backdrop-filter: blur(8px);
+    }
+
+    .brand{
+      display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:6px;
+    }
+    /* Do not change the icon name/class as requested */
+    .brand .movie-icon{
+      font-size: 52px;
+      color: var(--gold);
+      text-shadow: 0 0 10px rgba(255,209,102,.65), 0 0 20px rgba(251,133,0,.35);
+    }
+    .brand-title{
+      font-weight: 600; letter-spacing:.2px;
+    }
+
+    .tagline{
+      font-size:.95rem; opacity:.9; margin-bottom:16px; text-align:center;
+    }
+
+    .form-control{
+      background: rgba(255,255,255,.95);
+      border-color: rgba(0,0,0,.1);
+    }
+    .form-label{ font-weight:500; }
+
+    .btn-ticket{
+      background: linear-gradient(135deg, var(--amber), var(--orange));
+      border:none; color:#1f1f1f; font-weight:700;
+      box-shadow: 0 6px 18px rgba(251,133,0,.35);
+    }
+    .btn-ticket:hover{ background: linear-gradient(135deg, #ffc53d, #ff9900); color:#111; }
+
+    .link-light-gold a{ color:#ffe08a; text-decoration:none; }
+    .link-light-gold a:hover{ color:#ffffff; text-decoration:underline; }
+  </style>
 </head>
-<body class="bg-light">
 
-  <div class="container mt-5">
-    <div class="col-md-4 offset-md-4">
-      <h2 class="text-center mb-4">Sign in</h2>
+<body>
+  <!-- Background accents -->
+  <div class="film-strip"></div>
+  <div class="popcorn-watermark"></div>
+  <div class="vignette"></div>
 
-      <!-- Messages -->
-      <div th:if="${param.error}">
-        <p class="text-danger">Invalid username or password</p>
-      </div>
-      <div th:if="${param.logout}">
-        <p class="text-success">You have been logged out.</p>
-      </div>
-      <div th:if="${param.signup}">
-        <p class="text-success">Signup successful. Please log in.</p>
-      </div>
+  <div class="login-wrapper container">
+    <div class="col-12 col-sm-10 col-md-7 col-lg-5 col-xl-4">
+      <div class="login-card">
+        <div class="brand">
+          <!-- ✅ Movie icon kept unchanged -->
+          <i class="bi bi-ticket-perforated movie-icon"></i>
+          <span class="fs-4 brand-title">TicketNest</span>
+        </div>
+        <p class="tagline">Book your next show in seconds</p>
 
-      <!-- IMPORTANT: Single form only -->
-      <form method="post" th:action="@{/do-login}">
-        <!-- If redirected to login from a protected URL, Spring Security can still use SavedRequest.
-             Optionally keep this returnTo param if you want manual fallback -->
-        <input type="hidden" name="returnTo" th:value="${param.returnTo}" />
+        <h2 class="text-center mb-3">Sign in</h2>
 
-        <div class="mb-3">
-          <label class="form-label">Username</label>
-          <input type="text" name="username" class="form-control" required>
+        <!-- Messages -->
+        <div th:if="${param.error}">
+          <p class="text-danger bg-white bg-opacity-75 p-2 rounded">Invalid username or password</p>
+        </div>
+        <div th:if="${param.logout}">
+          <p class="text-success bg-white bg-opacity-75 p-2 rounded">You have been logged out.</p>
+        </div>
+        <div th:if="${param.signup}">
+          <p class="text-success bg-white bg-opacity-75 p-2 rounded">Signup successful. Please log in.</p>
         </div>
 
-        <div class="mb-3">
-          <label class="form-label">Password</label>
-          <input type="password" name="password" class="form-control" required>
+        <!-- Login Form (mapping unchanged) -->
+        <form method="post" th:action="@{/do-login}">
+          <input type="hidden" name="returnTo" th:value="${param.returnTo}" />
+
+          <div class="mb-3">
+            <label class="form-label">Username</label>
+            <input type="text" name="username" class="form-control" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input type="password" name="password" class="form-control" required>
+          </div>
+
+          <button type="submit" class="btn btn-ticket w-100">
+            <i class="bi bi-film me-1"></i> Login
+          </button>
+        </form>
+
+        <div class="text-center mt-3 link-light-gold">
+          <a th:href="@{/signup}">Don’t have an account? Sign up</a>
         </div>
-
-        <button type="submit" class="btn btn-primary w-100">Login</button>
-      </form>
-
-      <div class="text-center mt-3">
-        <a th:href="@{/signup}">Don’t have an account? Sign up</a>
       </div>
     </div>
   </div>

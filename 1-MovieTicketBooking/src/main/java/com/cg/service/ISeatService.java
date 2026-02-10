@@ -12,5 +12,5 @@ public interface ISeatService {
     SeatDto getSeatById(Long seatId);
 
     // Mark a seat as booked and return updated DTO
-    SeatDto markSeatAsBooked(Long seatId);
+//    SeatDto markSeatAsBooked(Long seatId);
 }
