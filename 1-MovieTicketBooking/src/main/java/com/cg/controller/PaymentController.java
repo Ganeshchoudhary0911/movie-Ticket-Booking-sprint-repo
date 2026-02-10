@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@RequestMapping("/payment") // <-- namespace all payment gateway routes
+//@RequestMapping("/payment") // <-- namespace all payment gateway routes
 public class PaymentController {
 
     private final BookingService bookingService;
