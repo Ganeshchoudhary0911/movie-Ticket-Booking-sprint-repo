@@ -59,7 +59,7 @@
 					<!-- DTO PAYMENT BUTTON -->
 					<a th:href="@{/payment/method(bookingId=${booking.bookingId})}" class="btn btn-primary">Pay Now</a>
 					 <a
-						 th:href="@{/payment/fail}"
+						 th:href="@{/fail/{id}(id=${booking.bookingId})}"
 						class="btn btn-outline-danger">cancel </a>
 				</div>
 

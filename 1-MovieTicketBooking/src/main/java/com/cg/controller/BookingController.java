@@ -1,399 +1,417 @@
 package com.cg.controller;
- 
+
 import java.security.Principal;
-
 import java.time.LocalDate;
-
 import java.util.Comparator;
-
 import java.util.List;
-
 import java.util.Optional;
- 
+
 import com.cg.dto.BookingDto;
-
 import com.cg.dto.ShowDto;
-
 import com.cg.dto.UserDto;
-
 import com.cg.service.BookingService;
-import com.cg.service.MovieService;
 import com.cg.service.PaymentService;
-
 import com.cg.service.ShowService;
-
 import com.cg.service.UserService;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-
 import org.springframework.ui.Model;
-
 import org.springframework.web.bind.annotation.*;
-
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
- 
+
 @Controller
 
 public class BookingController {
-	
-	@Autowired
-	private MovieService movieService;
- 
-    private final BookingService bookingService;
 
-    private final ShowService showService;
+	private final BookingService bookingService;
+	private final ShowService showService;
+	private final UserService userService;
+	private final PaymentService paymentService;
+	public BookingController(BookingService bookingService,
 
-    private final UserService userService;
+			ShowService showService,
 
-    private final PaymentService paymentService;
+			UserService userService, PaymentService paymentService) {
 
-    public BookingController(BookingService bookingService,
+		this.bookingService = bookingService;
 
-                             ShowService showService,
+		this.showService = showService;
 
-                             UserService userService, PaymentService paymentService) {
-
-        this.bookingService = bookingService;
-
-        this.showService = showService;
-
-        this.userService = userService;
+		this.userService = userService;
 
 		this.paymentService = paymentService;
 
-    }
- 
-    // ============================================================================
+	}
 
-    // PAYMENT (BOOKING-ONLY FLOW)
+	// ============================================================================
 
-    // ============================================================================
- 
-    // Payment entry: requires bookingId; forwards to /payment/dto
+	// PAYMENT (BOOKING-ONLY FLOW)
 
-    @GetMapping("/payment")
+	// ============================================================================
 
-    public String paymentEntry(@RequestParam(value = "bookingId", required = false) Long bookingId) {
+	// Payment entry: requires bookingId; forwards to /payment/dto
 
-        if (bookingId == null) {
+	@GetMapping("/payment")
 
-            return "redirect:/history?error=missingBookingId";
+	public String paymentEntry(@RequestParam(value = "bookingId", required = false) Long bookingId) {
 
-        }
+		if (bookingId == null) {
 
-        return "forward:/payment/dto?bookingId=" + bookingId;
+			return "redirect:/history?error=missingBookingId";
 
-    }
- 
-    // Loads the booking and returns the "payment" view
+		}
 
-    @GetMapping("/payment/dto")
+		return "forward:/payment/dto?bookingId=" + bookingId;
 
-    public String dtoPayment(@RequestParam Long bookingId, Model model) {
+	}
 
-        BookingDto booking = bookingService.getBookingById(bookingId);
+	// Loads the booking and returns the "payment" view
 
-        if (booking == null) {
+	@GetMapping("/payment/dto")
 
-            return "redirect:/history?error=bookingNotFound";
+	public String dtoPayment(@RequestParam Long bookingId, Model model) {
 
-        }
+		BookingDto booking = bookingService.getBookingById(bookingId);
 
-        model.addAttribute("booking", booking);
+		if (booking == null) {
 
-        return "payment";
+			return "redirect:/history?error=bookingNotFound";
 
-    }
- 
-    // Confirms payment and redirects to success
+		}
 
-    @PostMapping("/payment/confirm")
+		model.addAttribute("booking", booking);
 
-    public String confirmPayment(@RequestParam Long bookingId, RedirectAttributes ra) {
+		return "payment";
 
-        BookingDto updated = bookingService.confirmPayment(bookingId);
+	}
 
-        ra.addFlashAttribute("booking", updated);
+	// Confirms payment and redirects to success
 
-        return "redirect:/success/" + bookingId;
+	@PostMapping("/payment/confirm")
 
-    }
- 
+	public String confirmPayment(@RequestParam Long bookingId, RedirectAttributes ra) {
 
-    @GetMapping("/payment/fail")
+		BookingDto updated = bookingService.confirmPayment(bookingId);
 
-    public String paymentFail() {
+		ra.addFlashAttribute("booking", updated);
 
-        return "payment-fail";
+		return "redirect:/success/" + bookingId;
 
-    }
+	}
 
- 
-    // ============================================================================
+	// ============================================================================
 
-    // BOOKING CREATION → PAYMENT → SUCCESS
+	// BOOKING CREATION → PAYMENT → SUCCESS
 
-    // ============================================================================
- 
-    @PostMapping("/confirm/{showId}")
+	// ============================================================================
 
-    public String confirmBooking(@PathVariable Long showId,
+	@PostMapping("/confirm/{showId}")
 
-                                 @RequestParam double amount,
+	public String confirmBooking(@PathVariable Long showId,
 
-                                 Principal principal,
+			@RequestParam double amount,
 
-                                 RedirectAttributes ra) {
- 
-        if (principal == null) {
+			Principal principal,
 
-            return "redirect:/login?error=unauthorized";
+			RedirectAttributes ra) {
 
-        }
- 
-        Optional<UserDto> userOpt = userService.findByUsername(principal.getName());
+		if (principal == null) {
 
-        if (userOpt.isEmpty()) userOpt = userService.findByEmail(principal.getName());
+			return "redirect:/login?error=unauthorized";
 
-        if (userOpt.isEmpty()) return "redirect:/login?error=unauthorized";
- 
-        UserDto user = userOpt.get();
- 
-        ShowDto show = showService.getShowById(showId);
+		}
 
-        if (show == null) {
+		Optional<UserDto> userOpt = userService.findByUsername(principal.getName());
 
-            ra.addFlashAttribute("error", "Show not found");
+		if (userOpt.isEmpty())
+			userOpt = userService.findByEmail(principal.getName());
 
-            return "redirect:/";
+		if (userOpt.isEmpty())
+			return "redirect:/login?error=unauthorized";
 
-        }
- 
-        BookingDto booking = bookingService.createBooking(
+		UserDto user = userOpt.get();
 
-                user.getUserId(),
+		ShowDto show = showService.getShowById(showId);
 
-                show.getShowId(),
+		if (show == null) {
 
-                amount
+			ra.addFlashAttribute("error", "Show not found");
 
-        );
- 
-        // Go to payment with bookingId; payment page shows booking details
+			return "redirect:/";
 
-        return "redirect:/payment?bookingId=" + booking.getBookingId();
+		}
 
-    }
- 
-    @GetMapping("/success/{bookingId}")
+		BookingDto booking = bookingService.createBooking(
 
-    public String dtoSuccess(@PathVariable Long bookingId, Model model) {
+				user.getUserId(),
 
-        BookingDto booking = bookingService.getBookingById(bookingId);
+				show.getShowId(),
 
-        if (booking == null) {
+				amount
 
-            return "redirect:/history?error=bookingNotFound";
+		);
 
-        }
+		// Go to payment with bookingId; payment page shows booking details
 
-        model.addAttribute("booking", booking);
+		return "redirect:/payment?bookingId=" + booking.getBookingId();
 
-        return "success";
+	}
 
-    }
- 
-    @GetMapping("/fail/{bookingId}")
+	@GetMapping("/success/{bookingId}")
 
-    public String dtoFail(@PathVariable Long bookingId, Model model) {
+	public String dtoSuccess(@PathVariable Long bookingId, Model model) {
 
-        BookingDto booking = bookingService.failPayment(bookingId);
+		BookingDto booking = bookingService.getBookingById(bookingId);
 
-        model.addAttribute("booking", booking);
+		if (booking == null) {
 
-        return "payment-fail";
+			return "redirect:/history?error=bookingNotFound";
 
-    }
- 
-    @PostMapping("/cancel/{bookingId}")
+		}
 
-    public String cancelBooking(@PathVariable Long bookingId, Principal principal) {
+		model.addAttribute("booking", booking);
 
-        if (principal == null) {
+		return "success";
 
-            return "redirect:/login?error=unauthorized";
+	}
 
-        }
+	@GetMapping("/fail/{bookingId}")
 
-        bookingService.cancelBooking(bookingId, principal.getName());
+	public String dtoFail(@PathVariable Long bookingId, Model model) {
 
-        return "redirect:/history";
+		BookingDto booking = bookingService.failPayment(bookingId);
 
-    }
-  
+		model.addAttribute("booking", booking);
 
- 
-    // ============================================================================
+		return "payment-fail";
 
-    // AUX PAGES
+	}
 
-    // ============================================================================
- 
-    @GetMapping("/booking/cancel")
+	@PostMapping("/cancel/{bookingId}")
 
-    public String basicCancel() {
+	public String cancelBooking(@PathVariable Long bookingId, Principal principal) {
 
-        return "payment-fail";
+		if (principal == null) {
 
-    }
- 
-    @GetMapping("/home")
-    public String home(Model model){
-        model.addAttribute("movies", movieService.getAllMovies());
-        return "home";
-    }
-     
- 
-    
-    
-   
-    
+			return "redirect:/login?error=unauthorized";
 
- 
-    // ============================================================================
+		}
 
-    // BOOKING LISTS
+		bookingService.cancelBooking(bookingId, principal.getName());
 
-    // ============================================================================
- 
-    @GetMapping("/current")
+		return "redirect:/history";
 
-    public String current(Model model, Principal principal) {
- 
-        if (principal == null) {
+	}
 
-            return "redirect:/login?error=unauthorized";
+	// ============================================================================
 
-        }
- 
-        Optional<UserDto> userOpt = userService.findByUsername(principal.getName());
+	// AUX PAGES
 
-        if (userOpt.isEmpty()) userOpt = userService.findByEmail(principal.getName());
+	// ============================================================================
 
-        if (userOpt.isEmpty()) return "redirect:/login?error=unauthorized";
- 
-        UserDto user = userOpt.get();
+	@GetMapping("/booking/cancel")
 
-        List<BookingDto> bookings = bookingService.getUserBookings(user.getUserId());
- 
-        List<BookingDto> current = bookings.stream()
+	public String basicCancel() {
 
-                .filter(b -> "PAID".equalsIgnoreCase(b.getPaymentStatus())
+		return "payment-fail";
 
-                          || "CONFIRMED".equalsIgnoreCase(b.getBookingStatus()))
+	}
 
-                .sorted(Comparator.comparing(
+	@GetMapping("/shows")
 
-                        BookingDto::getBookingDate,
+	public String showsPage() {
 
-                        Comparator.nullsLast(LocalDate::compareTo)
+		return "home";
 
-                ).reversed())
+	}
 
-                .toList();
- 
-        model.addAttribute("bookings", current);
+	@GetMapping("/tryagain")
 
-        return "bookings-current";
+	public String tryAgain() {
 
-    }
- 
-    @GetMapping("/history")
+		return "seat-selection";
 
-    public String history(Model model, Principal principal) {
- 
-        if (principal == null) {
+	}
 
-            return "redirect:/login?error=unauthorized";
+	// ============================================================================
 
-        }
- 
-        Optional<UserDto> userOpt = userService.findByUsername(principal.getName());
+	// BOOKING LISTS
 
-        if (userOpt.isEmpty()) userOpt = userService.findByEmail(principal.getName());
+	// ============================================================================
 
-        if (userOpt.isEmpty()) return "redirect:/login?error=unauthorized";
- 
-        UserDto user = userOpt.get();
+	@GetMapping("/current")
 
-        List<BookingDto> bookings = bookingService.getUserBookings(user.getUserId());
- 
-        List<BookingDto> history = bookings.stream()
+	public String current(Model model, Principal principal) {
 
-                .filter(b -> !"PAID".equalsIgnoreCase(b.getPaymentStatus()))
+		if (principal == null) {
 
-                .sorted(Comparator.comparing(
+			return "redirect:/login?error=unauthorized";
 
-                        BookingDto::getBookingDate,
+		}
 
-                        Comparator.nullsLast(LocalDate::compareTo)
+		Optional<UserDto> userOpt = userService.findByUsername(principal.getName());
 
-                ).reversed())
+		if (userOpt.isEmpty())
+			userOpt = userService.findByEmail(principal.getName());
 
-                .toList();
- 
-        model.addAttribute("bookings", history);
+		if (userOpt.isEmpty())
+			return "redirect:/login?error=unauthorized";
 
-        return "bookings-history";
+		UserDto user = userOpt.get();
 
-    }
- 
-    // ============================================================================
+		List<BookingDto> bookings = bookingService.getUserBookings(user.getUserId());
 
-    // Ticket view (renders Ticket.html)
+		List<BookingDto> current = bookings.stream()
 
-    // ============================================================================
- 
+				.filter(b -> "PAID".equalsIgnoreCase(b.getPaymentStatus())
+
+						|| "CONFIRMED".equalsIgnoreCase(b.getBookingStatus()))
+
+				.sorted(Comparator.comparing(
+
+						BookingDto::getBookingDate,
+
+						Comparator.nullsLast(LocalDate::compareTo)
+
+				).reversed())
+
+				.toList();
+
+		model.addAttribute("bookings", current);
+
+		return "bookings-current";
+
+	}
+
+	@GetMapping("/history")
+
+	public String history(Model model, Principal principal) {
+
+		if (principal == null) {
+
+			return "redirect:/login?error=unauthorized";
+
+		}
+
+		Optional<UserDto> userOpt = userService.findByUsername(principal.getName());
+
+		if (userOpt.isEmpty())
+			userOpt = userService.findByEmail(principal.getName());
+
+		if (userOpt.isEmpty())
+			return "redirect:/login?error=unauthorized";
+
+		UserDto user = userOpt.get();
+
+		List<BookingDto> bookings = bookingService.getUserBookings(user.getUserId());
+
+		List<BookingDto> history = bookings.stream()
+
+				.filter(b -> !"PAID".equalsIgnoreCase(b.getPaymentStatus()))
+
+				.sorted(Comparator.comparing(
+
+						BookingDto::getBookingDate,
+
+						Comparator.nullsLast(LocalDate::compareTo)
+
+				).reversed())
+
+				.toList();
+
+		model.addAttribute("bookings", history);
+
+		return "bookings-history";
+
+	}
+
+	// ============================================================================
+
+	// Ticket view (renders Ticket.html)
+
+	// ============================================================================
+
 // Ticket view (renders Ticket.html)
 
-    @GetMapping("/ticket/{bookingId}")
+	@GetMapping("/ticket/{bookingId}")
 
-    public String viewTicket(@PathVariable Long bookingId, Model model) {
+	public String viewTicket(@PathVariable Long bookingId, Model model) {
 
-        BookingDto booking = bookingService.getBookingById(bookingId);
+		BookingDto booking = bookingService.getBookingById(bookingId);
 
-        if (booking == null) {
+		if (booking == null) {
 
-            return "redirect:/history?error=bookingNotFound";
+			return "redirect:/history?error=bookingNotFound";
 
-        }
- 
-        // Fetch the show by showId from the booking DTO (adjust getter name if different)
+		}
 
-        ShowDto show = null;
+		// Fetch the show by showId from the booking DTO (adjust getter name if
+		// different)
 
-        try {
+		ShowDto show = null;
 
-            Long showId = booking.getShowId(); // <-- BookingDto should expose this
+		try {
 
-            if (showId != null) {
+			Long showId = booking.getShowId(); // <-- BookingDto should expose this
 
-                show = showService.getShowById(showId);
+			if (showId != null) {
 
-            }
+				show = showService.getShowById(showId);
 
-        } catch (Exception ignored) {
+			}
 
-            // swallow - template is guarded with "show != null"
+		} catch (Exception ignored) {
 
-        }
- 
-        model.addAttribute("booking", booking);
+			// swallow - template is guarded with "show != null"
 
-        model.addAttribute("show", show); // <-- add separate 'show' object
+		}
 
-        return "Ticket"; // file must be templates/Ticket.html (case-sensitive in some OS)
+		model.addAttribute("booking", booking);
 
-    }
+		model.addAttribute("show", show); // <-- add separate 'show' object
+
+		return "Ticket"; // file must be templates/Ticket.html (case-sensitive in some OS)
+
+	}
+
+// --- Show the payment method selection page ---
+
+	@GetMapping("/payment/method")
+
+	public String selectPaymentMethod(@RequestParam Long bookingId, Model model) {
+
+		BookingDto booking = bookingService.getBookingById(bookingId);
+
+		if (booking == null) {
+
+			return "redirect:/history?error=bookingNotFound";
+
+		}
+
+		model.addAttribute("booking", booking);
+
+		return "payment-method"; // templates/payment-method.html
+
+	}
+
+	// --- Handle the chosen method, create/mark payment, then go to success ---
+
+	@PostMapping("/payment/choose")
+
+	public String chooseAndPay(@RequestParam Long bookingId,
+
+			@RequestParam String method,
+
+			RedirectAttributes ra) {
+
+		// methods: UPI | DEBIT_CARD | CREDIT_CARD | NET_BANKING | WALLET
+
+		paymentService.chooseMethodAndPay(bookingId, method);
+
+		ra.addFlashAttribute("paidBy", method);
+
+		return "redirect:/success/" + bookingId;
+
+	}
+
 }
