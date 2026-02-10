@@ -50,15 +50,10 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
          // SecurityConfig.java (only the authorizeHttpRequests part)
             .authorizeHttpRequests(auth -> auth
-            	    .requestMatchers("/", "/login", "/signup",
-            	                     "/css/**", "/js/**", "/images/**", "/webjars/**", "/h2-console/**", "/error")
-            	        .permitAll()
-            	    .requestMatchers("/admin/**", "/api/admin/**")
-            	        .hasRole("ADMIN")
-            	    .requestMatchers("/movie/**", "/profile/**", "/bookings/**","/booking/**")
-            	        .authenticated()
-            	    .anyRequest()
-            	        .permitAll()
+            	    .requestMatchers("/", "/login", "/signup", "/css/**", "/js/**", "/images/**", "/webjars/**", "/h2-console/**", "/error").permitAll()
+            	    .requestMatchers("/admin/**", "/api/admin/**").hasRole("ADMIN")
+            	    .requestMatchers("/movie/**", "/profile/**", "/bookings/**","/booking/**").authenticated()
+            	    .anyRequest().permitAll()
             	)
             .formLogin(form -> form
                 .loginPage("/login")

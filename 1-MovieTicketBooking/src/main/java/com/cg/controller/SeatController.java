@@ -1,14 +1,10 @@
 package com.cg.controller;
 
-import com.cg.dto.MovieDto;
 import com.cg.dto.ShowDto;
-import com.cg.dto.TheatreDto;
 import com.cg.service.SeatService;
 import com.cg.service.ShowService;
 import com.cg.service.MovieService;
 import com.cg.service.TheatreService;
-import com.cg.entity.Movie;
-import com.cg.entity.Theatre;
 import com.cg.repository.BookingRepository;
 
 import java.util.List;
