@@ -257,12 +257,7 @@ public class BookingController {
  
     
     
-    @GetMapping("/home")
-    public String homepage(Model model) {
-    	model.addAttribute("movies",movieService.getAllMovies());
-        return "home";
-
-    }
+   
     
 
  
