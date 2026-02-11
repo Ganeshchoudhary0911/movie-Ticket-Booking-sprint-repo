@@ -13,6 +13,7 @@ import com.cg.dto.MovieDto;
 import com.cg.dto.ShowDto;
 import com.cg.dto.TheatreDto;
 import com.cg.entity.Movie;
+import com.cg.entity.Show;
 import com.cg.service.MovieService;
 import com.cg.service.ShowService;
 import com.cg.service.TheatreService;
@@ -47,6 +48,11 @@ public class ShowController {
         model.addAttribute("groupedShows", groupedShows);
 
         return "show-timings";
+    }
+    
+    @PostMapping("/shows")
+    public Show createShow(@RequestBody Show show) {
+        return showService.createShowWithSeats(show);
     }
 
 
