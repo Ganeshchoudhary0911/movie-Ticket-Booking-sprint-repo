@@ -6,43 +6,24 @@ import java.util.List;
 @Entity
 @Table
 public class Theatre {
- 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long theatreId;
- 
+
     @Column(nullable = false, length = 100)
     private String theatreName;
+
     private String location;
     private String city;
     private int totalSeats;
     private String contactNumber;
- 
-    @OneToMany(mappedBy = "theatre")
+
+    // ⭐ Automatically delete all shows when deleting a theatre
+    @OneToMany(mappedBy = "theatre", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Show> shows;
 
-	public Theatre() {
-
-	}
-	
-// Constructor for Theatre 
-	public Theatre(String theatreName, String location) {
-		super();
-		this.theatreName = theatreName;
-		this.location = location;
-	}
-
-	public Theatre(Long theatreId, String theatreName, String location, String city, int totalSeats,
-			String contactNumber, List<Show> shows) {
-		super();
-		this.theatreId = theatreId;
-		this.theatreName = theatreName;
-		this.location = location;
-		this.city = city;
-		this.totalSeats = totalSeats;
-		this.contactNumber = contactNumber;
-		this.shows = shows;
-	}
+    public Theatre() {}
 
 	public Long getTheatreId() {
 		return theatreId;
@@ -99,6 +80,6 @@ public class Theatre {
 	public void setShows(List<Show> shows) {
 		this.shows = shows;
 	}
- 
     
+
 }

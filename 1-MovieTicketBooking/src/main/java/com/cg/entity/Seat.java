@@ -3,6 +3,8 @@ package com.cg.entity;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.hibernate.annotations.Cascade;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -40,6 +42,7 @@ public class Seat {
 
 	@ManyToOne
 	@JoinColumn(name = "show_id")
+	@org.hibernate.annotations.OnDelete(action = org.hibernate.annotations.OnDeleteAction.CASCADE)
 	private Show show;
 	
 	@ManyToMany(mappedBy = "seats")

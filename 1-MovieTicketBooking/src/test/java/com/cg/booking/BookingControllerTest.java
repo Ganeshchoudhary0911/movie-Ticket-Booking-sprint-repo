@@ -2,10 +2,10 @@ package com.cg.booking;
 
 import com.cg.controller.BookingController;
 import com.cg.dto.BookingDto;
+import com.cg.dto.UserDto;
 import com.cg.service.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -20,39 +20,38 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = BookingController.class)
-@AutoConfigureMockMvc(addFilters = false)
+@AutoConfigureMockMvc(addFilters = false) // Disables Spring Security filters for easier testing
 class BookingControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean BookingService bookingService;
-    @MockBean ShowService showService;
-    @MockBean UserService userService;
+    @MockBean private BookingService bookingService;
+    @MockBean private ShowService showService;
+    @MockBean private UserService userService;
+    @MockBean private PaymentService paymentService; // Required for constructor injection
 
-    // ================= PAYMENT PAGE =================
+    // ================= PAYMENT ENTRY (FORWARD TEST) =================
     @Test
-    void paymentPage_shouldReturnView() throws Exception {
-
+    void paymentEntry_shouldForwardToDtoPayment() throws Exception {
+        // Path matches @GetMapping("/payment")
         mockMvc.perform(get("/payment")
-                .param("seats","2")
-                .param("amount","500"))
+                .param("bookingId", "101"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("payment"));
+                .andExpect(forwardedUrl("/payment/dto?bookingId=101"));
     }
 
     // ================= SUCCESS PAGE =================
     @Test
     void successPage_shouldReturnViewWithBooking() throws Exception {
-
         BookingDto dto = new BookingDto();
         dto.setBookingId(1L);
         dto.setBookingDate(LocalDate.now());
 
+        // Path matches @GetMapping("/success/{bookingId}")
         when(bookingService.getBookingById(1L)).thenReturn(dto);
 
-        mockMvc.perform(get("/booking/success")
-                .param("bookingId","1"))
+        mockMvc.perform(get("/success/1"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("booking"))
                 .andExpect(view().name("success"));
@@ -61,16 +60,17 @@ class BookingControllerTest {
     // ================= HISTORY PAGE =================
     @Test
     void history_shouldReturnView() throws Exception {
+        UserDto mockUser = new UserDto();
+        mockUser.setUserId(1L);
 
-        when(userService.findByUsername("anshu"))
-                .thenReturn(Optional.of(new com.cg.dto.UserDto()));
-
-        when(bookingService.getUserBookings(1L))
-                .thenReturn(List.of());
+        // Controller logic: checks username, then email
+        when(userService.findByUsername("anshu")).thenReturn(Optional.of(mockUser));
+        when(bookingService.getUserBookings(1L)).thenReturn(List.of());
 
         mockMvc.perform(get("/history")
-                .principal(() -> "anshu"))
+                .principal(() -> "anshu")) // Mocks authenticated user principal
                 .andExpect(status().isOk())
-                .andExpect(view().name("bookings-history"));
+                .andExpect(view().name("bookings-history"))
+                .andExpect(model().attributeExists("bookings"));
     }
 }

@@ -147,11 +147,13 @@
           <div class="mb-3">
             <label class="form-label">Username</label>
             <input th:field="*{username}" type="text" class="form-control" required>
+            <div class="text-warning small" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
           </div>
 
           <div class="mb-3">
             <label class="form-label">Email</label>
             <input th:field="*{email}" type="email" class="form-control" required>
+            <div class="text-warning small" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
           </div>
 
           <div class="mb-3">
@@ -162,6 +164,7 @@
           <div class="mb-3">
             <label class="form-label">Password</label>
             <input th:field="*{password}" type="password" class="form-control" required>
+            <div class="text-warning small" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
           </div>
 
           <button class="btn btn-ticket w-100" type="submit">Sign Up</button>

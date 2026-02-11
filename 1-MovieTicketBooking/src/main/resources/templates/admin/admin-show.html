@@ -63,15 +63,22 @@
 						<td th:text="${s.theatreName} ?: 'N/A'">Theatre</td>
 						<td th:text="${s.showDate}">2026-02-01</td>
 						<td th:text="${s.showTime}">18:00</td>
-						<td class="text-nowrap"><a
-							class="btn btn-sm btn-outline-primary"
+						<td class="text-nowrap">
+							<!-- EDIT (GET) --> <a class="btn btn-sm btn-outline-primary"
 							th:href="@{/admin/shows/edit/{id}(id=${s.showId})}"> <i
 								class="bi bi-pencil-square"></i>
-						</a> <a class="btn btn-sm btn-outline-danger ms-1"
-							th:href="@{/admin/shows/delete/{id}(id=${s.showId})}"
-							onclick="return confirm('Delete this show?');"> <i
-								class="bi bi-trash"></i>
-						</a></td>
+						</a> <!-- DELETE (DELETE with method override) -->
+							<form th:action="@{/admin/shows/{id}(id=${s.showId})}"
+								method="post" class="d-inline">
+
+								<input type="hidden" name="_method" value="delete" />
+
+								<button type="submit" class="btn btn-sm btn-outline-danger ms-1"
+									onclick="return confirm('Delete this show?');">
+									<i class="bi bi-trash"></i>
+								</button>
+							</form>
+						</td>
 					</tr>
 					<tr th:if="${#lists.isEmpty(shows)}">
 						<td colspan="7" class="text-center text-muted py-4">No shows

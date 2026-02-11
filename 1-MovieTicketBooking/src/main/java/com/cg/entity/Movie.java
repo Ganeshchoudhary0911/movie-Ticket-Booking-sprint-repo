@@ -2,6 +2,7 @@ package com.cg.entity;
 
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,8 +31,9 @@ public class Movie {
 	@Column(length = 512) // long URLs can exceed 255
 	private String posterUrl;
 
-	@OneToMany(mappedBy = "movie")
+	@OneToMany(mappedBy = "movie", cascade = CascadeType.REMOVE, orphanRemoval = true)
 	private List<Show> shows;
+
 
 	public Movie() {
 	}

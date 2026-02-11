@@ -22,50 +22,54 @@ public class TheatreController {
     @GetMapping("/theatres")
     public String viewTheatresByCity(@RequestParam(required = false) String city, Model model) {
         if (city != null && !city.isBlank()) {
-            model.addAttribute("theatres", theatreService.getTheatresByCity(city));   // List<TheatreDto>
+            model.addAttribute("theatres", theatreService.getTheatresByCity(city));
         } else {
-            model.addAttribute("theatres", theatreService.getAllTheatres());         // List<TheatreDto>
+            model.addAttribute("theatres", theatreService.getAllTheatres());
         }
-        return "theatre-list";  // create theatre-list.html (bind to TheatreDto)
+        return "theatre-list";
     }
 
     // ================== ADMIN VIEW ===================
 
     @GetMapping("/admin/theatres")
     public String adminList(Model model) {
-        model.addAttribute("theatres", theatreService.getAllTheatres());             // List<TheatreDto>
+        model.addAttribute("theatres", theatreService.getAllTheatres());
         return "admin/admin-theatre";
     }
 
     @GetMapping("/admin/theatres/add")
     public String showAddForm(Model model) {
-        model.addAttribute("theatre", new TheatreDto());                             // bind DTO in form
+        model.addAttribute("theatre", new TheatreDto());
         return "admin/admin-theatre-form";
     }
 
-    @PostMapping("/admin/theatres/add")
+    // CREATE (POST)
+    @PostMapping("/admin/theatres")
     public String addTheatre(@ModelAttribute("theatre") TheatreDto theatre) {
-        theatreService.addTheatre(theatre);                                          // accepts TheatreDto
+        theatreService.addTheatre(theatre);
         return "redirect:/admin/theatres";
     }
 
     @GetMapping("/admin/theatres/edit/{id}")
     public String editPage(@PathVariable Long id, Model model) {
-        TheatreDto dto = theatreService.getTheatreById(id);                          // returns TheatreDto
+        TheatreDto dto = theatreService.getTheatreById(id);
         if (dto == null) {
             return "redirect:/admin/theatres?error=theatre-not-found";
         }
-        model.addAttribute("theatre", theatreService.getTheatreById(id));
+        model.addAttribute("theatre", dto);
         return "admin/admin-theatre-form";
     }
 
-    @PostMapping("/admin/theatres/update/{id}")
-    public String updateTheatre(@PathVariable Long id, @ModelAttribute("theatre") TheatreDto theatre) {
-        theatreService.updateTheatre(id, theatre);                                   // accepts TheatreDto
+    // UPDATE (PUT)
+    @PutMapping("/admin/theatres/{id}")
+    public String updateTheatre(@PathVariable Long id,
+                                @ModelAttribute("theatre") TheatreDto theatre) {
+        theatreService.updateTheatre(id, theatre);
         return "redirect:/admin/theatres";
     }
 
-    @GetMapping("/admin/theatres/delete/{id}")
+    // DELETE (DELETE)
+    @DeleteMapping("/admin/theatres/{id}")
     public String deleteTheatre(@PathVariable Long id) {
         theatreService.deleteTheatre(id);
         return "redirect:/admin/theatres";

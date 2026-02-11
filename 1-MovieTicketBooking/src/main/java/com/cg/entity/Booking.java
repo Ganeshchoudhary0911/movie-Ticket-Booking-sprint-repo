@@ -3,6 +3,11 @@ package com.cg.entity;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -26,15 +31,17 @@ public class Booking {
 
     @ManyToOne
     @JoinColumn(name = "show_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Show show;
 
     // NEW: Seats booked in this booking
     @ManyToMany
     @JoinTable(
-        name = "booking_seat",
-        joinColumns = @JoinColumn(name = "booking_id"),
-        inverseJoinColumns = @JoinColumn(name = "seat_id")
+            name = "booking_seat",
+            joinColumns = @JoinColumn(name = "booking_id"),
+            inverseJoinColumns = @JoinColumn(name = "seat_id")
     )
+    @org.hibernate.annotations.OnDelete(action = org.hibernate.annotations.OnDeleteAction.CASCADE)
     private Set<Seat> seats = new HashSet<>();
 
     public Booking() {}

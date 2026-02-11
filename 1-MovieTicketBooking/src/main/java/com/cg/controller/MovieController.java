@@ -28,27 +28,34 @@ public class MovieController {
     @GetMapping("/movie/{id}")
     public String movieDetails(@PathVariable Long id, Model model) {
         MovieDto movie = movieService.getMovieById(id);
-        if (movie == null) {
-            return "redirect:/?error=movie-not-found";
-        }
+        if (movie == null) return "redirect:/?error=movie-not-found";
         model.addAttribute("movie", movie);
         return "movie-details";
     }
 
+    /* ------------------ ADMIN ------------------ */
+
     @GetMapping("/admin/movies")
     public String adminMovies(Model model) {
         model.addAttribute("movies", movieService.getAllMovies());
-        model.addAttribute("movie", new MovieDto()); // bind DTO in the form
+        model.addAttribute("movie", new MovieDto());
         return "admin/admin-movie";
     }
 
-    @PostMapping("/admin/movies/save")
-    public String saveMovie(@ModelAttribute MovieDto movie) {
+    @PostMapping("/admin/movies")
+    public String createMovie(@ModelAttribute MovieDto movie) {
         movieService.saveOrUpdateMovie(movie);
         return "redirect:/admin/movies";
     }
 
-    @GetMapping("/admin/movies/delete/{id}")
+    @PutMapping("/admin/movies/{id}")
+    public String updateMovie(@PathVariable Long id, @ModelAttribute MovieDto movie) {
+        movie.setMovieId(id);
+        movieService.saveOrUpdateMovie(movie);
+        return "redirect:/admin/movies";
+    }
+
+    @DeleteMapping("/admin/movies/{id}")
     public String deleteMovie(@PathVariable Long id) {
         movieService.deleteMovie(id);
         return "redirect:/admin/movies";
@@ -56,17 +63,16 @@ public class MovieController {
 
     @GetMapping("/admin/movies/new")
     public String movieCreateForm(Model model) {
-        model.addAttribute("movie", new MovieDto());           // must NOT be null
-        model.addAttribute("ratings", List.of("U", "UA", "A")); // if you use this in the form
+        model.addAttribute("movie", new MovieDto());
+        model.addAttribute("ratings", List.of("U", "UA", "A"));
         return "admin/admin-movie-form";
     }
 
     @GetMapping("/admin/movies/{id}/edit")
     public String movieEditForm(@PathVariable Long id, Model model) {
         MovieDto movie = movieService.getMovieById(id);
-        if (movie == null) {
-            return "redirect:/admin/movies?error=movie-not-found";
-        }
+        if (movie == null) return "redirect:/admin/movies?error=movie-not-found";
+
         model.addAttribute("movie", movie);
         model.addAttribute("ratings", List.of("U", "UA", "A"));
         return "admin/admin-movie-form";
