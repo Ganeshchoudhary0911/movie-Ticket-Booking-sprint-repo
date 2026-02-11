@@ -2,7 +2,9 @@ package com.cg.entity;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -36,7 +39,13 @@ public class Show {
 	@ManyToOne
 	@JoinColumn(name = "theatre_id", nullable = false)
 	private Theatre theatre;
+	
+	@OneToMany(mappedBy = "show", cascade = CascadeType.REMOVE, orphanRemoval = true)
+	private List<Seat> seats;
 
+	@OneToMany(mappedBy = "show", cascade = CascadeType.REMOVE, orphanRemoval = true)
+	private List<Booking> bookings;
+	
 	public Show() {
 	}
 	
@@ -50,6 +59,22 @@ public class Show {
     this.movie = movie;
     this.theatre = theatre;
 }
+
+	public List<Booking> getBookings() {
+		return bookings;
+	}
+
+	public void setBookings(List<Booking> bookings) {
+		this.bookings = bookings;
+	}
+
+	public List<Seat> getSeats() {
+		return seats;
+	}
+
+	public void setSeats(List<Seat> seats) {
+		this.seats = seats;
+	}
 
 	public Long getShowId() {
 		return showId;

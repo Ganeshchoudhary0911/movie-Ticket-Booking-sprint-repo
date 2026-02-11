@@ -14,15 +14,17 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.filter.HiddenHttpMethodFilter;
+import org.springframework.http.HttpMethod;
 
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
 
-	@Autowired
+    @Autowired
     CustomUserDetailsService customUserDetailsService;
-	
-	@Autowired
+
+    @Autowired
     RoleBasedSuccessHandler successHandler;
 
     @Bean
@@ -33,9 +35,14 @@ public class SecurityConfig {
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(customUserDetailsService);  
+        provider.setUserDetailsService(customUserDetailsService);
         provider.setPasswordEncoder(passwordEncoder());
         return provider;
+    }
+
+    @Bean
+    public HiddenHttpMethodFilter hiddenHttpMethodFilter() {
+        return new HiddenHttpMethodFilter();   // ⭐ Enables PUT & DELETE via _method override
     }
 
     @Bean
@@ -45,30 +52,27 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         http
             .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
             .csrf(csrf -> csrf.disable())
-         // SecurityConfig.java (only the authorizeHttpRequests part)
             .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/", "/login", "/signup",
-                                     "/css/**", "/js/**", "/images/**",
-                                     "/webjars/**", "/h2-console/**", "/error")
-                            .permitAll()
+                .requestMatchers("/", "/login", "/signup",
+                                 "/css/**", "/js/**", "/images/**",
+                                 "/webjars/**", "/h2-console/**", "/error")
+                    .permitAll()
 
-                    .requestMatchers("/admin/**", "/api/admin/**")
-                            .hasRole("ADMIN")
+                // ⭐ Allow PUT/DELETE for admin routes
+                .requestMatchers(HttpMethod.PUT, "/admin/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/admin/**").hasRole("ADMIN")
 
-                    .requestMatchers("/movie/**", "/profile/**", "/bookings/**", "/booking/**")
-                            .authenticated()
-
-                    // ⭐ FIXED — no tabs, no spaces, no Unicode
-                    .requestMatchers("/confirm/**").authenticated()
-
-                    // Seats page can be public
-                    .requestMatchers("/seats/**").permitAll()
-
-                    .anyRequest().permitAll()
+                .requestMatchers("/admin/**", "/api/admin/**").hasRole("ADMIN")
+                .requestMatchers("/movie/**", "/profile/**", "/bookings/**", "/booking/**").authenticated()
+                .requestMatchers("/confirm/**").authenticated()
+                .requestMatchers("/seats/**").permitAll()
+                .anyRequest().permitAll()
             )
+            .authenticationProvider(daoAuthenticationProvider())
             .formLogin(form -> form
                 .loginPage("/login")
                 .loginProcessingUrl("/do-login")

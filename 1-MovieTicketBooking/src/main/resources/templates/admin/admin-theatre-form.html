@@ -1,85 +1,123 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title th:text="${theatre != null and theatre.theatreId != null} ? 'Edit Theatre' : 'Add Theatre'">Theatre Form</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous"/>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
-  <style>.required::after{content:" *";color:#dc3545}</style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title
+	th:text="${theatre != null and theatre.theatreId != null} ? 'Edit Theatre' : 'Add Theatre'">Theatre
+	Form</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+	rel="stylesheet" crossorigin="anonymous" />
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+	rel="stylesheet" />
+<style>
+.required::after {
+	content: " *";
+	color: #dc3545
+}
+</style>
 </head>
 <body>
-<!-- Inline Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <div class="container-fluid">
-    <a class="navbar-brand fw-semibold" th:href="@{/admin/dashboard}">Admin Panel</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav"><span class="navbar-toggler-icon"></span></button>
-    <div id="nav" class="collapse navbar-collapse">
-      <ul class="navbar-nav me-auto">
-        <li class="nav-item"><a class="nav-link" th:href="@{/admin/movies}">Movies</a></li>
-        <li class="nav-item"><a class="nav-link active" th:href="@{/admin/theatres}">Theatres</a></li>
-        <li class="nav-item"><a class="nav-link" th:href="@{/admin/shows}">Shows</a></li>
-      </ul>
-      <a class="btn btn-outline-light" th:href="@{/logout}"><i class="bi bi-box-arrow-right me-1"></i>Logout</a>
-    </div>
-  </div>
-</nav>
+	<!-- Inline Navbar -->
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+		<div class="container-fluid">
+			<a class="navbar-brand fw-semibold" th:href="@{/admin/dashboard}">Admin
+				Panel</a>
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#nav">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div id="nav" class="collapse navbar-collapse">
+				<ul class="navbar-nav me-auto">
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/admin/movies}">Movies</a></li>
+					<li class="nav-item"><a class="nav-link active"
+						th:href="@{/admin/theatres}">Theatres</a></li>
+					<li class="nav-item"><a class="nav-link"
+						th:href="@{/admin/shows}">Shows</a></li>
+				</ul>
+				<a class="btn btn-outline-light" th:href="@{/logout}"><i
+					class="bi bi-box-arrow-right me-1"></i>Logout</a>
+			</div>
+		</div>
+	</nav>
 
-<main class="container py-4">
-  <div class="d-flex align-items-center justify-content-between mb-3">
-    <h2 class="mb-0" th:text="${theatre != null and theatre.theatreId != null} ? 'Edit Theatre' : 'Add Theatre'">Add Theatre</h2>
-    <a class="btn btn-secondary" th:href="@{/admin/theatres}">
-      <i class="bi bi-arrow-left"></i> Back
-    </a>
-  </div>
+	<main class="container py-4">
+		<div class="d-flex align-items-center justify-content-between mb-3">
+			<h2 class="mb-0"
+				th:text="${theatre != null and theatre.theatreId != null} ? 'Edit Theatre' : 'Add Theatre'">Add
+				Theatre</h2>
+			<a class="btn btn-secondary" th:href="@{/admin/theatres}"> <i
+				class="bi bi-arrow-left"></i> Back
+			</a>
+		</div>
 
-  <form th:object="${theatre}"
-        th:action="${theatre != null and theatre.theatreId != null} ? @{/admin/theatres/update/{id}(id=${theatre.theatreId})} : @{/admin/theatres/add}"
-        method="post"
-        class="row g-3">
-    <input type="hidden" th:field="*{theatreId}"/>
 
-    <div class="col-12 col-md-6">
-      <label class="form-label required">Theatre Name</label>
-      <input type="text" class="form-control" th:field="*{theatreName}" required maxlength="100"/>
-    </div>
+		<form th:object="${theatre}"
+			th:action="${theatre != null and theatre.theatreId != null} 
+                     ? @{/admin/theatres/{id}(id=${theatre.theatreId})} 
+                     : @{/admin/theatres}"
+			method="post" class="row g-3">
 
-    <div class="col-12 col-md-6">
-      <label class="form-label required">City</label>
-      <input type="text" class="form-control" th:field="*{city}" required maxlength="80"/>
-    </div>
+			<!-- For edit: method override -->
+			<input th:if="${theatre != null and theatre.theatreId != null}"
+				type="hidden" name="_method" value="put" /> <input type="hidden"
+				th:field="*{theatreId}" />
 
-    <div class="col-12 col-md-6">
-      <label class="form-label required">Location</label>
-      <input type="text" class="form-control" th:field="*{location}" required maxlength="120"/>
-    </div>
+			<div class="col-12 col-md-6">
+				<label class="form-label required">Theatre Name</label> <input
+					type="text" class="form-control" th:field="*{theatreName}" required
+					maxlength="100" />
+			</div>
 
-    <div class="col-12 col-md-3">
-      <label class="form-label required">Total Seats</label>
-      <input type="number" min="1" class="form-control" th:field="*{totalSeats}" required/>
-    </div>
+			<div class="col-12 col-md-6">
+				<label class="form-label required">City</label> <input type="text"
+					class="form-control" th:field="*{city}" required maxlength="80" />
+			</div>
 
-    <div class="col-12 col-md-3">
-      <label class="form-label required">Contact Number</label>
-      <input type="text" class="form-control" th:field="*{contactNumber}" required maxlength="20"/>
-    </div>
+			<div class="col-12 col-md-6">
+				<label class="form-label required">Location</label> <input
+					type="text" class="form-control" th:field="*{location}" required
+					maxlength="120" />
+			</div>
 
-    <div class="col-12">
-      <button type="submit" class="btn btn-warning text-dark">
-        <i class="bi bi-save me-1"></i>
-        <span th:text="${theatre != null and theatre.theatreId != null} ? 'Save Changes' : 'Create Theatre'">Create Theatre</span>
-      </button>
-      <a class="btn btn-outline-secondary ms-2" th:href="@{/admin/theatres}">
-        <i class="bi bi-x-circle me-1"></i> Cancel
-      </a>
-    </div>
-  </form>
-</main>
+			<div class="col-12 col-md-3">
+				<label class="form-label required">Total Seats</label> <input
+					type="number" min="1" class="form-control" th:field="*{totalSeats}"
+					required />
+			</div>
 
-<footer class="text-center text-muted py-4">
-  <small>&copy; <span th:text="${#dates.format(#dates.createNow(), 'yyyy')}"></span> Admin Portal</small>
-</footer>
+			<div class="col-12 col-md-3">
+				<label class="form-label required">Contact Number</label> <input
+					type="text" class="form-control" th:field="*{contactNumber}"
+					required maxlength="20" />
+			</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+			<div class="col-12">
+				<button type="submit" class="btn btn-warning text-dark">
+					<i class="bi bi-save me-1"></i> <span
+						th:text="${theatre != null and theatre.theatreId != null} ? 'Save Changes' : 'Create Theatre'">Create
+						Theatre</span>
+				</button>
+				<a class="btn btn-outline-secondary ms-2"
+					th:href="@{/admin/theatres}"> <i class="bi bi-x-circle me-1"></i>
+					Cancel
+				</a>
+			</div>
+		</form>
+	</main>
+
+	<footer class="text-center text-muted py-4">
+		<small>&copy; <span
+			th:text="${#dates.format(#dates.createNow(), 'yyyy')}"></span> Admin
+			Portal
+		</small>
+	</footer>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+		crossorigin="anonymous"></script>
 </body>
 </html>

@@ -3,6 +3,7 @@ package com.cg.controller;
 import com.cg.entity.User;
 import com.cg.repository.UserRepository;
 import jakarta.validation.Valid;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,34 +21,32 @@ public class ProfileController {
         this.userRepository = userRepository;
     }
 
+    /** Show Edit Profile page */
     @GetMapping("/profile/edit")
-    public String editProfile(Model model, Principal principal,
+    public String editProfile(Model model,
+                              Principal principal,
                               @RequestParam(value = "success", required = false) String successParam) {
-        if (principal == null) {
-            return "redirect:/login?error=unauthorized";
-        }
+        if (principal == null) return "redirect:/login?error=unauthorized";
 
         Optional<User> opt = userRepository.findByUsername(principal.getName());
         if (opt.isEmpty()) opt = userRepository.findByEmail(principal.getName());
         if (opt.isEmpty()) return "redirect:/login?error=unauthorized";
 
-        model.addAttribute("user", opt.get());
-
-        // Optional: support query param fallback ?success=true
+        if (!model.containsAttribute("user")) {
+            model.addAttribute("user", opt.get());
+        }
         if (successParam != null && !model.containsAttribute("successMessage")) {
             model.addAttribute("successMessage", "Your profile was updated successfully.");
         }
-
         return "profile-edit";
     }
 
-    @PostMapping("/profile/update")
+    /** Update profile (PUT) */
+    @PutMapping("/profile")
     public String updateProfile(@ModelAttribute("user") @Valid User updated,
                                 Principal principal,
                                 RedirectAttributes ra) {
-        if (principal == null) {
-            return "redirect:/login?error=unauthorized";
-        }
+        if (principal == null) return "redirect:/login?error=unauthorized";
 
         Optional<User> opt = userRepository.findByUsername(principal.getName());
         if (opt.isEmpty()) opt = userRepository.findByEmail(principal.getName());
@@ -55,19 +54,23 @@ public class ProfileController {
 
         User user = opt.get();
 
-        // Update only allowed fields
+        // Only update allowed fields (do not allow client to change role/enabled/password here)
         user.setUsername(updated.getUsername());
         user.setEmail(updated.getEmail());
         user.setPhoneNumber(updated.getPhoneNumber());
 
-        userRepository.save(user);
+        try {
+            userRepository.saveAndFlush(user);
+        } catch (DataIntegrityViolationException ex) {
+            // Likely due to unique constraints on username/email
+            ra.addFlashAttribute("errorMessage", "Username or email already exists. Please choose another.");
+            ra.addFlashAttribute("user", updated);
+            return "redirect:/profile/edit";
+        }
 
-        // Flash message survives redirect and is cleared after display
         ra.addFlashAttribute("successMessage", "Your profile was updated successfully.");
-
-        // Redirect back to edit page (canonical)
         return "redirect:/profile/edit";
-        // If you prefer the query-param style instead, use:
-        // return "redirect:/profile/edit?success=true";
+        // or: return "redirect:/profile/edit?success=true";
     }
+
 }

@@ -2,111 +2,103 @@ package com.cg.movie;
 
 import com.cg.entity.Movie;
 import com.cg.repository.MovieRepository;
+
+import jakarta.transaction.Transactional;
+
+import org.junit.jupiter.api.BeforeEach; // Har test se pehle clean up ke liye
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.ActiveProfiles;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 @DataJpaTest
+@Transactional
+@ActiveProfiles("test")
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+
 class MovieRepositoryTest {
 
     @Autowired
     private MovieRepository movieRepository;
-        @Test
-        void testSave() {
 
-            Movie movie = new Movie();
-            movie.setMovieName("Test");
-            movie.setRating(8.5);
-
-            Movie saved = movieRepository.save(movie);
-
-            assertNotNull(saved.getMovieId());
-        }
+    @BeforeEach
+    void setUp() {
+        movieRepository.deleteAll(); // Safety ke liye har test se pehle database saaf
     }
 
-    // =========================
-    // SAVE TEST
-    // =========================
-//    @Test
-//    void saveMovie_shouldSaveSuccessfully() {
-//
-//        Movie movie = new Movie();
-//        movie.setMovieName("Inception");
-//        movie.setGenre("Sci-Fi");
-//        movie.setLanguage("English");
-//        movie.setDuration(150);
-//        movie.setDescription("Mind bending movie");
-//        movie.setRating(8.8);   // ✅ double
-//
-//        Movie saved = movieRepository.save(movie);
-//
-//        assertThat(saved.getMovieId()).isNotNull();
-//        assertThat(saved.getMovieName()).isEqualTo("Inception");
-//        assertThat(saved.getRating()).isEqualTo(8.8);
-//    }
-//
-//    // =========================
-//    // FIND BY ID
-//    // =========================
-//    @Test
-//    void findById_shouldReturnMovie() {
-//
-//        Movie movie = new Movie();
-//        movie.setMovieName("Avatar");
-//        movie.setRating(7.5);
-//
-//        Movie saved = movieRepository.save(movie);
-//
-//        Optional<Movie> found = movieRepository.findById(saved.getMovieId());
-//
-//        assertThat(found).isPresent();
-//        assertThat(found.get().getRating()).isEqualTo(7.5);
-//    }
-//
-//    // =========================
-//    // FIND ALL
-//    // =========================
+    @Test
+    void saveMovie_shouldSaveSuccessfully() {
+        Movie movie = new Movie();
+        movie.setMovieName("Inception");
+        movie.setRating(8.8);
+
+        Movie saved = movieRepository.save(movie);
+
+        assertThat(saved.getMovieId()).isNotNull();
+        assertThat(saved.getMovieName()).isEqualTo("Inception");
+    }
+
+    @Test
+    void findById_shouldReturnMovie() {
+        Movie movie = new Movie();
+        movie.setMovieName("Avatar");
+        movie.setRating(7.5);
+        Movie saved = movieRepository.save(movie);
+
+        Optional<Movie> found = movieRepository.findById(saved.getMovieId());
+
+        assertThat(found).isPresent();
+        assertThat(found.get().getRating()).isEqualTo(7.5);
+    }
+
 //    @Test
 //    void findAll_shouldReturnAllMovies() {
-//
 //        Movie m1 = new Movie();
-//        m1.setMovieName("A");
-//        m1.setRating(6.5);
-//
+//        m1.setMovieName("A"); m1.setRating(6.5);
 //        Movie m2 = new Movie();
-//        m2.setMovieName("B");
-//        m2.setRating(9.0);
+//        m2.setMovieName("B"); m2.setRating(9.0);
 //
 //        movieRepository.save(m1);
 //        movieRepository.save(m2);
 //
 //        List<Movie> movies = movieRepository.findAll();
 //
-//        assertThat(movies.size()).isEqualTo(2);
+//        // size 2 hi hona chahiye agar database empty tha starting mein
+//        assertThat(movies).hasSize(2);
+//        assertThat(movies).extracting(Movie::getMovieName).containsExactlyInAnyOrder("A", "B");
 //    }
-//
-//    // =========================
-//    // DELETE
-//    // =========================
+
+    @Test
+    void delete_shouldRemoveMovie() {
+        Movie movie = new Movie();
+        movie.setMovieName("DeleteMe");
+        movie.setRating(5.0);
+        Movie saved = movieRepository.save(movie);
+
+        movieRepository.deleteById(saved.getMovieId());
+        Optional<Movie> deleted = movieRepository.findById(saved.getMovieId());
+
+        assertThat(deleted).isEmpty();
+    }
+
 //    @Test
-//    void delete_shouldRemoveMovie() {
+//    void findByMovieNameContainingIgnoreCase_shouldReturnMatches() {
+//        Movie m1 = new Movie(); m1.setMovieName("Inception");
+//        Movie m2 = new Movie(); m2.setMovieName("Inside Out");
+//        Movie m3 = new Movie(); m3.setMovieName("Avatar");
 //
-//        Movie movie = new Movie();
-//        movie.setMovieName("DeleteMe");
-//        movie.setRating(5.0);
+//        movieRepository.save(m1);
+//        movieRepository.save(m2);
+//        movieRepository.save(m3);
 //
-//        Movie saved = movieRepository.save(movie);
+//        List<Movie> result = movieRepository.findByMovieNameContainingIgnoreCase("In");
 //
-//        movieRepository.deleteById(saved.getMovieId());
-//
-//        Optional<Movie> deleted = movieRepository.findById(saved.getMovieId());
-//
-//        assertThat(deleted).isEmpty();
+//        assertThat(result).hasSize(2);
+//        assertThat(result).extracting(Movie::getMovieName)
+//                .containsExactlyInAnyOrder("Inception", "Inside Out");
 //    }
-//}
+}

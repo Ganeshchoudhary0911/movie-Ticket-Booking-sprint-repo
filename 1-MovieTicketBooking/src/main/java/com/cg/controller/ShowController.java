@@ -1,7 +1,9 @@
 package com.cg.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import com.cg.dto.MovieDto;
 import com.cg.dto.ShowDto;
 import com.cg.dto.TheatreDto;
-import com.cg.entity.Movie;
 import com.cg.entity.Show;
 import com.cg.service.MovieService;
 import com.cg.service.ShowService;
@@ -30,31 +31,54 @@ public class ShowController {
     @Autowired
     private TheatreService theatreService;
 
-
     // ========== USER ==========
     @GetMapping("/shows/{movieId}")
-    public String showTimings(@PathVariable Long movieId, Model model) {
-
+    public String showTimings(
+            @PathVariable Long movieId,
+            @RequestParam(required = false) LocalDate date,
+            Model model) {
+ 
+        // Get movie (DTO or entity depending on your service)
         MovieDto movie = movieService.getMovieById(movieId);
-
-        // DTOs instead of entities
-        List<ShowDto> shows = showService.getShowsByMovie(movieId);
-
-        // Group by theatreId directly from DTO
-        Map<Long, List<ShowDto>> groupedShows =
-                shows.stream().collect(Collectors.groupingBy(ShowDto::getTheatreId));
-
+ 
+        // All shows for the movie (DTOs)
+        List<ShowDto> allShows = showService.getShowsByMovie(movieId);
+ 
+        // Available dates (distinct, sorted)
+        List<LocalDate> dates = allShows.stream()
+                .map(ShowDto::getShowDate)
+                .filter(Objects::nonNull)
+                .distinct()
+                .sorted()
+                .toList();
+ 
+        // selectedDate defaults to first available date if not provided
+        LocalDate selectedDate = (date == null && !dates.isEmpty()) ? dates.get(0) : date;
+ 
+        // Filter shows for the selected date
+        List<ShowDto> showsForDate = (selectedDate == null) ? List.of()
+                : allShows.stream()
+                        .filter(s -> selectedDate.equals(s.getShowDate()))
+                        .toList();
+ 
+        // Group by theatreId
+        Map<Long, List<ShowDto>> groupedShows = showsForDate.stream()
+                .collect(Collectors.groupingBy(ShowDto::getTheatreId));
+ 
         model.addAttribute("movie", movie);
+        model.addAttribute("dates", dates);
+        model.addAttribute("selectedDate", selectedDate);
         model.addAttribute("groupedShows", groupedShows);
-
+ 
         return "show-timings";
     }
-    
+
+    // API-style endpoint to create a Show and auto-generate seats
     @PostMapping("/shows")
+    @ResponseBody
     public Show createShow(@RequestBody Show show) {
         return showService.createShowWithSeats(show);
     }
-
 
     // ========== ADMIN ==========
     @GetMapping("/admin/shows")
@@ -83,7 +107,8 @@ public class ShowController {
         return "admin/admin-show-form";
     }
 
-    @PostMapping("/admin/shows/add")
+    // CREATE (POST)
+    @PostMapping("/admin/shows")
     public String addShow(@ModelAttribute("show") ShowDto showDto) {
         showService.addShow(showDto);
         return "redirect:/admin/shows";
@@ -97,13 +122,15 @@ public class ShowController {
         return "admin/admin-show-form";
     }
 
-    @PostMapping("/admin/shows/update/{id}")
+    // UPDATE (PUT)
+    @PutMapping("/admin/shows/{id}")
     public String updateShow(@PathVariable Long id, @ModelAttribute("show") ShowDto showDto) {
         showService.updateShow(id, showDto);
         return "redirect:/admin/shows";
     }
 
-    @GetMapping("/admin/shows/delete/{id}")
+    // DELETE (DELETE)
+    @DeleteMapping("/admin/shows/{id}")
     public String deleteShow(@PathVariable Long id) {
         showService.deleteShow(id);
         return "redirect:/admin/shows";

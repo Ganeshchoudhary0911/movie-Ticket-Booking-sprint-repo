@@ -12,8 +12,9 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long paymentId;
 
-    @OneToOne(optional = false)
-    @JoinColumn(name = "booking_id", nullable = false, unique = true)
+    @ManyToOne
+    @JoinColumn(name = "booking_id")
+    @org.hibernate.annotations.OnDelete(action = org.hibernate.annotations.OnDeleteAction.CASCADE)
     private Booking booking;
 
     @Column(nullable = false)
