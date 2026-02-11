@@ -4,13 +4,13 @@ import com.cg.controller.TheatreController;
 import com.cg.dto.TheatreDto;
 import com.cg.service.TheatreService;
 
-import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.List;
 
@@ -19,48 +19,50 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@WebMvcTest(TheatreController.class)
-@AutoConfigureMockMvc(addFilters = false) 
+@ExtendWith(MockitoExtension.class)
 class TheatreControllerTest {
 
-    @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @Mock
     private TheatreService theatreService;
 
-    @Test
-    @DisplayName("GET /theatres should return theatre-list view")
-    void testGetAllTheatres() throws Exception {
-        // 1. Prepare Mock Data
-        List<TheatreDto> theatres = List.of(
-                new TheatreDto(1L, "PVR", "City Center", "Delhi", 200, "9999")
-        );
+    @InjectMocks
+    private TheatreController theatreController;
 
-        // 2. Define Mock Behavior
-        when(theatreService.getAllTheatres()).thenReturn(theatres);
-
-        // 3. Perform Request and Verify View and Model
-        mockMvc.perform(get("/theatres"))
-                .andExpect(status().isOk())
-                // Use view() and model() to verify HTML-based controllers
-                .andExpect(view().name("theatre-list"))
-                .andExpect(model().attributeExists("theatres"));
+    @BeforeEach
+    void setup() {
+        mockMvc = MockMvcBuilders
+                .standaloneSetup(theatreController)
+                .build();
     }
 
     @Test
-    @DisplayName("POST /admin/theatres/add should redirect to admin list")
+    void testGetAllTheatres() throws Exception {
+
+        TheatreDto dto = new TheatreDto();
+        dto.setTheatreId(1L);
+
+        when(theatreService.getAllTheatres()).thenReturn(List.of(dto));
+
+        mockMvc.perform(get("/theatres"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("theatre-list"))
+                .andExpect(model().attributeExists("theatres"));
+
+        verify(theatreService).getAllTheatres();
+    }
+
+    @Test
     void testAddTheatre() throws Exception {
-        // Use flashAttr to simulate @ModelAttribute form submission
-        TheatreDto input = new TheatreDto(null, "PVR", "City Center", "Delhi", 200, "9999999999");
-        
-        mockMvc.perform(post("/admin/theatres/add") 
-                .flashAttr("theatre", input)) 
-                .andExpect(status().is3xxRedirection()) // Verify redirection status (302)
+
+        mockMvc.perform(post("/admin/theatres")
+                .flashAttr("theatre", new TheatreDto()))
+                .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/admin/theatres"));
 
-        // Verify that the service method was called exactly once
-        verify(theatreService, times(1)).addTheatre(any(TheatreDto.class));
+        verify(theatreService).addTheatre(any(TheatreDto.class));
     }
 }

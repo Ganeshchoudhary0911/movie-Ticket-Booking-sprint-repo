@@ -2,7 +2,6 @@ package com.cg.show;
 
 import com.cg.controller.ShowController;
 import com.cg.dto.MovieDto;
-import com.cg.repository.UserRepository;
 import com.cg.service.MovieService;
 import com.cg.service.ShowService;
 import com.cg.service.TheatreService;
@@ -21,7 +20,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(controllers = ShowController.class)
+@WebMvcTest(ShowController.class)
 @AutoConfigureMockMvc(addFilters = false)
 @ImportAutoConfiguration(exclude = {
         org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration.class
@@ -34,7 +33,6 @@ class ShowControllerTest {
     @MockBean private ShowService showService;
     @MockBean private MovieService movieService;
     @MockBean private TheatreService theatreService;
-    @MockBean private UserRepository userRepository;
 
     @Test
     void testAdminShowsPage() throws Exception {
@@ -53,12 +51,14 @@ class ShowControllerTest {
 
         MovieDto movie = new MovieDto();
         movie.setMovieId(1L);
+        movie.setMovieName("Test Movie");
 
         when(movieService.getMovieById(1L)).thenReturn(movie);
         when(showService.getShowsByMovie(1L)).thenReturn(List.of());
 
         mockMvc.perform(get("/shows/1"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("show-timings"));
+                .andExpect(view().name("show-timings"))
+                .andExpect(model().attributeExists("movie"));
     }
 }
