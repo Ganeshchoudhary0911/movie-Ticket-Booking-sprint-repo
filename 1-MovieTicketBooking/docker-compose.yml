@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  mysqldb:
+    image: mysql:8.0
+    container_name: mysqldb
+    restart: always
+    environment:
+      MYSQL_DATABASE: capg
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+ 
+  Ticket-Nest:
+    build: .
+    container_name: Ticket-Nest
+    restart: always
+    depends_on:
+      - mysqldb
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysqldb:3306/capg
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
