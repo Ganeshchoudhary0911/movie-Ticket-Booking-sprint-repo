@@ -21,8 +21,6 @@ public class ShowDto {
 	@NotNull(message = "Show time is required")
 	private LocalTime showTime;
 
-	@Positive(message = "Price must be a positive value")
-	@Digits(integer = 4, fraction = 2, message = "Price must be valid (max 4 digits, 2 decimals)")
 	private double price;
 
 	@NotNull(message = "Movie ID is required")
@@ -31,12 +29,8 @@ public class ShowDto {
 	@NotNull(message = "Theatre ID is required")
 	private Long theatreId;
 
-	@NotBlank(message = "Movie name is required")
-	@Size(min = 2, max = 150)
 	private String movieName;
 
-	@NotBlank(message = "Theatre name is required")
-	@Size(min = 2, max = 150)
 	private String theatreName;
 
 	public ShowDto() {
