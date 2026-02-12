@@ -1,6 +1,5 @@
-package com.cg.seat;
+package com.cg.controller;
 
-import com.cg.controller.SeatController;
 import com.cg.dto.ShowDto;
 import com.cg.service.SeatService;
 import com.cg.service.ShowService;
@@ -18,7 +17,6 @@ import java.util.Arrays;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(SeatController.class)

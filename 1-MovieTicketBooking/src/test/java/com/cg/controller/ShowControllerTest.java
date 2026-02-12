@@ -1,6 +1,5 @@
-package com.cg.show;
+package com.cg.controller;
 
-import com.cg.controller.ShowController;
 import com.cg.dto.MovieDto;
 import com.cg.service.MovieService;
 import com.cg.service.ShowService;

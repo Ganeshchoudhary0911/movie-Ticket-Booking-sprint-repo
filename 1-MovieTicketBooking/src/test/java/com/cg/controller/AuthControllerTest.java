@@ -1,4 +1,4 @@
-package com.cg.user;
+package com.cg.controller;
 
 import com.cg.controller.AuthController;
 import com.cg.repository.UserRepository;

@@ -1,4 +1,4 @@
-package com.cg.booking;
+package com.cg.controller;
 
 import com.cg.controller.BookingController;
 import com.cg.dto.BookingDto;

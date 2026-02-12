@@ -1,4 +1,4 @@
-package com.cg.seat;
+package com.cg.service;
 
 import com.cg.dto.SeatDto;
 import com.cg.entity.Seat;

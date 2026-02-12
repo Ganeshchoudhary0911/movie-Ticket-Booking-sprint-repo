@@ -1,4 +1,4 @@
-package com.cg.show;
+package com.cg.service;
 
 import com.cg.dto.ShowDto;
 import com.cg.entity.Movie;
