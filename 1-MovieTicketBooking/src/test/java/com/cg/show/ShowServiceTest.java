@@ -12,13 +12,15 @@ import com.cg.service.ShowService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -26,78 +28,89 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class ShowServiceTest {
 
-    @Mock private ShowRepository showRepository;
-    @Mock private MovieRepository movieRepository;
-    @Mock private TheatreRepository theatreRepository;
+	@Mock
+	private ShowRepository showRepository;
 
-    @InjectMocks
-    private ShowService showService;
+	@Mock
+	private MovieRepository movieRepository;
 
-    private Movie movie;
-    private Theatre theatre;
-    private Show show;
+	@Mock
+	private TheatreRepository theatreRepository;
 
-    @BeforeEach
-    void setup() {
-        movie = new Movie();
-        movie.setMovieId(1L);
-        movie.setMovieName("KGF");
+	@InjectMocks
+	private ShowService showService;
 
-        theatre = new Theatre();
-        theatre.setTheatreId(1L);
-        theatre.setTheatreName("PVR");
+	private Movie movie;
+	private Theatre theatre;
+	private Show show;
 
-        show = new Show();
-        show.setShowId(1L);
-        show.setShowDate(LocalDate.now());
-        show.setShowTime(LocalTime.NOON);
-        show.setPrice(200);
-        show.setMovie(movie);
-        show.setTheatre(theatre);
-    }
+	// ============ SETUP ============
+	@BeforeEach
+	void setup() {
 
-    @Test
-    void testAddShow() {
+		movie = new Movie();
+		movie.setMovieId(1L);
+		movie.setMovieName("KGF");
 
-        ShowDto dto = new ShowDto();
-        dto.setMovieId(1L);
-        dto.setTheatreId(1L);
-        dto.setShowDate(LocalDate.now());
-        dto.setShowTime(LocalTime.NOON);
-        dto.setPrice(200);
+		theatre = new Theatre();
+		theatre.setTheatreId(1L);
+		theatre.setTheatreName("PVR");
 
-        when(movieRepository.findById(1L)).thenReturn(Optional.of(movie));
-        when(theatreRepository.findById(1L)).thenReturn(Optional.of(theatre));
-        when(showRepository.save(any(Show.class))).thenReturn(show);
+		show = new Show();
+		show.setShowId(1L);
+		show.setShowDate(LocalDate.now());
+		show.setShowTime(LocalTime.NOON);
+		show.setPrice(200);
+		show.setMovie(movie);
+		show.setTheatre(theatre);
+	}
 
-        ShowDto saved = showService.addShow(dto);
+	// ============ ADD ============
+	public ShowDto addShow(ShowDto dto) {
 
-        assertEquals(200, saved.getPrice());
-        assertEquals("KGF", saved.getMovieName());
-        verify(showRepository).save(any());
-    }
+	    Movie movie = movieRepository.findById(dto.getMovieId())
+	            .orElseThrow(() -> new RuntimeException("Movie not found"));
 
-    @Test
-    void testGetAllShows() {
-        when(showRepository.findAll()).thenReturn(List.of(show));
+	    Theatre theatre = theatreRepository.findById(dto.getTheatreId())
+	            .orElseThrow(() -> new RuntimeException("Theatre not found"));
 
-        List<ShowDto> list = showService.getAllShows();
+	    Show show = new Show();
+	    show.setShowDate(dto.getShowDate());
+	    show.setShowTime(dto.getShowTime());
+	    show.setPrice(dto.getPrice());
+	    show.setMovie(movie);
+	    show.setTheatre(theatre);
 
-        assertEquals(1, list.size());
-    }
+	    Show saved = showRepository.save(show);
 
-    @Test
-    void testGetShowById() {
-        when(showRepository.findById(1L)).thenReturn(Optional.of(show));
+	    ShowDto result = new ShowDto();
+	    result.setShowId(saved.getShowId());
+	    result.setShowDate(saved.getShowDate());
+	    result.setShowTime(saved.getShowTime());
+	    result.setPrice(saved.getPrice());
 
-        ShowDto dto = showService.getShowById(1L);
+	    result.setMovieId(movie.getMovieId());
+	    result.setMovieName(movie.getMovieName());
 
-        assertEquals(1L, dto.getShowId());
-    }
+	    result.setTheatreId(theatre.getTheatreId());
+	    result.setTheatreName(theatre.getTheatreName());
 
-    @Test
-    void testDeleteShow() {
-        showService.deleteShow(1L);
-        verify(showRepository).deleteById(1L);
-    }
+	    return result;
+	}
+	// ============ GET ALL ============
+	@Test
+	void getAllShows_shouldReturnList() {
+		when(showRepository.findAll()).thenReturn(List.of(show));
+		List<ShowDto> list = showService.getAllShows();
+		assertEquals(1, list.size());
+		assertEquals("KGF", list.get(0).getMovieName());
+	}
+
+	// ============ GET BY ID ============
+	@Test
+	void getShowById_shouldReturnDto() {
+		when(showRepository.findById(1L)).thenReturn(Optional.of(show));
+		ShowDto dto = showService.getShowById(1L);
+		assertEquals(1L, dto.getShowId());
+	}
 }

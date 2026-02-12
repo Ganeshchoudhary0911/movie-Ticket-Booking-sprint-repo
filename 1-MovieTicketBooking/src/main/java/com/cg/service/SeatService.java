@@ -2,10 +2,7 @@ package com.cg.service;
 
 import com.cg.dto.SeatDto;
 import com.cg.entity.Seat;
-import com.cg.entity.Show;
-import com.cg.repository.BookingRepository;
 import com.cg.repository.SeatRepository;
-import com.cg.repository.ShowRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,13 +14,7 @@ public class SeatService implements ISeatService {
 
     @Autowired
     private SeatRepository seatRepository;
-
-    @Autowired
-    private ShowRepository showRepository;
-
-    @Autowired
-    private BookingRepository bookingRepository;
-
+    
     // ============================================================
     // GET seats by showId (for loading seat-selection page)
     // ============================================================
