@@ -25,81 +25,44 @@ import java.util.Optional;
 public class UserService implements IUserService {
  
     @Autowired
-
     private UserRepository userRepository;
- 
     @Autowired
-
     private PasswordEncoder encoder;
- 
     @Override
-
     @Transactional
-
     public UserDto saveUser(UserDto dto) {
-
         User user;
- 
         if (dto.getUserId() != null) {
-
             user = userRepository.findById(dto.getUserId())
-
                     .orElseThrow(() -> new RuntimeException("User not found: " + dto.getUserId()));
-
         } else {
-
             user = new User();
-
         }
- 
         if (dto.getUsername() != null) user.setUsername(dto.getUsername());
-
         if (dto.getEmail() != null) user.setEmail(dto.getEmail());
-
         if (dto.getRole() != null) user.setRole(dto.getRole());
-
         if (dto.getPhoneNumber() != null) user.setPhoneNumber(dto.getPhoneNumber());
-
         user.setEnabled(dto.isEnabled());
- 
         User saved = userRepository.save(user);
-
         return toDto(saved);
-
     }
- 
     @Override
-
     public Optional<UserDto> findByEmail(String email) {
-
         return userRepository.findByEmail(email).map(this::toDto);
-
     }
- 
     @Override
-
     public Optional<UserDto> findByUsername(String username) {
-
         return userRepository.findByUsername(username).map(this::toDto);
-
     }
- 
     @Override
-
     public boolean existsByUsername(String username) {
-
         return userRepository.existsByUsername(username);
-
     }
- 
     @Override
-
     public boolean existsByEmail(String email) {
-
         return userRepository.existsByEmail(email);
-
     }
- 
+
     /**
 
      * Creates a new user from SignupDto, encodes the password,
@@ -159,6 +122,27 @@ public class UserService implements IUserService {
         return dto;
 
     }
+    @Override
+    public Optional<User> findEntityByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
 
+    @Override
+    public Optional<User> findEntityByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public Optional<User> findEntityByUsernameOrEmail(String login) {
+        Optional<User> u = userRepository.findByUsername(login);
+        return u.isPresent() ? u : userRepository.findByEmail(login);
+    }
+
+    @Override
+    @Transactional
+    public User saveEntity(User user) {
+        return userRepository.save(user);
+    }
 }
+
  

@@ -18,17 +18,7 @@ import jakarta.persistence.UniqueConstraint;
 import jakarta.persistence.Index;
 
 @Entity
-@Table(
-name = "seat",
-uniqueConstraints = {
-  @UniqueConstraint(name = "uk_show_row_number", columnNames = {"show_id", "seat_row", "seat_number"})
-},
-indexes = {
-  @Index(name = "idx_seat_show", columnList = "show_id"),
-  @Index(name = "idx_seat_booked", columnList = "show_id, is_booked")
-}
-)
-
+@Table
 public class Seat {
 
 	@Id

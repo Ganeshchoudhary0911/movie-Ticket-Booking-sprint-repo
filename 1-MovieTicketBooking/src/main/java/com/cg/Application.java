@@ -19,7 +19,7 @@ public class Application {
 	}
 
 	@Bean
-//	@Profile("!test")  // disable during tests
+	@Profile("!test")  // disable during tests
     public CommandLineRunner seedAdmin(UserRepository userRepo, PasswordEncoder encoder) {
         return args -> {
             if (!userRepo.existsByUsername("admin")) {

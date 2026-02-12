@@ -120,6 +120,7 @@ public class ShowService {
         // Seats reference Show (ManyToOne), so we must delete Seats first
         seatRepo.deleteByShowId(id);
         showRepo.deleteById(id);
+        showRepo.deleteById(id);
     }
 
     // ========================= Core: Create show + auto-generate seats =========================

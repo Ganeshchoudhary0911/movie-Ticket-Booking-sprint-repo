@@ -2,6 +2,7 @@ package com.cg.user;
 
 import com.cg.controller.AuthController;
 import com.cg.repository.UserRepository;
+import com.cg.service.UserService;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +25,10 @@ class AuthControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private UserRepository userRepo;
+    private UserService userService;   
 
-    @MockBean
-    private PasswordEncoder encoder;
+    // ---------------------
 
-    // ======================
     @Test
     void loginPage_shouldReturnLoginView() throws Exception {
         mockMvc.perform(get("/login"))
@@ -37,7 +36,8 @@ class AuthControllerTest {
                 .andExpect(view().name("login"));
     }
 
-    // ======================
+    // ---------------------
+
     @Test
     void signupPage_shouldReturnSignupView() throws Exception {
         mockMvc.perform(get("/signup"))
@@ -46,52 +46,33 @@ class AuthControllerTest {
                 .andExpect(model().attributeExists("user"));
     }
 
-    // ======================
-    
-//    @Test
-//    void doSignup_success_shouldRedirectLogin() throws Exception {
-//
-//        when(userRepo.existsByUsername(any())).thenReturn(false);
-//        when(userRepo.existsByEmail(any())).thenReturn(false);
-//        when(encoder.encode(any())).thenReturn("encoded");
-//
-//        mockMvc.perform(post("/signup")
-//                .param("username", "alice123")
-//                .param("email", "alice@test.com")
-//                .param("password", "password123")
-//                .param("phoneNumber", "9999999999"))
-//                .andExpect(status().is3xxRedirection())
-//                .andExpect(redirectedUrl("/login?signup=true"));
-//
-//        verify(userRepo).save(any(User.class));
-//    }
+    // ---------------------
 
-
-    // ======================
     @Test
     void doSignup_usernameExists_shouldReturnSignupView() throws Exception {
 
-        when(userRepo.existsByUsername("alice")).thenReturn(true);
+        when(userService.existsByUsername("alice")).thenReturn(true);
 
         mockMvc.perform(post("/signup")
-                .param("user.username", "alice")
-                .param("user.email", "a@test.com")
-                .param("user.password", "123"))
+                .param("username", "alice")
+                .param("email", "a@test.com")
+                .param("password", "123"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("signup"));
     }
 
-    // ======================
+    // ---------------------
+
     @Test
     void doSignup_emailExists_shouldReturnSignupView() throws Exception {
 
-        when(userRepo.existsByUsername(any())).thenReturn(false);
-        when(userRepo.existsByEmail("a@test.com")).thenReturn(true);
+        when(userService.existsByUsername(any())).thenReturn(false);
+        when(userService.existsByEmail("a@test.com")).thenReturn(true);
 
         mockMvc.perform(post("/signup")
-                .param("user.username", "alice")
-                .param("user.email", "a@test.com")
-                .param("user.password", "123"))
+                .param("username", "alice")
+                .param("email", "a@test.com")
+                .param("password", "123"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("signup"));
     }
