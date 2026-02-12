@@ -1,12 +1,29 @@
 package com.cg.dto;
 
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Positive;
+
 public class SeatDto {
 
 	private Long seatId;
+
+	@NotBlank(message = "Seat number is required")
+	@Pattern(regexp = "^[A-Z]\\d{1,3}$", message = "Seat number must be like A10, B5, C120")
 	private String seatNumber;
+
+	@NotBlank(message = "Seat row is required")
+	@Pattern(regexp = "^[A-Z]$", message = "Seat row must be a single capital letter (e.g., A, B, C)")
 	private String seatRow;
-	private String seatType; // Regular/Premium
+
+	@NotBlank(message = "Seat type is required")
+	private String seatType;
+
+	@Positive(message = "Seat price must be positive")
+	@Digits(integer = 4, fraction = 2, message = "Invalid seat price format")
 	private double seatPrice;
+
 	private boolean booked;
 
 	// Replace the Show entity with just the ID
@@ -84,5 +101,4 @@ public class SeatDto {
 		this.showId = showId;
 	}
 
-	
 }

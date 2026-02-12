@@ -3,43 +3,60 @@ package com.cg.dto;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
+
 public class ShowDto {
 
 	private Long showId;
+
+	@NotNull(message = "Show date is required")
+	@FutureOrPresent(message = "Show date cannot be in the past")
 	private LocalDate showDate;
+
+	@NotNull(message = "Show time is required")
 	private LocalTime showTime;
+
+	@Positive(message = "Price must be a positive value")
+	@Digits(integer = 4, fraction = 2, message = "Price must be valid (max 4 digits, 2 decimals)")
 	private double price;
 
-	// Use IDs for associations to avoid leaking entity graphs
+	@NotNull(message = "Movie ID is required")
 	private Long movieId;
+
+	@NotNull(message = "Theatre ID is required")
 	private Long theatreId;
 
+	@NotBlank(message = "Movie name is required")
+	@Size(min = 2, max = 150)
 	private String movieName;
+
+	@NotBlank(message = "Theatre name is required")
+	@Size(min = 2, max = 150)
 	private String theatreName;
 
 	public ShowDto() {
 	}
 
-	
 	public String getMovieName() {
 		return movieName;
 	}
-
 
 	public void setMovieName(String movieName) {
 		this.movieName = movieName;
 	}
 
-
 	public String getTheatreName() {
 		return theatreName;
 	}
 
-
 	public void setTheatreName(String theatreName) {
 		this.theatreName = theatreName;
 	}
-
 
 	public ShowDto(Long showId, LocalDate showDate, LocalTime showTime, double price, Long movieId, Long theatreId,
 			String movieName, String theatreName) {
@@ -53,7 +70,6 @@ public class ShowDto {
 		this.movieName = movieName;
 		this.theatreName = theatreName;
 	}
-
 
 	public Long getShowId() {
 		return showId;

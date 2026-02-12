@@ -18,11 +18,18 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bookingId;
 
+    @Column(nullable = false)
     private LocalDate bookingDate;
+
+    @Column(nullable = false)
     private double totalAmount;
 
     // Keeping as String since your model uses it. (Consider Enum later.)
+
+    @Column(nullable = false)
     private String paymentStatus;  // e.g., "PAID", "PENDING", "FAILED"
+
+    @Column(nullable = false)
     private String bookingStatus;  // e.g., "CONFIRMED", "CANCELLED"
 
     @ManyToOne

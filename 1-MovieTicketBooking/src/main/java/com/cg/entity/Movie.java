@@ -18,9 +18,16 @@ public class Movie {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long movieId;
 
+	@Column(nullable=false)
 	private String movieName;
+	
+	@Column(nullable=false)
 	private String genre;
+	
+	@Column(nullable=false)
 	private String language;
+	
+	@Column(nullable=false)
 	private int duration;
 
 	@Column(columnDefinition = "TEXT" ) // allow up to 2000 chars (adjust as you like)

@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import com.cg.dto.MovieDto;
@@ -18,6 +19,8 @@ import com.cg.entity.Show;
 import com.cg.service.MovieService;
 import com.cg.service.ShowService;
 import com.cg.service.TheatreService;
+
+import jakarta.validation.Valid;
 
 @Controller
 public class ShowController {
@@ -109,7 +112,14 @@ public class ShowController {
 
     // CREATE (POST)
     @PostMapping("/admin/shows")
-    public String addShow(@ModelAttribute("show") ShowDto showDto) {
+    public String addShow(@Valid @ModelAttribute("show") ShowDto showDto,
+                          BindingResult result,
+                          Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("movies", movieService.getAllMovies());
+            model.addAttribute("theatres", theatreService.getAllTheatres());
+            return "admin/admin-show-form";
+        }
         showService.addShow(showDto);
         return "redirect:/admin/shows";
     }
@@ -124,7 +134,15 @@ public class ShowController {
 
     // UPDATE (PUT)
     @PutMapping("/admin/shows/{id}")
-    public String updateShow(@PathVariable Long id, @ModelAttribute("show") ShowDto showDto) {
+    public String updateShow(@PathVariable Long id,
+                             @Valid @ModelAttribute("show") ShowDto showDto,
+                             BindingResult result,
+                             Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("movies", movieService.getAllMovies());
+            model.addAttribute("theatres", theatreService.getAllTheatres());
+            return "admin/admin-show-form";
+        }
         showService.updateShow(id, showDto);
         return "redirect:/admin/shows";
     }
