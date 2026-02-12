@@ -1,0 +1,40 @@
+/* Keep it minimal and professional */
+html, body {
+	height: 100%;
+}
+
+body {
+	background: #ffffff; /* white background like your reference */
+}
+
+.auth-container {
+	min-height: 100vh; /* center vertically */
+	padding: 24px;
+}
+
+.simple-card {
+	width: 100%;
+	max-width: 480px; /* was 380px — make it bigger */
+	padding: 28px 32px; /* more spacing inside */
+	border: 1px solid #e9ecef;
+	border-radius: 10px;
+	background: #fff;
+}
+
+.form-control {
+	background-color: #fff; /* white inputs */
+}
+
+.form-control::placeholder {
+	color: #9aa0a6;
+}
+
+.btn-primary {
+	background-color: #0d6efd; /* Bootstrap primary blue */
+	border-color: #0d6efd;
+}
+
+/* Optional: slightly larger heading appearance */
+h4 {
+	font-weight: 600;
+}

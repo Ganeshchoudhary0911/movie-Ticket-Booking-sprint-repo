@@ -70,7 +70,7 @@ public class SecurityConfig {
                 .requestMatchers("/movie/**", "/profile/**", "/bookings/**", "/booking/**").authenticated()
                 .requestMatchers("/confirm/**").authenticated()
                 .requestMatchers("/seats/**").permitAll()
-                .anyRequest().permitAll()
+                .anyRequest().authenticated()
             )
             .authenticationProvider(daoAuthenticationProvider())
             .formLogin(form -> form
