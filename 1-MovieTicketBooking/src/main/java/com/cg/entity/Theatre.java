@@ -14,9 +14,16 @@ public class Theatre {
     @Column(nullable = false, length = 100)
     private String theatreName;
 
+    @Column(nullable = false, length = 100)
     private String location;
+
+    @Column(nullable = false, length = 100)
     private String city;
+
+    @Column(nullable = false)
     private int totalSeats;
+
+    @Column(length = 10)
     private String contactNumber;
 
     // ⭐ Automatically delete all shows when deleting a theatre

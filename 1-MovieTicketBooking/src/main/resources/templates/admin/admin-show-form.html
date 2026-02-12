@@ -76,6 +76,9 @@
 					<option th:each="m : ${movies}" th:value="${m.movieId}"
 						th:text="${m.movieName}"></option>
 				</select>
+
+				<p class="text-danger small" th:if="${#fields.hasErrors('movieId')}"
+					th:errors="*{movieId}"></p>
 			</div>
 
 			<div class="col-12 col-md-6">
@@ -87,22 +90,26 @@
 					<option th:each="t : ${theatres}" th:value="${t.theatreId}"
 						th:text="${t.theatreName}"></option>
 				</select>
+
+				<p class="text-danger small"
+					th:if="${#fields.hasErrors('theatreId')}" th:errors="*{theatreId}"></p>
 			</div>
 
 			<div class="col-12 col-md-4">
 				<label class="form-label required">Date</label> <input type="date"
 					class="form-control" th:field="*{showDate}" required />
+
+				<p class="text-danger small"
+					th:if="${#fields.hasErrors('showDate')}" th:errors="*{showDate}"></p>
 			</div>
 
 			<div class="col-12 col-md-4">
 				<label class="form-label required">Time</label> <input type="time"
 					class="form-control" th:field="*{showTime}" required />
-			</div>
 
-			<!--  <div class="col-12 col-md-4">
-      <label class="form-label required">Price</label>
-      <input type="number" class="form-control" step="0.01" min="0" th:field="*{price}" required/>
-    </div> -->
+				<p class="text-danger small"
+					th:if="${#fields.hasErrors('showTime')}" th:errors="*{showTime}"></p>
+			</div>
 
 			<div class="col-12">
 				<button type="submit" class="btn btn-success">

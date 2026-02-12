@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.hibernate.annotations.Cascade;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,27 +18,26 @@ import jakarta.persistence.UniqueConstraint;
 import jakarta.persistence.Index;
 
 @Entity
-
 @Table
-//    name = "seat",
-//    uniqueConstraints = {
-//        @UniqueConstraint(name = "uk_show_row_number", columnNames = {"show_id", "seat_row", "seat_number"})
-//    },
-//    indexes = {
-//        @Index(name = "idx_seat_show", columnList = "show_id"),
-//        @Index(name = "idx_seat_booked", columnList = "show_id, is_booked")
-//    }
-//)
-
 public class Seat {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long seatId;
+
+    @Column(nullable = false)
 	private String seatNumber;
+
+    @Column(nullable = false)
 	private String seatRow;
-	private String seatType;  // Regular/Premium
+
+    @Column(nullable = false)
+	private String seatType;  // Gold/Silver
+
+    @Column(nullable = false)
 	private double seatPrice;
+
+    @Column(nullable = false)
 	private boolean isBooked;
 
 	@ManyToOne

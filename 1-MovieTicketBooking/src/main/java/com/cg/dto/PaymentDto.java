@@ -2,11 +2,22 @@ package com.cg.dto;
 
 import java.time.LocalDateTime;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public class PaymentDto {
     private Long paymentId;
+    
+    @NotNull
     private Long bookingId;
+    
+    @NotNull
     private double amount;
+    
+    @NotBlank
     private String method;
+    
+    @NotBlank
     private String status;
     private String gatewayRef;
     private LocalDateTime createdAt;

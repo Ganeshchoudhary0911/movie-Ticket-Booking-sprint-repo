@@ -5,10 +5,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import com.cg.dto.MovieDto;
 import com.cg.service.MovieService;
+
+import jakarta.validation.Valid;
 
 @Controller
 public class MovieController {
@@ -43,13 +46,30 @@ public class MovieController {
     }
 
     @PostMapping("/admin/movies")
-    public String createMovie(@ModelAttribute MovieDto movie) {
+    public String createMovie(
+            @Valid @ModelAttribute("movie") MovieDto movie,
+            BindingResult result,
+            Model model) {
+
+        if (result.hasErrors()) {
+            return "admin/admin-movie-form";  // return the SAME form
+        }
+
         movieService.saveOrUpdateMovie(movie);
         return "redirect:/admin/movies";
     }
 
     @PutMapping("/admin/movies/{id}")
-    public String updateMovie(@PathVariable Long id, @ModelAttribute MovieDto movie) {
+    public String updateMovie(
+            @PathVariable Long id,
+            @ModelAttribute("movie") MovieDto movie,
+            BindingResult result,
+            Model model) {
+
+        if (result.hasErrors()) {
+            return "admin/admin-movie-form";
+        }
+
         movie.setMovieId(id);
         movieService.saveOrUpdateMovie(movie);
         return "redirect:/admin/movies";

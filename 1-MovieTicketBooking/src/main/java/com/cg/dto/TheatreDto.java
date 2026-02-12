@@ -1,29 +1,38 @@
 package com.cg.dto;
 
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 public class TheatreDto {
 
 	private Long theatreId;
 
-	@NotBlank
+	@NotBlank(message = "Theatre name is required")
+	@Size(min = 2, max = 100)
 	private String theatreName;
 
-	@NotBlank
+	@NotBlank(message = "Location is required")
+	@Size(min = 2, max = 150)
 	private String location;
 
-	@NotBlank
+	@NotBlank(message = "City is required")
+	@Size(min = 2, max = 100)
 	private String city;
-	
-	@Min(1)
-	private int totalSeats;
+
+	@Min(value = 50, message = "Total seats must be at least 50")
+	@Max(value = 1000, message = "Total seats cannot exceed 1000")
+	private Integer totalSeats;
+
+	@Pattern(regexp = "^[6-9]\\d{9}$", message = "Contact number must be a valid 10-digit Indian mobile number")
 	private String contactNumber;
 
 	public TheatreDto() {
 	}
 
-	public TheatreDto(Long theatreId, String theatreName, String location, String city, int totalSeats,
+	public TheatreDto(Long theatreId, String theatreName, String location, String city, Integer totalSeats,
 			String contactNumber) {
 		super();
 		this.theatreId = theatreId;
@@ -66,11 +75,11 @@ public class TheatreDto {
 		this.city = city;
 	}
 
-	public int getTotalSeats() {
+	public Integer getTotalSeats() {
 		return totalSeats;
 	}
 
-	public void setTotalSeats(int totalSeats) {
+	public void setTotalSeats(Integer totalSeats) {
 		this.totalSeats = totalSeats;
 	}
 

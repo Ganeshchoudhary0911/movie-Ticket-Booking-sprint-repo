@@ -70,29 +70,42 @@
 				<label class="form-label required">Theatre Name</label> <input
 					type="text" class="form-control" th:field="*{theatreName}" required
 					maxlength="100" />
+				<div class="text-danger small"
+					th:if="${#fields.hasErrors('theatreName')}"
+					th:errors="*{theatreName}"></div>
 			</div>
 
 			<div class="col-12 col-md-6">
 				<label class="form-label required">City</label> <input type="text"
 					class="form-control" th:field="*{city}" required maxlength="80" />
+				<div class="text-danger small" th:if="${#fields.hasErrors('city')}"
+					th:errors="*{city}"></div>
 			</div>
 
 			<div class="col-12 col-md-6">
 				<label class="form-label required">Location</label> <input
 					type="text" class="form-control" th:field="*{location}" required
 					maxlength="120" />
+				<div class="text-danger small"
+					th:if="${#fields.hasErrors('location')}" th:errors="*{location}"></div>
 			</div>
 
 			<div class="col-12 col-md-3">
 				<label class="form-label required">Total Seats</label> <input
 					type="number" min="1" class="form-control" th:field="*{totalSeats}"
 					required />
+				<div class="text-danger small"
+					th:if="${#fields.hasErrors('totalSeats')}"
+					th:errors="*{totalSeats}"></div>
 			</div>
 
 			<div class="col-12 col-md-3">
 				<label class="form-label required">Contact Number</label> <input
 					type="text" class="form-control" th:field="*{contactNumber}"
 					required maxlength="20" />
+				<div class="text-danger small"
+					th:if="${#fields.hasErrors('contactNumber')}"
+					th:errors="*{contactNumber}"></div>
 			</div>
 
 			<div class="col-12">
