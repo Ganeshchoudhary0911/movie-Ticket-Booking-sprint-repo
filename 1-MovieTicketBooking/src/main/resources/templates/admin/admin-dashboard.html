@@ -97,11 +97,6 @@ body {
 								page
 							</a>
 						</div>
-
-						<hr class="my-3">
-						<small class="text-muted"> REST endpoint: <span
-							class="endpoint">GET/POST/PUT/DELETE /admin/movies</span>
-						</small>
 					</div>
 				</div>
 			</div>
@@ -130,17 +125,7 @@ body {
 								class="bi bi-plus-circle me-1"></i> Add Theatre
 								(admin-theatre-form.html)
 							</a>
-
-							<!-- You have theatre-list.html 
-            <a class="btn btn-outline-secondary w-100" th:href="@{/admin/theatres/list}">
-              <i class="bi bi-card-list me-1"></i> Theatre List (theatre-list.html)
-            </a>-->
 						</div>
-
-						<hr class="my-3">
-						<small class="text-muted"> REST endpoint: <span
-							class="endpoint">GET/POST/PUT/DELETE /admin/theatres</span>
-						</small>
 					</div>
 				</div>
 			</div>
@@ -169,11 +154,6 @@ body {
 								(admin-show-form.html)
 							</a>
 						</div>
-
-						<hr class="my-3">
-						<small class="text-muted"> REST endpoint: <span
-							class="endpoint">GET/POST/PUT/DELETE /admin/shows</span>
-						</small>
 					</div>
 				</div>
 			</div>
@@ -187,12 +167,11 @@ body {
 				<a class="list-group-item list-group-item-action" th:href="@{/}">
 					<i class="bi bi-house-door me-2"></i> Home (home.html)
 				</a> <a class="list-group-item list-group-item-action"
-					th:href="@{/history}"> <i class="bi bi-clock-history me-2"></i>
-					Booking History (history.html)
-				</a> <a class="list-group-item list-group-item-action"
 					th:href="@{/login}"> <i class="bi bi-box-arrow-in-right me-2"></i>
 					Login (login.html)
 				</a>
+				<a class="list-group-item list-group-item-action" th:href="@{/logout}">
+					<i class="bi bi-box-arrow-right me-1"></i> Logout (Logout.html)
 			</div>
 		</section>
 	</main>
