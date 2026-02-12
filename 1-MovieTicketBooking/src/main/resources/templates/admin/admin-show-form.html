@@ -56,23 +56,20 @@
 
 
 		<form th:object="${show}"
-			th:action="${show != null and show.showId != null} 
-                     ? @{/admin/shows/{id}(id=${show.showId})} 
-                     : @{/admin/shows}"
+			th:action="${show.showId != null} ?
+                 @{/admin/shows/{id}(id=${show.showId})} :
+                 @{/admin/shows}"
 			method="post" class="row g-3">
 
-			<!-- Hidden method override for PUT -->
-			<input th:if="${show != null and show.showId != null}" type="hidden"
-				name="_method" value="put" /> <input type="hidden"
-				th:field="*{showId}" />
-
-
+			<!-- Hidden ID -->
+			<input th:if="${show.showId != null}" type="hidden" name="_method"
+				value="put">
+				
 			<div class="col-12 col-md-6">
 				<label class="form-label required">Movie</label> <select
 					class="form-select" th:field="*{movieId}" required>
-					<option value="" disabled
-						th:selected="${show == null or show.movieId == null}">Select
-						movie</option>
+					<option value="" disabled th:selected="${show.movieId == null}">
+						Select movie</option>
 					<option th:each="m : ${movies}" th:value="${m.movieId}"
 						th:text="${m.movieName}"></option>
 				</select>
