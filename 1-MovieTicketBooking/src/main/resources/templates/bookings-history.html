@@ -49,11 +49,7 @@
                         <!-- Amount: always 2 decimals; null-safe -->
                         <td th:text="${b.totalAmount != null ? #numbers.formatDecimal(b.totalAmount, 1, 2) : '0.00'}">150.00</td>
 
-                        <td>
-                            <a th:href="@{/success/{id}(id=${b.bookingId})}" class="btn btn-sm btn-outline-primary">
-                                View Ticket
-                            </a>
-                        </td>
+                        
                     </tr>
                 </tbody>
             </table>
