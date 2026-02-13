@@ -3,24 +3,18 @@ package com.cg.service;
 import com.cg.dto.MovieDto;
 import com.cg.entity.Movie;
 import com.cg.repository.MovieRepository;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-/**
- * MovieService Tests (5 test methods)
- */
 @ExtendWith(MockitoExtension.class)
 class MovieServiceTest {
 
@@ -30,62 +24,169 @@ class MovieServiceTest {
     @InjectMocks
     private MovieService movieService;
 
+
+    // ------------------------------------------------------------
+    // POSITIVE TEST : getAllMovies()
+    // ------------------------------------------------------------
     @Test
-    @DisplayName("getAllMovies - Returns list of all movies")
-    void shouldGetAllMovies() {
-        Movie movie = new Movie();
-        movie.setMovieId(1L);
-        movie.setMovieName("Avatar");
+    void testGetAllMovies() {
 
-        when(movieRepository.findAll()).thenReturn(List.of(movie));
+        Movie m1 = new Movie();
+        m1.setMovieId(1L);
+        m1.setMovieName("Dune");
 
-        List<MovieDto> result = movieService.getAllMovies();
+        Movie m2 = new Movie();
+        m2.setMovieId(2L);
+        m2.setMovieName("Avatar");
 
-        assertEquals(1, result.size());
-        assertEquals("Avatar", result.get(0).getMovieName());
-        verify(movieRepository).findAll();
+        when(movieRepository.findAll()).thenReturn(List.of(m1, m2));
+
+        List<MovieDto> dtos = movieService.getAllMovies();
+
+        assertEquals(2, dtos.size());
+        assertEquals("Dune", dtos.get(0).getMovieName());
+        assertEquals("Avatar", dtos.get(1).getMovieName());
     }
 
+
+    // ------------------------------------------------------------
+    // POSITIVE TEST : getMovieById() found
+    // ------------------------------------------------------------
     @Test
-    @DisplayName("getAllMovies - Returns empty list when no movies")
-    void shouldGetAllMovies_returnEmpty() {
-        when(movieRepository.findAll()).thenReturn(Collections.emptyList());
+    void testGetMovieById_found() {
 
-        List<MovieDto> result = movieService.getAllMovies();
+        Movie m = new Movie();
+        m.setMovieId(10L);
+        m.setMovieName("Inception");
 
-        assertTrue(result.isEmpty());
+        when(movieRepository.findById(10L)).thenReturn(Optional.of(m));
+
+        MovieDto dto = movieService.getMovieById(10L);
+
+        assertNotNull(dto);
+        assertEquals("Inception", dto.getMovieName());
     }
 
+
+    // ------------------------------------------------------------
+    // NEGATIVE TEST: getMovieById() not found
+    // ------------------------------------------------------------
     @Test
-    @DisplayName("getMovieById - Returns movie when found")
-    void shouldGetMovieById_whenFound() {
-        Movie movie = new Movie();
-        movie.setMovieId(1L);
-        movie.setMovieName("Avatar");
+    void testGetMovieById_notFound() {
 
-        when(movieRepository.findById(1L)).thenReturn(Optional.of(movie));
+        when(movieRepository.findById(5L)).thenReturn(Optional.empty());
 
-        MovieDto result = movieService.getMovieById(1L);
+        MovieDto dto = movieService.getMovieById(5L);
 
-        assertNotNull(result);
-        assertEquals(1L, result.getMovieId());
+        assertNull(dto);
     }
 
+
+    // ------------------------------------------------------------
+    // POSITIVE TEST : searchMovies()
+    // ------------------------------------------------------------
     @Test
-    @DisplayName("getMovieById - Returns null when not found")
-    void shouldGetMovieById_returnNull() {
+    void testSearchMovies() {
+
+        Movie m = new Movie();
+        m.setMovieId(7L);
+        m.setMovieName("Interstellar");
+
+        when(movieRepository.findByMovieNameContainingIgnoreCase("stellar"))
+                .thenReturn(List.of(m));
+
+        List<MovieDto> dtos = movieService.searchMovies("stellar");
+
+        assertEquals(1, dtos.size());
+        assertEquals("Interstellar", dtos.get(0).getMovieName());
+    }
+
+
+  
+
+   
+
+
+    // ------------------------------------------------------------
+    // POSITIVE TEST : deleteMovie()
+    // ------------------------------------------------------------
+    @Test
+    void testDeleteMovie() {
+
+        doNothing().when(movieRepository).deleteById(50L);
+
+        movieService.deleteMovie(50L);
+
+        verify(movieRepository, times(1)).deleteById(50L);
+    }
+
+
+    // ------------------------------------------------------------
+    // POSITIVE TEST : findById() found
+    // ------------------------------------------------------------
+    @Test
+    void testFindById_found() {
+
+        Movie m = new Movie();
+        m.setMovieId(55L);
+        m.setMovieName("Joker");
+
+        when(movieRepository.findById(55L)).thenReturn(Optional.of(m));
+
+        Optional<MovieDto> dto = movieService.findById(55L);
+
+        assertTrue(dto.isPresent());
+        assertEquals("Joker", dto.get().getMovieName());
+    }
+
+
+    // ------------------------------------------------------------
+    // NEGATIVE TEST : findById() empty
+    // ------------------------------------------------------------
+    @Test
+    void testFindById_empty() {
+
         when(movieRepository.findById(99L)).thenReturn(Optional.empty());
 
-        MovieDto result = movieService.getMovieById(99L);
+        Optional<MovieDto> dto = movieService.findById(99L);
 
-        assertNull(result);
-    }
-
-    @Test
-    @DisplayName("deleteMovie - Deletes movie by ID")
-    void shouldDeleteMovie() {
-        movieService.deleteMovie(1L);
-
-        verify(movieRepository).deleteById(1L);
+        assertTrue(dto.isEmpty());
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

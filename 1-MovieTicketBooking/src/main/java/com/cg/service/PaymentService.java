@@ -12,7 +12,7 @@ import com.cg.repository.BookingRepository;
 import com.cg.repository.PaymentRepository;
 
 @Service
-public class PaymentService {
+public class PaymentService implements IPaymentService {
 
     private final PaymentRepository paymentRepository;
     private final BookingRepository bookingRepository;
