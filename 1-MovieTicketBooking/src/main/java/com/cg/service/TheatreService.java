@@ -20,7 +20,7 @@ public class TheatreService implements ITheatreService {
 	}
 
 	// ========== CREATE ==========
-	@Override
+//	@Override
 	public TheatreDto addTheatre(TheatreDto dto) {
 		Theatre entity = toEntity(dto);
 		Theatre saved = theatreRepository.save(entity);

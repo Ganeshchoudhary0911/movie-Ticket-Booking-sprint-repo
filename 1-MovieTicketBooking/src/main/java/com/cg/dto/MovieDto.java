@@ -36,7 +36,7 @@ public class MovieDto {
 
 	@DecimalMin(value = "0.0", inclusive = true, message = "Rating cannot be negative")
 	@DecimalMax(value = "10.0", inclusive = true, message = "Rating cannot exceed {value}")
-	private Double rating; // <-- wrapper type (nullable)
+	private double rating; // <-- wrapper type (nullable)
 
 	@Size(max = 512, message = "Poster URL cannot exceed {max} characters")
 	@URL(message = "Poster URL must be a valid URL (http/https)")
@@ -105,11 +105,11 @@ public class MovieDto {
 		this.description = description;
 	}
 
-	public Double getRating() {   // <-- returns Double (NOT double)
+	public double getRating() {   // <-- returns Double (NOT double)
 	    return rating;            // <-- NO unboxing, NO defaulting here
 	}
 
-	public void setRating(Double rating) {  // <-- accepts Double (NOT double)
+	public void setRating(double rating) {  // <-- accepts Double (NOT double)
 	    this.rating = rating;
 	}
 

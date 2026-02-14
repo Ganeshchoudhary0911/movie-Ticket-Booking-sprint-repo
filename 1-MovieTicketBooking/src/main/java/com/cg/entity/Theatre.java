@@ -23,7 +23,7 @@ public class Theatre {
     @Column(nullable = false)
     private int totalSeats;
 
-    @Column(length = 10)
+    @Column(length = 10, name="mobile")
     private String contactNumber;
 
     // ⭐ Automatically delete all shows when deleting a theatre
