@@ -37,7 +37,8 @@
 							th:text="${b.bookingStatus}">CONFIRMED</span></td>
 						<td th:text="${b.paymentStatus}">PAID</td>
 						<td
-							th:text="${#numbers.formatDecimal(b.totalAmount, 1, 'POINT', 2, 'NONE')}">450.00</td>
+							th:text="${b.totalAmount != null ? #numbers.formatDecimal(b.totalAmount, 1, 2) : '0.00'}">150.00</td>
+
 						<td><a th:href="@{/ticket/{id}(id=${b.bookingId})}"
 							class="btn btn-sm btn-outline-primary"> View Ticket </a></td>
 					</tr>

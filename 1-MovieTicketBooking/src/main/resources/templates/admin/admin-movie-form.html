@@ -100,7 +100,7 @@
 
     <!-- Rating -->
     <div class="col-12 col-md-6">
-      <label class="form-label required">Rating (0.0 - 10.0)</label>
+      <label class="form-label">Rating (0.0 - 10.0)</label>
       <input type="number" step="0.1" min="0" max="10" class="form-control" th:field="*{rating}" required/>
       <div class="text-danger small" th:if="${#fields.hasErrors('rating')}" th:errors="*{rating}"></div>
     </div>

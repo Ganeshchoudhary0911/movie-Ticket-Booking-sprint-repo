@@ -2,6 +2,7 @@ package com.cg.service;
 
 import com.cg.dto.MovieDto;
 import com.cg.entity.Movie;
+import com.cg.exception.MovieNotFoundException;
 import com.cg.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,9 +36,15 @@ public class MovieService implements IMovieService {
     // ===== SEARCH =====
     @Override
     public List<MovieDto> searchMovies(String name) {
-        return movieRepository.findByMovieNameContainingIgnoreCase(name).stream()
+        List<MovieDto> movies = movieRepository.findByMovieNameContainingIgnoreCase(name).stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
+        
+        if (movies.isEmpty()) {
+            throw new MovieNotFoundException("No movies found matching the name: " + name);
+        }
+        
+        return movies;
     }
 
     // ===== CREATE / UPDATE =====

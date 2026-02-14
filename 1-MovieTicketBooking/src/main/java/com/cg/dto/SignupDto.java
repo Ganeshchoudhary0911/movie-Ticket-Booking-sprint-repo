@@ -2,6 +2,7 @@ package com.cg.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class SignupDto {
@@ -20,7 +21,7 @@ public class SignupDto {
     @Size(min = 6, max = 128, message = "Password must be between 6 and 128 characters")
     private String password;
 
-    @Size(max = 32, message = "Phone number is too long")
+	@Pattern(regexp = "^(\\+91[- ]?)?[6-9]\\d{9}$", message = "Enter a valid Indian mobile number")
     private String phoneNumber;
 
     public SignupDto() {}
